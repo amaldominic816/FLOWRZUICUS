@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import RegistrationPage from './RegisterPage'; 
 import OtpScreen from './OTPScreen';
 import ProductOverview from './ProductScreen';
+import CartPage from './CartPage';
 
 const Stack = createStackNavigator();
 const screenWidth = Dimensions.get('window').width;
@@ -65,6 +66,11 @@ const AppNavigator = () => (
         <Stack.Screen
             name="ProductOverview"
             component={ProductOverview} // Make sure this component is defined
+            options={{ headerShown: false }} // Hide header for registration page
+        />
+        <Stack.Screen
+            name="CartPage"
+            component={CartPage} // Make sure this component is defined
             options={{ headerShown: false }} // Hide header for registration page
         />
     </Stack.Navigator>

@@ -12,7 +12,7 @@ import {
 import Svg, {Path} from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 const screenWidth = Dimensions.get('window').width;
-const ProductOverview = () => {
+const ProductOverview = ({navigation}) => {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
 
@@ -39,12 +39,12 @@ const ProductOverview = () => {
         </TouchableOpacity>
         <Text style={styles.headerText}>Product Overview</Text>
         <View style={styles.headerIcons}>
-          <TouchableOpacity style={styles.iconButton}>
-            <Image
-              source={require('./assets/images/cart.png')}
-              style={styles.headerIconImage}
-            />
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate('CartPage')}>
+          <Image
+            source={require('./assets/images/cart.png')}
+            style={styles.headerIconImage}
+          />
+        </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton}>
             <Image
               source={require('./assets/images/notification.png')}
@@ -164,9 +164,9 @@ const ProductOverview = () => {
       <View style={styles.footerButtons}>
        <TouchableOpacity onPress={() => navigation.navigate('RegistrationPage')}>
                        <LinearGradient
-                           colors={['#DE8542', '#FE5993']} // Gradient colors
-                           start={{ x: 0, y: 0 }} // Start of the gradient
-                           end={{ x: 1, y: 0 }} // End of the gradient
+                           colors={['#DE8542', '#FE5993']}
+                           start={{ x: 0, y: 0 }}
+                           end={{ x: 1, y: 0 }}
                            style={[styles.addToCartButton, { width: screenWidth * 0.7 }]} // Set the width to 80% of screen width
                        >
                            <Text style={styles.buttonText}>ADD TO CART</Text>
