@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import RegistrationPage from './RegisterPage'; 
 import OtpScreen from './OTPScreen';
-import ProductOverview from './ProductScreen';  
+import ProductOverview from './ProductScreen';
 
 const Stack = createStackNavigator();
 const screenWidth = Dimensions.get('window').width;
