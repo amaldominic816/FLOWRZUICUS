@@ -40,14 +40,14 @@ const ProductOverview = ({navigation}) => {
         <Text style={styles.headerText}>Product Overview</Text>
         <View style={styles.headerIcons}>
         <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate('CartPage')}>
-          <Image
-            source={require('./assets/images/cart.png')}
-            style={styles.headerIconImage}
-          />
+        <Image
+              source={require('../../assets/images/cart.png')}
+              style={styles.headerIconImage}
+            />
         </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton}>
             <Image
-              source={require('./assets/images/notification.png')}
+              source={require('../../assets/images/notification.png')}
               style={styles.headerIconImage}
             />
           </TouchableOpacity>
@@ -58,7 +58,7 @@ const ProductOverview = ({navigation}) => {
       <ScrollView style={styles.content}>
         {/* Product Image */}
         <Image
-          source={require('./assets/images/item-test.png')}
+          source={require('../../assets/images/item-test.png')}
           style={styles.productImage}
         />
 
@@ -90,19 +90,19 @@ const ProductOverview = ({navigation}) => {
           <Text style={styles.sectionTitle}>Includes</Text>
           <View style={styles.includesImagesContainer}>
             <Image
-              source={require('./assets/images/in1.png')}
+              source={require('../../assets/images/in1.png')}
               style={styles.includesImage}
             />
             <Image
-              source={require('./assets/images/in2.png')}
+              source={require('../../assets/images/in2.png')}
               style={styles.includesImage}
             />
             <Image
-              source={require('./assets/images/in3.png')}
+              source={require('../../assets/images/in3.png')}
               style={styles.includesImage}
             />
             <Image
-              source={require('./assets/images/in4.png')}
+              source={require('../../assets/images/in4.png')}
               style={styles.includesImage}
             />
           </View>

@@ -25,9 +25,11 @@ const OTPScreen = ({ navigation }) => {
     const handleVerify = () => {
         const enteredOtp = otp.join('');
         console.log('OTP Entered:', enteredOtp);
-
-        // Navigate to Product Overview Screen
-        navigation.navigate('ProductOverview');
+        // Navigate to the bottom tab navigator
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'Main' }], // Navigate to the 'Main' screen
+        });
     };
 
     return (

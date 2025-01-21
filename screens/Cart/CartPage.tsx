@@ -11,14 +11,16 @@ import {
 } from 'react-native';
 import Svg, {Path} from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
+import {useNavigation} from '@react-navigation/native';
 
 const CartPage = () => {
+  const navigation = useNavigation();
   const [cartItems, setCartItems] = useState([
-    {id: 1, name: 'Tulips', price: 40, quantity: 1, image: require('./assets/images/flower.png')},
-    {id: 2, name: 'Yellow Roses', price: 350, quantity: 1, image: require('./assets/images/in1.png')},
-    {id: 3, name: 'Lavender', price: 55, quantity: 1, image: require('./assets/images/in2.png')},
-    {id: 4, name: 'White Orchid', price: 40, quantity: 1, image: require('./assets/images/in3.png')},
-    {id: 5, name: 'White drchid', price: 40, quantity: 1, image: require('./assets/images/in4.png')},
+    {id: 1, name: 'Tulips', price: 40, quantity: 1, image: require('../../assets/images/flower.png')},
+    {id: 2, name: 'Yellow Roses', price: 350, quantity: 1, image: require('../../assets/images/in1.png')},
+    {id: 3, name: 'Lavender', price: 55, quantity: 1, image: require('../../assets/images/in2.png')},
+    {id: 4, name: 'White Orchid', price: 40, quantity: 1, image: require('../../assets/images/in3.png')},
+    {id: 5, name: 'White drchid', price: 40, quantity: 1, image: require('../../assets/images/in4.png')},
   ]);
   const [promoCode, setPromoCode] = useState('');
 
@@ -57,7 +59,7 @@ const CartPage = () => {
         <Text style={styles.headerText}>Cart</Text>
         <View style={styles.headerIcons}>
           <TouchableOpacity>
-            <Image source={require('./assets/images/notification.png')} style={styles.iconImage} />
+            <Image source={require('../../assets/images/notification.png')} style={styles.iconImage} />
           </TouchableOpacity>
         </View>
       </View>
@@ -67,7 +69,10 @@ const CartPage = () => {
 >
         {/* Cart Items */}
         {cartItems.map(item => (
-          <View key={item.id} style={styles.cartItem}>
+          <TouchableOpacity 
+            key={item.id} 
+            style={styles.cartItem} 
+            onPress={() => navigation.navigate('ProductOverview')}>
             <Image source={item.image} style={styles.cartItemImage} />
             <View style={styles.cartItemDetails}>
               <Text style={styles.itemName}>{item.name}</Text>
@@ -82,7 +87,7 @@ const CartPage = () => {
                 <Text style={styles.quantityText}>+</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </TouchableOpacity>
         ))}
 
         {/* Promo Code Section */}
@@ -146,8 +151,8 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: '#D2AE8FFF', // Light gray color for the divider
-    marginVertical: 8, // Space around the divider
+    backgroundColor: '#D2AE8FFF',
+    marginVertical: 8,
   },
   iconButton: {
     width: 40,
