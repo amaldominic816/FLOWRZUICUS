@@ -46,27 +46,25 @@ const CartPage = () => {
 
       {/* Header */}
       <View style={styles.header}>
-         <TouchableOpacity style={styles.iconButton2}>
-                  <Svg width="24" height="24" viewBox="0 0 24 24">
-                    <Path
-                      d="M15 19l-7-7 7-7"
-                      stroke="#000"
-                      strokeWidth="2"
-                      fill="none"
-                    />
-                  </Svg>
-                </TouchableOpacity>
+        <TouchableOpacity style={styles.iconButton2}>
+          <Svg width="24" height="24" viewBox="0 0 24 24">
+            <Path
+              d="M15 19l-7-7 7-7"
+              stroke="#000"
+              strokeWidth="2"
+              fill="none"
+            />
+          </Svg>
+        </TouchableOpacity>
         <Text style={styles.headerText}>Cart</Text>
         <View style={styles.headerIcons}>
-          <TouchableOpacity>
+          <TouchableOpacity style={styles.iconButtonn}>
             <Image source={require('../../assets/images/notification.png')} style={styles.iconImage} />
           </TouchableOpacity>
         </View>
       </View>
 
-      <ScrollView style={styles.content}
-        contentContainerStyle={{ paddingBottom: 50 }} // Add extra padding at the bottom
->
+      <ScrollView style={styles.content} contentContainerStyle={{paddingBottom: 300}}>
         {/* Cart Items */}
         {cartItems.map(item => (
           <TouchableOpacity 
@@ -89,7 +87,10 @@ const CartPage = () => {
             </View>
           </TouchableOpacity>
         ))}
+      </ScrollView>
 
+      {/* Floating Section */}
+      <View style={styles.floatingContainer}>
         {/* Promo Code Section */}
         <View style={styles.promoSection}>
           <TextInput
@@ -116,8 +117,7 @@ const CartPage = () => {
             <Text style={styles.summaryLabel}>Delivery Fee:</Text>
             <Text style={styles.summaryValue}>${deliveryFee.toFixed(2)}</Text>
           </View>
-            {/* Divider */}
-  <View style={styles.divider} />
+          <View style={styles.divider} />
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>Total Amount:</Text>
             <Text style={styles.summaryValueBold}>${total.toFixed(2)}</Text>
@@ -125,17 +125,16 @@ const CartPage = () => {
         </View>
 
         {/* Footer Button */}
-        <TouchableOpacity>
-    <LinearGradient
-      colors={['#FF7E5F', '#FD3A84']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}
-      style={styles.continueButton}
-    >
-      <Text style={styles.continueButtonText}>Continue</Text>
-    </LinearGradient>
-  </TouchableOpacity>
-      </ScrollView>
+        <TouchableOpacity onPress={() => navigation.navigate('CheckoutPage')}>
+          <LinearGradient
+            colors={['#FF7E5F', '#FD3A84']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            style={styles.continueButton}>
+            <Text style={styles.continueButtonText}>Continue</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -149,22 +148,21 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#F9F9F9',
   },
-  divider: {
-    height: 1,
-    backgroundColor: '#D2AE8FFF',
-    marginVertical: 8,
-  },
-  iconButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  backIcon: {fontSize: 18, color: '#000'},
-  headerText: {fontSize: 18, fontWeight: 'bold', color: '#000'},
-  headerIcons: {flexDirection: 'row'},
-  iconImage: {width: 24, height: 24, marginLeft: 16},
   content: {padding: 16},
+  floatingContainer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    backgroundColor: '#FFF',
+    padding: 16,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: -2},
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 5,
+  },
   cartItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -185,20 +183,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#EEE',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  iconButton2: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#FFE0C4',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
-    marginLeft: 8,
   },
   quantityText: {fontSize: 16, color: '#000'},
   quantity: {fontSize: 16, marginHorizontal: 10},
@@ -222,9 +206,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 10,
   },
-  applyButton: {
-    marginLeft: 10,
-  },
+  applyButton: {marginLeft: 10},
   applyGradient: {
     borderRadius: 10,
     paddingVertical: 10,
@@ -232,47 +214,57 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  applyButtonText: {
-    color: '#FFF',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
+  applyButtonText: {color: '#FFF', fontSize: 14, fontWeight: 'bold'},
   summarySection: {
     backgroundColor: '#F6CFAC',
-    borderRadius: 20,
+    borderRadius: 10,
     padding: 16,
-    marginBottom: 8,
+    marginBottom: 16,
   },
   summaryRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 8,
   },
-  summaryLabel: {
-    fontSize: 14,
-    color: '#555',
-  },
-  summaryValue: {
-    fontSize: 14,
-    color: '#555',
-  },
-  summaryValueBold: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#000',
-  },
+  summaryLabel: {fontSize: 14, color: '#555'},
+  summaryValue: {fontSize: 14, color: '#555'},
+  summaryValueBold: {fontSize: 16, fontWeight: 'bold', color: '#000'},
+  divider: {height: 1, backgroundColor: '#D2AE8FFF', marginVertical: 8},
   continueButton: {
-    width: '100%', // Make it span the full width
+    width: '100%',
     paddingVertical: 14,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 8,
   },
-  continueButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#FFF',
+  continueButtonText: {fontSize: 16, fontWeight: 'bold', color: '#FFF'},
+  iconButton2: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#FFE0C4',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
+    marginLeft: 8,
+  },
+  iconButtonn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
+  },
+  iconImage: {
+    width: 24,
+    height: 24,
+    borderRadius: 10,
   },
 });
 

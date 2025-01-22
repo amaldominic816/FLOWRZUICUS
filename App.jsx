@@ -19,6 +19,9 @@ import OtpScreen from './screens/Authentication/OTPScreen';
 import ProductOverview from './screens/Store/ProductScreen';
 import CartPage from './screens/Cart/CartPage';
 import HomePage from './screens/Home/HomePage';
+import CheckoutPage from './screens/CheckOut/CheckoutPage';
+import OrderDetailpage from './screens/Order/OrderDetailpage';
+import OrderTracking from './screens/Order/TrackOrderPage';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -164,6 +167,21 @@ const AppNavigator = () => (
         <Stack.Screen
             name="CartPage"
             component={CartPage}
+            options={{ headerShown: false }}
+        />
+        <Stack.Screen
+            name="CheckoutPage"
+            component={CheckoutPage}
+            options={{ headerShown: false }}
+        />
+         <Stack.Screen
+            name="OrderDetailpage"
+            component={OrderDetailpage}
+            options={{ headerShown: false }}
+        />
+         <Stack.Screen
+            name="OrderTracking"
+            component={OrderTracking}
             options={{ headerShown: false }}
         />
         <Stack.Screen
