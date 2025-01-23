@@ -1,0 +1,153 @@
+import React from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+} from 'react-native';
+import Svg, { Path } from 'react-native-svg';
+import LinearGradient from 'react-native-linear-gradient';
+
+const MyWalletScreen = () => {
+  return (
+    <View style={styles.container}>
+      {/* Top Bar */}
+      <View style={styles.topBar}>
+        <TouchableOpacity style={styles.backButton}>
+          <Svg width="24" height="24" viewBox="0 0 24 24">
+            <Path d="M15 19l-7-7 7-7" stroke="#000" strokeWidth="2" fill="none" />
+          </Svg>
+        </TouchableOpacity>
+        <Text style={styles.title}>My wallet</Text>
+        <View style={styles.icons}>
+          <TouchableOpacity>
+            <Image
+              source={require('../../assets/images/cart.png')}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Image
+              source={require('../../assets/images/notification.png')}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Wallet Section */}
+      <View style={styles.walletSection}>
+        <View style={styles.iconWrapper}>
+          <Image
+            source={require('../../assets/images/wallet-icon.png')} // Replace with the actual wallet icon
+            style={styles.walletIcon}
+          />
+        </View>
+        <Text style={styles.walletTitle}>FLOWRZ Wallet</Text>
+        <Text style={styles.walletDescription}>
+          A quick and convenient way to pay and refund
+        </Text>
+
+        {/* Wallet Balance Button */}
+        <TouchableOpacity style={styles.balanceButton}>
+          <LinearGradient
+            colors={['#FF7E5F', '#FD3A84']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.gradient}>
+            <Text style={styles.balanceText}>AED 0.00</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+
+        {/* Transaction History Link */}
+        <TouchableOpacity>
+          <Text style={styles.transactionHistory}>Transaction history</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F9F9F9',
+  },
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 15,
+    backgroundColor: '#F9F9F9',
+  },
+  backButton: {
+    padding: 8,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  icons: {
+    flexDirection: 'row',
+  },
+  icon: {
+    width: 24,
+    height: 24,
+    marginHorizontal: 8,
+  },
+  walletSection: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  iconWrapper: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 50,
+    marginBottom: 15,
+  },
+  walletIcon: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+  },
+  walletTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#F25485',
+    marginBottom: 5,
+  },
+  walletDescription: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  balanceButton: {
+    width: '60%',
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  gradient: {
+    paddingVertical: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  balanceText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  transactionHistory: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#F25485',
+    marginTop: 20,
+  },
+});
+
+export default MyWalletScreen;

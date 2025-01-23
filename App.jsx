@@ -22,6 +22,14 @@ import HomePage from './screens/Home/HomePage';
 import CheckoutPage from './screens/CheckOut/CheckoutPage';
 import OrderDetailpage from './screens/Order/OrderDetailpage';
 import OrderTracking from './screens/Order/TrackOrderPage';
+import ProfileScreen from './screens/Profile/ProfilePage';
+import PushNotificationsScreen from './screens/Home/NotificaionPage';
+import MyOrdersScreen from './screens/Order/MyrderScreen';
+import InvoicesScreen from './screens/Profile/InvoicesScreen';
+import AddAddressScreen from './screens/Profile/AddAddressScreen ';
+import MyOccasionsScreen from './screens/Profile/MyOccasionsScreen';
+import MyWalletScreen from './screens/Profile/MyWalletScreen';
+import GiftScreen from './screens/Gifts/GiftCardScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -70,19 +78,6 @@ const RewardsScreen = () => (
         <Text>Rewards Screen</Text>
     </View>
 );
-
-const GiftScreen = () => (
-    <View style={styles.center}>
-        <Text>Gift Screen</Text>
-    </View>
-);
-
-const ProfileScreen = () => (
-    <View style={styles.center}>
-        <Text>Profile Screen</Text>
-    </View>
-);
-
 // Bottom Tab Navigator
 const TabNavigator = () => (
   <Tab.Navigator
@@ -182,6 +177,41 @@ const AppNavigator = () => (
          <Stack.Screen
             name="OrderTracking"
             component={OrderTracking}
+            options={{ headerShown: false }}
+        />
+         <Stack.Screen
+            name="ProfileScreen"
+            component={ProfileScreen}
+            options={{ headerShown: false }}
+        />
+        <Stack.Screen
+            name="PushNotificationsScreen"
+            component={PushNotificationsScreen}
+            options={{ headerShown: false }}
+        />
+         <Stack.Screen
+            name="MyOrdersScreen"
+            component={MyOrdersScreen}
+            options={{ headerShown: false }}
+        />
+         <Stack.Screen
+            name="InvoicesScreen"
+            component={InvoicesScreen}
+            options={{ headerShown: false }}
+        />
+        <Stack.Screen
+            name="AddAddressScreen"
+            component={AddAddressScreen}
+            options={{ headerShown: false }}
+        />
+        <Stack.Screen
+            name="MyOccasionsScreen"
+            component={MyOccasionsScreen}
+            options={{ headerShown: false }}
+        />
+        <Stack.Screen
+            name="MyWalletScreen"
+            component={MyWalletScreen}
             options={{ headerShown: false }}
         />
         <Stack.Screen

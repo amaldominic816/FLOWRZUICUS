@@ -124,12 +124,13 @@ const HomePage = ({navigation}) => {
                       style={styles.headerIcon}
                     />
                   </TouchableOpacity>
-          <View style={styles.iconButton}>
-            <Image
-              source={require('../../assets/images/notification.png')}
-              style={styles.headerIcon}
-            />
-          </View>
+
+         <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate('PushNotificationsScreen')}>
+                    <Image
+                      source={require('../../assets/images/notification.png')}
+                      style={styles.headerIcon}
+                    />
+                  </TouchableOpacity>
           <Image
             source={require('../../assets/images/profile-picture.png')}
             style={styles.profileIcon}

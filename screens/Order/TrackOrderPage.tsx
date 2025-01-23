@@ -1,14 +1,40 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, StatusBar } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 
 const OrderTracking = ({ navigation }) => {
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
+      {/* Transparent Status Bar */}
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
+
+      {/* Map Background */}
+      <MapView
+        style={StyleSheet.absoluteFillObject} // Makes the map fill the background
+        initialRegion={{
+          latitude: 37.78825, // Replace with actual coordinates
+          longitude: -122.4324, // Replace with actual coordinates
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      >
+        {/* Example Marker */}
+        <Marker
+          coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
+          title="Delivery Location"
+          description="Your order will be delivered here."
+        />
+      </MapView>
+
       {/* Header Section */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.iconButton2}>
+        <TouchableOpacity style={styles.iconButton2} onPress={() => navigation.goBack()}>
           <Svg width="24" height="24" viewBox="0 0 24 24">
             <Path d="M15 19l-7-7 7-7" stroke="#000" strokeWidth="2" fill="none" />
           </Svg>
@@ -24,14 +50,6 @@ const OrderTracking = ({ navigation }) => {
             <Image source={require('../../assets/images/notification.png')} style={styles.iconImage} />
           </TouchableOpacity>
         </View>
-      </View>
-
-      {/* Map Section */}
-      <View style={styles.mapContainer}>
-        <Image
-          source={require('../../assets/images/Map.png')} // Replace with your map image
-          style={styles.mapImage}
-        />
       </View>
 
       {/* Delivery Boy Section */}
@@ -52,53 +70,72 @@ const OrderTracking = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Delivery Info Section */}
-      <View style={styles.deliveryInfoContainer}>
-        <View style={styles.infoRow}>
-          <Image
-            source={require('../../assets/images/clock.png')} // Replace with clock icon
-            style={styles.infoIcon}
-          />
-          <Text style={styles.infoText}>Delivery time: 30 Min</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Image
-            source={require('../../assets/images/deliveryod.png')} // Replace with address icon
-            style={styles.infoIcon}
-          />
-          <Text style={styles.infoText}>
-            Delivery address: 123 west 45th Street, Saudi Arab
-          </Text>
-        </View>
-      </View>
+      <View style={styles.bottomContainer}>
+  {/* Dashed Line */}
+  <View style={styles.dashedLineContainer}></View>
 
-      {/* Save Button */}
-      <TouchableOpacity style={styles.saveButton}>
-        <LinearGradient
-          colors={['#FF7E5F', '#FD3A84']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.saveButtonGradient}
-        >
-          <Text style={styles.saveButtonText}>Save</Text>
-        </LinearGradient>
-      </TouchableOpacity>
-    </ScrollView>
+  {/* Delivery Time */}
+  <View style={styles.deliveryInfoContainer}>
+    <View style={styles.infoRow}>
+      <View style={styles.infoIcon}>
+        <Image
+          source={require('../../assets/images/clock.png')}
+          style={{ width: 24, height: 24 }}
+        />
+      </View>
+      <View style={styles.infoTextWrapper}>
+        <Text style={styles.infoLabel}>Delivery time</Text>
+        <Text style={styles.infoValue}>30 Min</Text>
+      </View>
+    </View>
+
+    {/* Delivery Address */}
+    <View style={styles.infoRow}>
+      <View style={styles.infoIcon}>
+        <Image
+          source={require('../../assets/images/deliveryod.png')}
+          style={{ width: 24, height: 24 }}
+        />
+      </View>
+      <View style={styles.infoTextWrapper}>
+        <Text style={styles.infoLabel}>Delivery address</Text>
+        <Text style={styles.infoValue}>123 west 45th Street, Saudi Arab</Text>
+      </View>
+    </View>
+  </View>
+
+  {/* Save Button */}
+  <TouchableOpacity style={styles.saveButton}>
+    <LinearGradient
+      colors={['#FF7E5F', '#FD3A84']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+      style={styles.saveButtonGradient}
+    >
+      <Text style={styles.saveButtonText}>Done</Text>
+    </LinearGradient>
+  </TouchableOpacity>
+</View>
+
+
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
   },
   header: {
+    position: 'absolute',
+    top: 40, // Adjusted for the transparent status bar
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 10,
-    backgroundColor: '#f9f9f9',
+    zIndex: 10,
   },
   headerTitle: {
     fontSize: 18,
@@ -109,7 +146,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#FFE0C4',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -117,29 +154,23 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 4,
   },
   iconImage: { width: 24, height: 24 },
-  mapContainer: {
-    margin: 16,
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  mapImage: {
-    width: '100%',
-    height: 250,
-    resizeMode: 'cover',
-  },
   deliveryBoyContainer: {
+    position: 'absolute',
+    bottom: 230, // Position it above the bottom container
+    left: 16,
+    right: 16,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFF',
     borderRadius: 10,
     padding: 16,
-    margin: 16,
+    zIndex: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -176,35 +207,69 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  deliveryInfoContainer: {
+  bottomContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     backgroundColor: '#FFF',
-    borderRadius: 10,
-    padding: 16,
-    margin: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 4,
+    elevation: 10,
+  },
+  deliveryInfoContainer: {
+    marginBottom: 16,
+    position: 'relative', // Relative position for dashed line alignment
   },
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 16, // Space between rows
   },
   infoIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 12,
+    width: 40,
+    height: 40,
+    marginRight: 16,
+    borderRadius: 10, // Rounded icon background
+    backgroundColor: '#F2F2F2',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   infoText: {
+    flex: 1,
     fontSize: 14,
     color: '#000',
   },
+  infoLabel: {
+    fontSize: 14,
+    color: '#7E7E7E',
+    marginBottom: 4,
+  },
+  infoValue: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#000',
+  },
+  dashedLineContainer: {
+    position: 'absolute',
+    left: 20, // Aligns with the icons
+    top: 44, // Positions between the first and second row
+    bottom: 0,
+    width: 1,
+    borderStyle: 'dashed',
+    borderWidth: 1,
+    borderColor: '#FF8A80',
+  },
   saveButton: {
-    marginHorizontal: 16,
     borderRadius: 12,
     overflow: 'hidden',
+    marginTop: 8,
   },
   saveButtonGradient: {
     paddingVertical: 12,
