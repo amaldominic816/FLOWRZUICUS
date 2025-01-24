@@ -79,7 +79,7 @@ const GiftCardScreenDetail = ({ navigation }) => {
       </View>
 
       {/* Tab Content */}
-      <ScrollView style={styles.content}>
+      <View style={styles.content}>
         {activeTab === 'selectCard' && (
           <FlatList
             data={giftCards}
@@ -125,42 +125,43 @@ const GiftCardScreenDetail = ({ navigation }) => {
     </View>
 
     {/* From and Signature */}
-    <View style={styles.row}>
-      <TextInput
-        style={[styles.input, styles.flexInput]}
-        placeholder="From: Optional"
-        placeholderTextColor="#888"
-      />
-      <TouchableOpacity style={styles.signatureButton}>
-        <Image
-          source={require('../../assets/images/sign.png')} // Replace with actual PNG path
-          style={styles.signatureImage}
-        />
-      </TouchableOpacity>
-    </View>
+    <View style={styles.fromContainer}>
+  <TextInput
+    style={styles.fromInput}
+    placeholder="From: Optional"
+    placeholderTextColor="#888"
+  />
+  <TouchableOpacity style={styles.signatureButton}>
+    <Image
+      source={require('../../assets/images/sign.png')} // Replace with actual PNG path
+      style={styles.signatureIcon}
+    />
+    <Text style={styles.signatureText}>Signature</Text>
+  </TouchableOpacity>
+</View>
 
-    {/* Video and Link Options */}
-    <View style={styles.optionsRow}>
-      <TouchableOpacity style={styles.optionButton}>
-        <Image
-          source={require('../../assets/images/camera.png')} // Replace with actual PNG path
-          style={styles.optionIcon}
-        />
-        <Text style={styles.optionText}>Record video</Text>
-      </TouchableOpacity>
-      <Text style={styles.orText}>or</Text>
-      <TouchableOpacity style={styles.optionButton}>
-        <Image
-          source={require('../../assets/images/paste.png')} // Replace with actual PNG path
-          style={styles.optionIcon}
-        />
-        <Text style={styles.optionText}>Paste a Link</Text>
-      </TouchableOpacity>
-    </View>
+
+    <View style={styles.optionsContainer}>
+  <TouchableOpacity style={styles.optionButton}>
+    <Image
+      source={require('../../assets/images/camera.png')} // Replace with actual PNG path
+      style={styles.optionIcon}
+    />
+    <Text style={styles.optionText}>Record video</Text>
+  </TouchableOpacity>
+  <Text style={styles.orText}>or</Text>
+  <TouchableOpacity style={styles.optionButton}>
+    <Image
+      source={require('../../assets/images/paste.png')} // Replace with actual PNG path
+      style={styles.optionIcon}
+    />
+    <Text style={styles.optionText}>Paste a Link</Text>
+  </TouchableOpacity>
+</View>
   </View>
 )}
 
-      </ScrollView>
+      </View>
 
       {/* Bottom Button Container */}
       <View style={styles.bottomContainer}>
@@ -392,40 +393,66 @@ const styles = StyleSheet.create({
       flex: 1,
       marginRight: 8,
     },
+    fromContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      backgroundColor: '#F5F5F5', // Light gray background
+      borderRadius: 12,
+      padding: 16,
+      marginTop: 16,
+    },
+    fromInput: {
+      flex: 1,
+      marginRight: 16,
+      fontSize: 14,
+      color: '#333',
+    },
     signatureButton: {
-      backgroundColor: '#F9F9F9',
-      borderWidth: 1,
-      borderColor: '#ddd',
-      borderRadius: 8,
-      padding: 8,
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    signatureIcon: {
+      width: 20,
+      height: 20,
+      marginRight: 8,
+      tintColor: '#333', // Optional: Adjust icon color to match design
+    },
+    signatureText: {
+      fontSize: 14,
+      color: '#333',
+      fontWeight: '500',
     },
     signatureImage: {
       width: 24,
       height: 24,
       resizeMode: 'contain',
     },
-    optionsRow: {
+    optionsContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-evenly',
+      justifyContent: 'space-between',
+      backgroundColor: '#F5F5F5', // Light gray background
+      borderRadius: 12,
+      padding: 16,
       marginTop: 16,
     },
     optionButton: {
+      flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'center',
-      width: 80,
     },
     optionIcon: {
-      width: 10,
-      height: 10,
-      marginBottom: 4,
+      width: 20,
+      height: 20,
+      marginRight: 8,
+      tintColor: '#333', // Optional: Adjust icon color to match design
     },
     optionText: {
-      fontSize: 12,
-      color: '#555',
+      fontSize: 14,
+      color: '#333', // Text color for consistency
+      fontWeight: '500',
     },
     orText: {
-      marginHorizontal: 8,
       color: '#888',
       fontSize: 14,
     },

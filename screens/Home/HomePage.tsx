@@ -51,6 +51,13 @@ const HomePage = ({ navigation }) => {
       rating: 4.9,
       image: require('../../assets/images/j3.png'),
     },
+    {
+      id: '3',
+      name: 'Petal Paradise',
+      location: 'Riyadh, Saudi Arab',
+      rating: 4.9,
+      image: require('../../assets/images/j4.png'),
+    },
     // Add more stores
   ];
   const renderPopularStoreItem = ({ item }) => (
@@ -97,7 +104,8 @@ const HomePage = ({ navigation }) => {
   );
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView>
+    <View style={styles.container}>
       <StatusBar backgroundColor="#F5F5F5" barStyle="dark-content" />
 
       {/* Header Section */}
@@ -117,10 +125,12 @@ const HomePage = ({ navigation }) => {
               style={styles.headerIcon}
             />
           </TouchableOpacity>
-          <Image
+          <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
+            <Image
             source={require('../../assets/images/profile-picture.png')}
             style={styles.profileIcon}
-          />
+            />
+            </TouchableOpacity>
         </View>
       </View>
 
@@ -190,8 +200,8 @@ const HomePage = ({ navigation }) => {
               </TouchableOpacity>
       </View> */}
 
-    {/* Categories Section */}
-    <View style={styles.categoriesContainer}>
+      {/* Categories Section */}
+      <View style={styles.categoriesContainer}>
         <View style={styles.categoriesHeader}>
           <Text style={styles.categoriesTitle}>Categories</Text>
           <TouchableOpacity>
@@ -218,27 +228,28 @@ const HomePage = ({ navigation }) => {
       </View>
 
 
-{/* Popular Stores Section */}
-<View style={styles.popularStoresContainer}>
-  <View style={styles.popularStoresHeader}>
-    <Text style={styles.popularStoresTitle}>Stores</Text>
-    <TouchableOpacity>
-      <Text style={styles.popularStoresSeeAll}>See all</Text>
-    </TouchableOpacity>
-  </View>
-  <FlatList
-    data={popularStoresData} // Replace with your data array
-    renderItem={renderPopularStoreItem}
-    keyExtractor={(item) => item.id}
-    numColumns={2} // Ensures 2 items per row
-    columnWrapperStyle={styles.columnWrapper} // Space between rows
-    showsVerticalScrollIndicator={false}
-    contentContainerStyle={styles.popularStoresList}
-  />
-</View>
+      {/* Popular Stores Section */}
+      <View style={styles.popularStoresContainer}>
+        <View style={styles.popularStoresHeader}>
+          <Text style={styles.popularStoresTitle}>Stores</Text>
+          <TouchableOpacity>
+            <Text style={styles.popularStoresSeeAll}>See all</Text>
+          </TouchableOpacity>
+        </View>
+        <FlatList
+          data={popularStoresData} // Replace with your data array
+          renderItem={renderPopularStoreItem}
+          keyExtractor={(item) => item.id}
+          numColumns={2} // Ensures 2 items per row
+          columnWrapperStyle={styles.columnWrapper} // Space between rows
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.popularStoresList}
+        />
+      </View>
 
 
 
+    </View>
     </ScrollView>
   );
 };
@@ -581,7 +592,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     flex: 1,
-    marginLeft:10,
+    marginLeft: 10,
   },
   popularStoreRatingContainer: {
     flexDirection: 'row',
@@ -595,15 +606,15 @@ const styles = StyleSheet.create({
   popularStoreRating: {
     fontSize: 14,
     color: '#444',
-    marginRight:10,
+    marginRight: 10,
   },
   popularStoreLocation: {
     fontSize: 12,
     color: '#666',
     marginTop: 4,
-    marginLeft:10,
-    marginRight:10,
-    marginBottom:4,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 4,
   },
   favoriteButton: {
     position: 'absolute',
@@ -619,7 +630,7 @@ const styles = StyleSheet.create({
   favoriteIcon: {
     width: 15,
     height: 15,
-    resizeMode:'contain',
+    resizeMode: 'contain',
   },
 });
 
