@@ -8,8 +8,10 @@ import {
   ScrollView,
   StyleSheet,
   Dimensions,
+  StatusBar,
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
+import LinearGradient from 'react-native-linear-gradient';
 
 const { width } = Dimensions.get('window');
 
@@ -23,7 +25,7 @@ const giftCards = [
   {
     id: '1',
     title: 'Pink Tulips',
-    image: require('../../assets/images/pink-tulips.png'), // Replace with actual image
+    image: require('../../assets/images/flower.png'),
   },
 ];
 
@@ -33,8 +35,8 @@ const myGifts = [
     title: '1 Item from Madinah',
     details: 'Fill the card for details',
     icons: [
-      require('../../assets/images/gift1.png'),
-      require('../../assets/images/gift2.png'),
+      require('../../assets/images/gift.png'),
+      require('../../assets/images/gift.png'),
     ],
   },
   {
@@ -42,39 +44,28 @@ const myGifts = [
     title: '2 Items from Riyadh',
     details: 'Fill the card for details',
     icons: [
-      require('../../assets/images/gift1.png'),
-      require('../../assets/images/gift2.png'),
+      require('../../assets/images/gift.png'),
+      require('../../assets/images/gift.png'),
     ],
   },
 ];
 
-const GiftCardScreen = () => {
+const GiftCardScreen = ({navigation}) => {
   const renderGiftCard = ({ item }) => (
-    <View style={styles.giftCard}>
-      <Image source={item.image} style={styles.giftCardImage} />
-      <Text style={styles.giftCardTitle}>{item.title}</Text>
-      <TouchableOpacity style={styles.redeemButton}>
-        <Text style={styles.redeemText}>Redeem</Text>
-      </TouchableOpacity>
+    <View>
     </View>
   );
 
   const renderMyGift = ({ item }) => (
-    <View style={styles.myGiftCard}>
-      <View style={styles.myGiftDetails}>
-        <Text style={styles.myGiftTitle}>{item.title}</Text>
-        <Text style={styles.myGiftDescription}>{item.details}</Text>
-      </View>
-      <View style={styles.myGiftIcons}>
-        {item.icons.map((icon, index) => (
-          <Image key={index} source={icon} style={styles.myGiftIcon} />
-        ))}
-      </View>
+    <View>
     </View>
   );
 
   return (
     <View style={styles.container}>
+      {/* Set StatusBar */}
+      <StatusBar backgroundColor="#F9F9F9" barStyle="dark-content" />
+
       {/* Top Bar */}
       <View style={styles.topBar}>
         <TouchableOpacity style={styles.backButton}>
@@ -112,6 +103,22 @@ const GiftCardScreen = () => {
         </ScrollView>
       </View>
 
+      <TouchableOpacity
+        style={styles.trackButton}
+        onPress={() => navigation.navigate('GiftCardScreenDetail')} // Move the onPress here
+      >
+        <LinearGradient
+          colors={["#FF7E5F", "#FD3A84"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.trackButtonGradient}
+        >
+          <View style={styles.trackButtonContent}>
+            <Text style={styles.trackButtonText}>Send a gift now</Text>
+          </View>
+        </LinearGradient>
+      </TouchableOpacity>
+
       {/* Gift Cards Section */}
       <FlatList
         data={giftCards}
@@ -146,6 +153,29 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: '#F9F9F9',
   },
+  trackButton: {
+    marginVertical: 8,
+    padding:15,
+    alignSelf: 'center', // Centers the button horizontally
+    width: '100%', // Matches the parent container width
+  },
+  trackButtonGradient: {
+    padding: 2, // Gradient border thickness
+    borderRadius: 12, // Ensures the gradient border matches the button's radius
+  },
+  trackButtonContent: {
+    backgroundColor: '#FFF', // White background inside the gradient border
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
+  trackButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FD3A84', // Matches the gradient color for text
+    textAlign: 'center',
+  },
   backButton: {
     padding: 8,
   },
@@ -171,7 +201,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: 'hidden',
     backgroundColor: '#fff',
-    elevation: 2,
   },
   banner: {
     width: width - 32,

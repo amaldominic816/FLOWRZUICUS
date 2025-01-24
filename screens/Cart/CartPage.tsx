@@ -46,7 +46,7 @@ const CartPage = () => {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.iconButton2}>
+        <TouchableOpacity style={styles.iconButton2}onPress={() => navigation.goBack()}>
           <Svg width="24" height="24" viewBox="0 0 24 24">
             <Path
               d="M15 19l-7-7 7-7"
@@ -59,7 +59,7 @@ const CartPage = () => {
         <Text style={styles.headerText}>Cart</Text>
         <View style={styles.headerIcons}>
           <TouchableOpacity style={styles.iconButtonn}>
-            <Image source={require('../../assets/images/notification.png')} style={styles.iconImage} />
+            <Image source={require('../../assets/images/notification.png')} style={styles.iconImage} onPress={() => navigation.navigate('PushNotificationsScreen')}/>
           </TouchableOpacity>
         </View>
       </View>
@@ -67,8 +67,8 @@ const CartPage = () => {
       <ScrollView style={styles.content} contentContainerStyle={{paddingBottom: 300}}>
         {/* Cart Items */}
         {cartItems.map(item => (
-          <TouchableOpacity 
-            key={item.id} 
+          <TouchableOpacity
+            key={item.id}
             style={styles.cartItem} 
             onPress={() => navigation.navigate('ProductOverview')}>
             <Image source={item.image} style={styles.cartItemImage} />

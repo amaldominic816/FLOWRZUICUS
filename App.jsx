@@ -12,6 +12,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Video from 'react-native-video';
 
 // Import screens
 import RegistrationPage from './screens/Authentication/RegisterPage';
@@ -30,6 +31,7 @@ import AddAddressScreen from './screens/Profile/AddAddressScreen ';
 import MyOccasionsScreen from './screens/Profile/MyOccasionsScreen';
 import MyWalletScreen from './screens/Profile/MyWalletScreen';
 import GiftScreen from './screens/Gifts/GiftCardScreen';
+import GiftCardScreenDetail  from './screens/Gifts/GiftCardScreenDetail';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -38,39 +40,53 @@ const screenWidth = Dimensions.get('window').width;
 
 
 const SplashScreen = ({ navigation }) => {
-    return (
-        <View style={styles.container}>
-            <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+  return (
+      <View style={styles.container}>
+          <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
 
-            {/* App Title */}
-            <Text style={styles.title}>FLOWRZ</Text>
+          {/* Video Background */}
+          <Video
+              source={require('./assets/videos/bg.mp4')} // Ensure the video file exists in the correct path
+              style={StyleSheet.absoluteFillObject} // Makes the video cover the entire screen
+              resizeMode="cover" // Adjust the video to fill the screen while maintaining aspect ratio
+              repeat // Loops the video
+              muted // Mutes the video
+              playInBackground={false} // Stops playing when the app is in the background
+              playWhenInactive={false} // Stops playing when the app is inactive
+          />
 
-            {/* Decorative Image */}
-            <Image
-                source={require('./assets/images/flower.png')} // Ensure the image exists
-                style={styles.image}
-            />
+          {/* Overlay Content */}
+          <View style={styles.overlay}>
+    {/* Logo Image */}
+    <Image
+        source={require('./assets/images/logo.png')} // Replace with the correct path to your logo image
+        style={styles.logo} // Apply styles to adjust size and positioning
+    />
 
-            {/* Registration Button */}
-            <TouchableOpacity
-                onPress={() => navigation.navigate('RegistrationPage')} // Navigate to the RegistrationPage
-            >
-                <LinearGradient
-                    colors={['#DE8542', '#FE5993']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
-                    style={[styles.button, { width: screenWidth * 0.8 }]}
-                >
-                    <Text style={styles.buttonText}>Registration</Text>
-                </LinearGradient>
-            </TouchableOpacity>
+             
 
-            {/* Descriptive Text */}
-            <Text style={styles.subtext}>
-                Welcome to FLOWRZ! Dive into a world of beautiful flowers. Explore, shop, and share the joy!
-            </Text>
-        </View>
-    );
+              {/* Registration Button */}
+              <View style={styles.buttonWrapper}>
+                  <TouchableOpacity
+                      onPress={() => navigation.navigate('RegistrationPage')} // Navigate to the RegistrationPage
+                  >
+                      <LinearGradient
+                          colors={['#DE8542', '#FE5993']}
+                          start={{ x: 0, y: 0 }}
+                          end={{ x: 1, y: 0 }}
+                          style={[styles.button, { width: screenWidth * 0.8 }]}
+                      >
+                          <Text style={styles.buttonText}>Registration</Text>
+                      </LinearGradient>
+                  </TouchableOpacity>
+                   {/* Subtext */}
+              <Text style={styles.subtext}>
+                  Welcome to FLOWRZ! Dive into a world of beautiful flowers. Explore, shop, and share the joy!
+              </Text>
+              </View>
+          </View>
+      </View>
+  );
 };
 // Placeholder Screens for Rewards, Gift, and Profile
 const RewardsScreen = () => (
@@ -215,6 +231,11 @@ const AppNavigator = () => (
             options={{ headerShown: false }}
         />
         <Stack.Screen
+            name="GiftCardScreenDetail"
+            component={GiftCardScreenDetail}
+            options={{ headerShown: false }}
+        />
+        <Stack.Screen
             name="Main"
             component={TabNavigator}
             options={{ headerShown: false }}
@@ -231,62 +252,63 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-        paddingHorizontal: 30,
-        paddingVertical: 40,
-    },
-    title: {
-        fontSize: 45,
-        fontWeight: 'bold',
-        color: '#FE5993',
-        marginBottom: 20,
-    },
-    image: {
-        width: 300,
-        height: 300,
-        resizeMode: 'contain',
-        marginBottom: 30,
-    },
-    button: {
-        borderRadius: 10,
-        alignItems: 'center',
-        paddingVertical: 15,
-        shadowColor: '#ccc',
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.2,
-        shadowRadius: 5,
-        elevation: 5,
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
-        textAlign: 'center',
-    },
-    subtext: {
-        fontSize: 16,
-        color: '#555',
-        textAlign: 'center',
-        lineHeight: 22,
-        paddingHorizontal: 10,
-    },
-    center: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    tabItem: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: 30,
-      height: 30,
-      borderRadius: 25, // Circular shape for the icon background
-    },
+  container: {
+    flex: 1,
+    position: 'relative',
+},
+overlay: {
+    flex: 1,
+    justifyContent: 'space-between', // Aligns content vertically
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dark overlay over video
+    paddingHorizontal: 20,
+    paddingVertical: 40,
+},
+title: {
+    fontSize: 45,
+    fontWeight: 'bold',
+    color: '#FE5993',
+    textAlign: 'center',
+    marginTop: 50, // Pushes title down slightly
+},
+subtext: {
+    fontSize: 16,
+    color: '#fff', // Set text to white
+    textAlign: 'center',
+    lineHeight: 22,
+    paddingHorizontal: 20,
+    marginBottom: 0,
+    marginTop:20, // Space above the button
+},
+buttonWrapper: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 20, // Space at the bottom of the screen
+},
+button: {
+    borderRadius: 10,
+    alignItems: 'center',
+    paddingVertical: 15,
+    shadowColor: '#ccc',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
+},
+logo: {
+  width: 200, // Adjust width as needed
+  height: 200, // Adjust height as needed
+  resizeMode: 'contain', // Ensures the image maintains its aspect ratio
+  marginTop: 20, // Adds some space from the top
+  marginBottom: 0, // Adds space below the logo
+},
+buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    textAlign: 'center',
+},
     tabItemSelected: {
       justifyContent: 'center',
       alignItems: 'center',
@@ -299,6 +321,8 @@ const styles = StyleSheet.create({
       height: 22,
       resizeMode: 'contain',
     },
+
+
 });
 
 export default App;
