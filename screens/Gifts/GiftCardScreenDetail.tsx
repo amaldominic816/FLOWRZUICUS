@@ -104,6 +104,7 @@ const GiftCardScreenDetail = ({ navigation }) => {
       style={styles.input}
       placeholder="To: Optional"
       placeholderTextColor="#888"
+
     />
 
     {/* Message Input */}
@@ -358,6 +359,7 @@ const styles = StyleSheet.create({
       padding: 12,
       marginBottom: 16,
       backgroundColor: '#F9F9F9',
+      color:'#000',
     },
     messageInput: {
       height: 100,

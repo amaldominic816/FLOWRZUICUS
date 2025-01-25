@@ -52,57 +52,90 @@ const HomePage = ({ navigation }) => {
       image: require('../../assets/images/j3.png'),
     },
     {
-      id: '3',
+      id: '4',
       name: 'Petal Paradise',
       location: 'Riyadh, Saudi Arab',
       rating: 4.9,
       image: require('../../assets/images/j4.png'),
     },
+    {
+      id: '2',
+      name: 'Bloom Haven',
+      location: 'Jeddah, Saudi Arab',
+      rating: 4.7,
+      image: require('../../assets/images/flower.png'),
+    },
+    {
+      id: '2',
+      name: 'Bloom Haven',
+      location: 'Jeddah, Saudi Arab',
+      rating: 4.7,
+      image: require('../../assets/images/j2.png'),
+    },
+
+    {
+      id: '2',
+      name: 'Bloom Haven',
+      location: 'Jeddah, Saudi Arab',
+      rating: 4.7,
+      image: require('../../assets/images/j1.png'),
+    },
+    {
+      id: '2',
+      name: 'Bloom Haven',
+      location: 'Jeddah, Saudi Arab',
+      rating: 4.7,
+      image: require('../../assets/images/j4.png'),
+    },
+    {
+      id: '2',
+      name: 'Bloom Haven',
+      location: 'Jeddah, Saudi Arab',
+      rating: 4.7,
+      image: require('../../assets/images/j2.png'),
+    },
+    {
+      id: '2',
+      name: 'Bloom Haven',
+      location: 'Jeddah, Saudi Arab',
+      rating: 4.7,
+      image: require('../../assets/images/j1.png'),
+    },
+    {
+      id: '2',
+      name: 'Bloom Haven',
+      location: 'Jeddah, Saudi Arab',
+      rating: 4.7,
+      image: require('../../assets/images/j3.png'),
+    },
+
     // Add more stores
   ];
   const renderPopularStoreItem = ({ item }) => (
-    <TouchableOpacity style={styles.popularStoreCard}>
-      <Image source={item.image} style={styles.popularStoreImage} />
-      <View style={styles.popularStoreInfo}>
-        {/* Row for Store Name and Rating */}
-        <View style={styles.popularStoreHeader}>
-          <Text style={styles.popularStoreName}>{item.name}</Text>
-          <View style={styles.popularStoreRatingContainer}>
-            <Image
-              source={require('../../assets/images/star.png')}
-              style={styles.ratingIcon}
-            />
-            <Text style={styles.popularStoreRating}>{item.rating}</Text>
-          </View>
-        </View>
-        <Text style={styles.popularStoreLocation}>{item.location}</Text>
-      </View>
-      <TouchableOpacity style={styles.favoriteButton}>
-        <Image
-          source={require('../../assets/images/favourite.png')}
-          style={styles.favoriteIcon}
-        />
-      </TouchableOpacity>
-    </TouchableOpacity>
-  );
-
-  const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.card}>
-      <Image source={item.image} style={styles.image} />
-      <View style={styles.info}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.address}>{item.address}</Text>
-        <View style={styles.ratingContainer}>
+    <TouchableOpacity
+      style={styles.popularStoreCardSingle}
+      onPress={() =>
+        navigation.navigate('StoreOverviewPage', {
+          name: item.name,
+          image: item.image,
+          location: item.location,
+          rating: item.rating,
+        })
+      }>
+      <Image source={item.image} style={styles.popularStoreImageSingle} />
+      <View style={styles.popularStoreInfoSingle}>
+        <Text style={styles.popularStoreNameSingle}>{item.name}</Text>
+        <Text style={styles.popularStoreLocationSingle}>{item.location}</Text>
+        <View style={styles.popularStoreRatingRow}>
           <Image
-            source={require('../../assets/images/location.png')}
-            style={styles.icon}
+            source={require('../../assets/images/star.png')}
+            style={styles.ratingIconSingle}
           />
-          <Text style={styles.rating}>{item.rating} ({item.reviews})</Text>
+          <Text style={styles.popularStoreRatingSingle}>{item.rating}</Text>
         </View>
       </View>
     </TouchableOpacity>
   );
-
   return (
     <ScrollView>
     <View style={styles.container}>
@@ -168,37 +201,37 @@ const HomePage = ({ navigation }) => {
         </ScrollView>
       </View>
 
-      {/* <View style={styles.newSectionContainer}>
-        <TouchableOpacity style={styles.newSectionButtonSingle}>
-          <Image source={require('../../assets/images/location.png')} style={styles.newSectionIcon} />
-          <Text style={styles.newSectionText}>Where</Text>
-        </TouchableOpacity>
-        <View style={styles.newSectionRow}>
-          <TouchableOpacity style={styles.newSectionButton}>
-            <Image source={require('../../assets/images/calender.png')} style={styles.newSectionIcon} />
-            <Text style={styles.newSectionText}>Delivery Date</Text>
+        {/* <View style={styles.newSectionContainer}>
+          <TouchableOpacity style={styles.newSectionButtonSingle}>
+            <Image source={require('../../assets/images/location.png')} style={styles.newSectionIcon} />
+            <Text style={styles.newSectionText}>Where</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.newSectionButton, styles.giftButton]}>
-            <Image source={require('../../assets/images/giftgrey.png')} style={styles.newSectionIcon} />
-            <Text style={styles.newSectionText}>Gift Selection</Text>
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-                style={styles.trackButton}
-                onPress={() => navigation.navigate('OrderTracking')} // Move the onPress here
-              >
-                <LinearGradient
-                  colors={["#FF7E5F", "#FD3A84"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={styles.trackButtonGradient}
+          <View style={styles.newSectionRow}>
+            <TouchableOpacity style={styles.newSectionButton}>
+              <Image source={require('../../assets/images/calender.png')} style={styles.newSectionIcon} />
+              <Text style={styles.newSectionText}>Delivery Date</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.newSectionButton, styles.giftButton]}>
+              <Image source={require('../../assets/images/giftgrey.png')} style={styles.newSectionIcon} />
+              <Text style={styles.newSectionText}>Gift Selection</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+                  style={styles.trackButton}
+                  onPress={() => navigation.navigate('OrderTracking')} // Move the onPress here
                 >
-                  <View style={styles.trackButtonContent}>
-                    <Text style={styles.trackButtonText}>Send a gift now</Text>
-                  </View>
-                </LinearGradient>
-              </TouchableOpacity>
-      </View> */}
+                  <LinearGradient
+                    colors={["#FF7E5F", "#FD3A84"]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={styles.trackButtonGradient}
+                  >
+                    <View style={styles.trackButtonContent}>
+                      <Text style={styles.trackButtonText}>Send a gift now</Text>
+                    </View>
+                  </LinearGradient>
+                </TouchableOpacity>
+        </View> */}
 
       {/* Categories Section */}
       <View style={styles.categoriesContainer}>
@@ -226,26 +259,21 @@ const HomePage = ({ navigation }) => {
           ))}
         </ScrollView>
       </View>
-
-
-      {/* Popular Stores Section */}
-      <View style={styles.popularStoresContainer}>
-        <View style={styles.popularStoresHeader}>
-          <Text style={styles.popularStoresTitle}>Stores</Text>
-          <TouchableOpacity>
-            <Text style={styles.popularStoresSeeAll}>See all</Text>
-          </TouchableOpacity>
+        {/* Popular Stores Section */}
+        <View style={styles.popularStoresContainer}>
+          <View style={styles.popularStoresHeader}>
+            <Text style={styles.popularStoresTitle}>Stores</Text>
+            <TouchableOpacity>
+              <Text style={styles.popularStoresSeeAll}>See all</Text>
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={popularStoresData}
+            renderItem={renderPopularStoreItem}
+            keyExtractor={(item) => item.id}
+            showsVerticalScrollIndicator={false}
+          />
         </View>
-        <FlatList
-          data={popularStoresData} // Replace with your data array
-          renderItem={renderPopularStoreItem}
-          keyExtractor={(item) => item.id}
-          numColumns={2} // Ensures 2 items per row
-          columnWrapperStyle={styles.columnWrapper} // Space between rows
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.popularStoresList}
-        />
-      </View>
 
 
 
@@ -355,7 +383,8 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    fontSize: 10,
+    fontSize: 12,
+    color:'#000',
   },
   bannerContainer: {
     width: width - 32,
@@ -560,61 +589,47 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#000',
   },
-  popularStoresList: {
-    paddingVertical: 10,
-  },
-  columnWrapper: {
-    justifyContent: 'space-between', // Space between two items in a row
-    marginBottom: 16, // Space between rows
-  },
-  popularStoreCard: {
-    width: '48%',
+  popularStoreCardSingle: {
+    flexDirection: 'row',
     backgroundColor: '#fff',
     borderRadius: 12,
-    overflow: 'hidden',
-    marginBottom: 8,
-  },
-  popularStoreImage: {
-    width: '100%',
-    height: 150,
-    resizeMode: 'cover', // Optional: Add rounded corners to the image
-  },
-  popularStoreInfo: {
-    marginTop: 8,
-  },
-  popularStoreHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between', // Push the rating to the right
+    padding: 10,
+    marginBottom: 10,
     alignItems: 'center',
-    marginBottom: 4, // Add spacing below the row
   },
-  popularStoreName: {
-    fontSize: 14,
-    fontWeight: 'bold',
+  popularStoreImageSingle: {
+    width: 70,
+    height: 70,
+    borderRadius: 8,
+    marginRight: 10,
+    resizeMode: 'cover',
+  },
+  popularStoreInfoSingle: {
     flex: 1,
-    marginLeft: 10,
   },
-  popularStoreRatingContainer: {
+  popularStoreNameSingle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000',
+    marginBottom: 4,
+  },
+  popularStoreLocationSingle: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 6,
+  },
+  popularStoreRatingRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  ratingIcon: {
+  ratingIconSingle: {
     width: 16,
     height: 16,
     marginRight: 4,
   },
-  popularStoreRating: {
+  popularStoreRatingSingle: {
     fontSize: 14,
     color: '#444',
-    marginRight: 10,
-  },
-  popularStoreLocation: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 4,
-    marginLeft: 10,
-    marginRight: 10,
-    marginBottom: 4,
   },
   favoriteButton: {
     position: 'absolute',
@@ -632,6 +647,7 @@ const styles = StyleSheet.create({
     height: 15,
     resizeMode: 'contain',
   },
+
 });
 
 export default HomePage;

@@ -32,6 +32,7 @@ import MyOccasionsScreen from './screens/Profile/MyOccasionsScreen';
 import MyWalletScreen from './screens/Profile/MyWalletScreen';
 import GiftScreen from './screens/Gifts/GiftCardScreen';
 import GiftCardScreenDetail  from './screens/Gifts/GiftCardScreenDetail';
+import StoreOverviewPage from './screens/Store/StoreOverviewPage';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -62,8 +63,6 @@ const SplashScreen = ({ navigation }) => {
         source={require('./assets/images/logo.png')} // Replace with the correct path to your logo image
         style={styles.logo} // Apply styles to adjust size and positioning
     />
-
-             
 
               {/* Registration Button */}
               <View style={styles.buttonWrapper}>
@@ -233,6 +232,11 @@ const AppNavigator = () => (
         <Stack.Screen
             name="GiftCardScreenDetail"
             component={GiftCardScreenDetail}
+            options={{ headerShown: false }}
+        />
+         <Stack.Screen
+            name="StoreOverviewPage"
+            component={StoreOverviewPage}
             options={{ headerShown: false }}
         />
         <Stack.Screen
