@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 10 : 40, // Adjust for Android
+    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) + -10 : 40, // Default to 0 if undefined
     backgroundColor: '#F5F5F5',
   },
   appTitle: {
