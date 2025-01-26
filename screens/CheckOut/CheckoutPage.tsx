@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Dimensions } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import HeaderInner from '../../screens/components/Headerinner';
+import ButtonPrimary from '../components/ButtonPrimary';
 
 
 const CheckoutPage = ({navigation}) => {
@@ -100,17 +101,14 @@ const CheckoutPage = ({navigation}) => {
           </View>
         </View>
 
-        <TouchableOpacity
-         onPress={() => navigation.navigate('OrderDetailpage')}>
-          <LinearGradient
-            colors={["#FF7E5F", "#FD3A84"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.payNowButton}
-          >
-            <Text style={styles.payNowText}>Pay Now</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+         <ButtonPrimary
+                 buttonText="Pay Now"
+                 onPress={() => navigation.navigate('OrderDetailpage')}
+                 buttonWidth={Dimensions.get('window').width * 0.9} // Set width to 80% of the screen width
+                 buttonHeight={50}
+                 fontSize={20}
+                 gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
+               />
       </View>
     </View>
   );

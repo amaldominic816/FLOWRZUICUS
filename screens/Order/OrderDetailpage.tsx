@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image,ScrollView, } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image,ScrollView, Dimensions, } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import HeaderInner from '../../screens/components/Headerinner';
+import ButtonOutlined from '../components/ButtonOutlined';
+import ButtonPrimary from '../components/ButtonPrimary';
 
 
 
@@ -37,21 +39,15 @@ const OrderDetails = ({ navigation }) => {
           </View>
         </View>
 
-        <TouchableOpacity
-  style={styles.trackButton}
-  onPress={() => navigation.navigate('OrderTracking')} // Move the onPress here
->
-  <LinearGradient
-    colors={["#FF7E5F", "#FD3A84"]}
-    start={{ x: 0, y: 0 }}
-    end={{ x: 1, y: 0 }}
-    style={styles.trackButtonGradient}
-  >
-    <View style={styles.trackButtonContent}>
-      <Text style={styles.trackButtonText}>Track order</Text>
-    </View>
-  </LinearGradient>
-</TouchableOpacity>
+        <ButtonOutlined
+        buttonText="Track Order"
+        onPress={() => navigation.navigate('OrderTracking')}
+        buttonWidth={Dimensions.get('window').width * 0.8} // 90% of the screen width
+        buttonHeight={50} // Custom height
+        fontSize={15} // Custom font size
+        borderColor="#FF7E5F" // Custom border color
+        textColor="#FF7E5F" // Custom text color
+      />
 
 
 
@@ -82,17 +78,14 @@ const OrderDetails = ({ navigation }) => {
           ))}
         </View>
 
-        <TouchableOpacity
-                onPress={() => navigation.navigate('OrderDetailpage')}>
-                 <LinearGradient
-                   colors={["#FF7E5F", "#FD3A84"]}
-                   start={{ x: 0, y: 0 }}
-                   end={{ x: 1, y: 0 }}
-                   style={styles.needHelpButton}
-                 >
-                   <Text style={styles.needHelpText}>Need Help ?</Text>
-                 </LinearGradient>
-               </TouchableOpacity>
+        <ButtonPrimary
+                buttonText="Need Help ?"
+                onPress={() => navigation.navigate('')}
+                buttonWidth={Dimensions.get('window').width * 0.8} // Set width to 80% of the screen width
+                buttonHeight={50}
+                fontSize={15}
+                gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
+              />
       </View>
 
       {/* Delivery Section */}

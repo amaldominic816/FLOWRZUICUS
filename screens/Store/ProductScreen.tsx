@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import Svg, {Path} from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
+import ButtonPrimary from '../components/ButtonPrimary';
 const screenWidth = Dimensions.get('window').width;
 const ProductOverview = ({navigation}) => {
   const [quantity, setQuantity] = useState(1);
@@ -162,16 +163,14 @@ const ProductOverview = ({navigation}) => {
 
       {/* Footer Buttons */}
       <View style={styles.footerButtons}>
-       <TouchableOpacity onPress={() => navigation.navigate('RegistrationPage')}>
-                       <LinearGradient
-                           colors={['#DE8542', '#FE5993']}
-                           start={{ x: 0, y: 0 }}
-                           end={{ x: 1, y: 0 }}
-                           style={[styles.addToCartButton, { width: screenWidth * 0.7 }]} // Set the width to 80% of screen width
-                       >
-                           <Text style={styles.buttonText}>ADD TO CART</Text>
-                       </LinearGradient>
-                   </TouchableOpacity>
+      <ButtonPrimary
+          buttonText="Add to Cart"
+          onPress={() => navigation.navigate('')}
+          buttonWidth={Dimensions.get('window').width * 0.7} // Set width to 80% of the screen width
+          buttonHeight={50}
+          fontSize={20}
+          gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
+        />
         <View style={styles.buttonGap} />
         <TouchableOpacity style={styles.favoriteButton}>
           <Svg width="24" height="24" viewBox="0 0 24 24">
