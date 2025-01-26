@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, StatusBar, Dimensions, TouchableOpacity, TextInput } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    StatusBar,
+    Dimensions,
+    TouchableOpacity,
+    TextInput,
+    SafeAreaView,
+    Platform,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 const RegistrationPage = ({ navigation }) => {
@@ -13,110 +23,133 @@ const RegistrationPage = ({ navigation }) => {
         navigation.navigate('OtpScreen');
     };
 
+    const safeAreaStyle = {
+        paddingTop:
+            Platform.OS === 'android'
+                ? (StatusBar.currentHeight ?? 0) + 20
+                : 0,
+    };
+
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={[styles.safeArea, safeAreaStyle]}>
             {/* Set the status bar color */}
             <StatusBar backgroundColor="#fff" barStyle="dark-content" />
-            <Text style={styles.logo}>FLOWRZ</Text>
-            <Text style={styles.subtitle}>Log in to your account</Text>
+            <View style={styles.container}>
+                <Text style={styles.logo}>FLOWRZ</Text>
+                <Text style={styles.subtitle}>Log in to your account</Text>
 
-            {/* Phone number input field with country code */}
-            <View style={styles.inputContainer}>
-                <View style={styles.countryCodeContainer}>
-                    <TextInput
-                        style={[styles.input, { width: '20%' }]}
-                        value={countryCode}
-                        onChangeText={setCountryCode}
-                        keyboardType="phone-pad"
-                    />
-                    <TextInput
-                        style={[styles.input, { width: Dimensions.get('window').width * 0.8 - 80 }]} // Match button width
-                        value={phoneNumber}
-                        onChangeText={setPhoneNumber}
-                        placeholder="Enter phone number"
-                        keyboardType="phone-pad"
-                    />
+                {/* Phone number input field with country code */}
+                <View style={styles.inputContainer}>
+                    <View style={styles.countryCodeContainer}>
+                        <TextInput
+                            style={[styles.input, { width: '20%' }]}
+                            value={countryCode}
+                            onChangeText={setCountryCode}
+                            keyboardType="phone-pad"
+                        />
+                        <TextInput
+                            style={[
+                                styles.input,
+                                {
+                                    width:
+                                        Dimensions.get('window').width * 0.8 -
+                                        80,
+                                },
+                            ]} // Match button width
+                            value={phoneNumber}
+                            onChangeText={setPhoneNumber}
+                            placeholder="Enter phone number"
+                            keyboardType="phone-pad"
+                        />
+                    </View>
                 </View>
-            </View>
 
-            <TouchableOpacity onPress={handleRegister}>
-        <LinearGradient
-          colors={['#DE8542', '#FE5993']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={[styles.button, { width: Dimensions.get('window').width * 0.8 }]}
-        >
-          <Text style={styles.buttonText}>Get Started</Text>
-        </LinearGradient>
-      </TouchableOpacity>
-        </View>
+                <TouchableOpacity onPress={handleRegister}>
+                    <LinearGradient
+                        colors={['#DE8542', '#FE5993']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 0 }}
+                        style={[
+                            styles.button,
+                            { width: Dimensions.get('window').width * 0.8 },
+                        ]}
+                    >
+                        <Text style={styles.buttonText}>Get Started</Text>
+                    </LinearGradient>
+                </TouchableOpacity>
+            </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
     container: {
-      flex: 1,
-      justifyContent: 'flex-start',
-      alignItems: 'center',
-      backgroundColor: '#fff',
-      paddingTop: 40,
+        flex: 1,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        paddingTop: 40,
     },
     logo: {
-      fontSize: 45,
-      fontWeight: 'bold',
-      color: '#ff7f50',
-      fontFamily: 'GeneralSans-Regular',
-      marginBottom: 20,
+        fontSize: 45,
+        fontWeight: 'bold',
+        color: '#ff7f50',
+        fontFamily: 'GeneralSans-Regular',
+        marginBottom: 20,
     },
     subtitle: {
-      fontSize: 16,
-      color: '#888',
-      marginBottom: 30,
+        fontSize: 16,
+        color: '#888',
+        marginBottom: 30,
     },
     inputContainer: {
-      width: '80%',
-      marginBottom: 20,
+        width: '80%',
+        marginBottom: 20,
     },
     countryCodeContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      width: '110%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '110%',
     },
     input: {
-      padding: 16, // Increased padding for larger size
-      fontSize: 18, // Increased font size
-      height: 50, // Set a fixed height for larger input fields
-      borderWidth: 1,
-      borderColor: '#ddd',
-      borderRadius: 8,
-      backgroundColor: '#fff',
+        padding: 16, // Increased padding for larger size
+        fontSize: 18, // Increased font size
+        height: 50, // Set a fixed height for larger input fields
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 8,
+        backgroundColor: '#fff',
     },
     buttonWrapper: {
-      width: '100%',
-      alignItems: 'center',
-      marginBottom: 40, // Add more space if needed
+        width: '100%',
+        alignItems: 'center',
+        marginBottom: 40, // Add more space if needed
     },
-    
+
     button: {
-      borderRadius: 10,
-      alignItems: 'center',
-      justifyContent: 'center', // Center text vertically
-      height: 50, // Fixed height for the button
-      width: '80%', // Dynamic width based on screen size
-      shadowColor: '#ccc',
-      shadowOffset: { width: 0, height: 5 },
-      shadowOpacity: 0.2,
-      shadowRadius: 5,
-      elevation: 5,
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center', // Center text vertically
+        height: 50, // Fixed height for the button
+        width: '80%', // Dynamic width based on screen size
+        shadowColor: '#ccc',
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        elevation: 5,
     },
-    
+
     buttonText: {
-      color: '#fff',
-      fontSize: 18,
-      fontWeight: 'bold',
-      textTransform: 'uppercase',
-      textAlign: 'center', // Center text horizontally
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+        textAlign: 'center', // Center text horizontally
     },
-  });
+});
 
 export default RegistrationPage;

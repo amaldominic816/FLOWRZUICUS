@@ -43,7 +43,6 @@ const Tab = createBottomTabNavigator();
 const screenWidth = Dimensions.get('window').width;
 
 
-
 const SplashScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
@@ -68,22 +67,24 @@ const SplashScreen = ({ navigation }) => {
           style={styles.logo} // Apply styles to adjust size and positioning
         />
 
-        <ButtonPrimary
-          buttonText="Register Now"
-          onPress={() => navigation.navigate('RegistrationPage')}
-          buttonWidth={Dimensions.get('window').width * 0.8} // Set width to 80% of the screen width
-          buttonHeight={50}
-          fontSize={20}
-          gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
-        />
-        <Text style={styles.subtext}>
-          Welcome to FLOWRZ! Dive into a world of beautiful flowers. Explore, shop, and share the joy!
-        </Text>
-
+        <View style={styles.bottomContainer}>
+          <ButtonPrimary
+            buttonText="Register Now"
+            onPress={() => navigation.navigate('RegistrationPage')}
+            buttonWidth={Dimensions.get('window').width * 0.8} // Set width to 80% of the screen width
+            buttonHeight={50}
+            fontSize={20}
+            gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
+          />
+          <Text style={styles.subtext}>
+            Welcome to FLOWRZ! Dive into a world of beautiful flowers. Explore, shop, and share the joy!
+          </Text>
+        </View>
       </View>
     </View>
   );
 };
+
 
 // Bottom Tab Navigator
 const TabNavigator = () => (
@@ -260,12 +261,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 40,
   },
-  title: {
-    fontSize: 45,
-    fontWeight: 'bold',
-    color: '#FE5993',
-    textAlign: 'center',
-    marginTop: 50, // Pushes title down slightly
+
+  bottomContainer: {
+    position: 'absolute', // Aligns the container to the bottom of the screen
+    bottom: 40, // Adds spacing from the bottom
+    width: '100%',
+    alignItems: 'center',
   },
   subtext: {
     fontSize: 16,
@@ -273,22 +274,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 22,
     paddingHorizontal: 20,
-    marginBottom: 0, // Space above the button
+    marginTop: 10, // Space above the subtext
   },
 
 
-  button: {
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center', // Center text vertically
-    height: 50, // Fixed height for the button
-    width: '80%', // Dynamic width based on screen size
-    shadowColor: '#ccc',
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
-  },
+
 
   buttonText: {
     color: '#fff',

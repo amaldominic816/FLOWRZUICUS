@@ -1,5 +1,15 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Dimensions } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    Dimensions,
+    SafeAreaView,
+    Platform,
+    StatusBar,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 const screenWidth = Dimensions.get('window').width;
@@ -25,59 +35,78 @@ const OTPScreen = ({ navigation }) => {
     const handleVerify = () => {
         const enteredOtp = otp.join('');
         console.log('OTP Entered:', enteredOtp);
-        // Navigate to the bottom tab navigator
         navigation.reset({
             index: 0,
-            routes: [{ name: 'Main' }], // Navigate to the 'Main' screen
+            routes: [{ name: 'Main' }],
         });
     };
 
+    const safeAreaStyle = {
+        paddingTop:
+            Platform.OS === 'android'
+                ? (StatusBar.currentHeight ?? 0) + 20
+                : 0,
+    };
+
     return (
-        <View style={styles.container}>
-            <Text style={styles.logo}>FLOWRZ</Text>
-            <Text style={styles.subtitle}>Verify your phone number</Text>
+        <SafeAreaView style={[styles.safeArea, safeAreaStyle]}>
+            <View style={styles.container}>
+                <Text style={styles.logo}>FLOWRZ</Text>
+                <Text style={styles.subtitle}>Verify your phone number</Text>
 
-            <View style={styles.otpContainer}>
-                {otp.map((digit, index) => (
-                    <TextInput
-                        key={index}
-                        ref={(el) => (inputs.current[index] = el)}
-                        style={[
-                            styles.input,
-                            digit ? styles.inputFilled : null,
-                        ]}
-                        value={digit}
-                        onChangeText={(value) => handleChange(value, index)}
-                        keyboardType="number-pad"
-                        maxLength={1}
-                        onKeyPress={({ nativeEvent }) => {
-                            if (nativeEvent.key === 'Backspace' && !digit && index > 0) {
-                                inputs.current[index - 1]?.focus();
+                <View style={styles.otpContainer}>
+                    {otp.map((digit, index) => (
+                        <TextInput
+                            key={index}
+                            ref={(el) => (inputs.current[index] = el)}
+                            style={[
+                                styles.input,
+                                digit ? styles.inputFilled : null,
+                            ]}
+                            value={digit}
+                            onChangeText={(value) =>
+                                handleChange(value, index)
                             }
-                        }}
-                    />
-                ))}
+                            keyboardType="number-pad"
+                            maxLength={1}
+                            onKeyPress={({ nativeEvent }) => {
+                                if (
+                                    nativeEvent.key === 'Backspace' &&
+                                    !digit &&
+                                    index > 0
+                                ) {
+                                    inputs.current[index - 1]?.focus();
+                                }
+                            }}
+                        />
+                    ))}
+                </View>
+
+                <TouchableOpacity onPress={handleVerify}>
+                    <LinearGradient
+                        colors={['#DE8542', '#FE5993']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 0 }}
+                        style={[styles.button, { width: screenWidth * 0.8 }]}
+                    >
+                        <Text style={styles.buttonText}>SUBMIT OTP</Text>
+                    </LinearGradient>
+                </TouchableOpacity>
+
+                <Text style={styles.resendText}>
+                    Don't get your otp,{' '}
+                    <Text style={styles.tryAgain}>try again</Text>
+                </Text>
             </View>
-
-            <TouchableOpacity onPress={handleVerify}>
-                <LinearGradient
-                    colors={['#DE8542', '#FE5993']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
-                    style={[styles.button, { width: screenWidth * 0.8 }]}
-                >
-                    <Text style={styles.buttonText}>SUBMIT OTP</Text>
-                </LinearGradient>
-            </TouchableOpacity>
-
-            <Text style={styles.resendText}>
-                Don't get your otp, <Text style={styles.tryAgain}>try again</Text>
-            </Text>
-        </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
     container: {
         flex: 1,
         alignItems: 'center',
@@ -120,29 +149,27 @@ const styles = StyleSheet.create({
     buttonWrapper: {
         width: '100%',
         alignItems: 'center',
-        marginBottom: 40, // Add more space if needed
-      },
-      
-      button: {
+        marginBottom: 40,
+    },
+    button: {
         borderRadius: 10,
         alignItems: 'center',
-        justifyContent: 'center', // Center text vertically
-        height: 50, // Fixed height for the button
-        width: '80%', // Dynamic width based on screen size
+        justifyContent: 'center',
+        height: 50,
+        width: '80%',
         shadowColor: '#ccc',
         shadowOffset: { width: 0, height: 5 },
         shadowOpacity: 0.2,
         shadowRadius: 5,
         elevation: 5,
-      },
-      
-      buttonText: {
+    },
+    buttonText: {
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',
         textTransform: 'uppercase',
-        textAlign: 'center', // Center text horizontally
-      },
+        textAlign: 'center',
+    },
     resendText: {
         marginTop: 20,
         fontSize: 14,
