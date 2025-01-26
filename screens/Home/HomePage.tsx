@@ -3,6 +3,7 @@ import { View, Text, Image, TextInput, StyleSheet, FlatList, TouchableOpacity, S
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView, Platform } from 'react-native';
 import Header from '../../screens/components/Header';
+import ButtonPrimary from '../components/ButtonPrimary';
 
 
 
@@ -21,12 +22,15 @@ const HomePage = ({ navigation }) => {
   ];
 
   const banners = [
-    { id: '1', image: require('../../assets/images/mothersday.png') },
     { id: '2', image: require('../../assets/images/banner.png') },
     { id: '3', image: require('../../assets/images/banner.png') },
   ];
 
   const categories = [
+    { id: '1', name: 'Dahlia', image: require('../../assets/images/j1.png') },
+    { id: '2', name: 'Tulips', image: require('../../assets/images/j1.png') },
+    { id: '3', name: 'Rose', image: require('../../assets/images/j1.png') },
+    { id: '4', name: 'Teleflor', image: require('../../assets/images/j1.png') },
     { id: '1', name: 'Dahlia', image: require('../../assets/images/j1.png') },
     { id: '2', name: 'Tulips', image: require('../../assets/images/j1.png') },
     { id: '3', name: 'Rose', image: require('../../assets/images/j1.png') },
@@ -141,132 +145,121 @@ const HomePage = ({ navigation }) => {
   );
   return (
     <SafeAreaView style={styles.container}>
-    <ScrollView>
-    <View style={styles.container}>
-      <StatusBar backgroundColor="#F5F5F5" barStyle="dark-content" />
+      <ScrollView>
+        <View style={styles.container}>
+          <StatusBar backgroundColor="#F5F5F5" barStyle="dark-content" />
 
-      {/* Header Section */}
-      <Header
-        title="FLOWRZ" // Dynamic title
-        showCartIcon={true} // Show cart icon
-        showNotificationIcon={true} // Show notification icon
-        showProfileIcon={true} // Show profile icon
-        onCartPress={() => navigation.navigate('CartPage')}
-        onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
-        onProfilePress={() => navigation.navigate('ProfileScreen')}
-      />
-      {/* Search Bar and Filter */}
-      <View style={styles.searchSection}>
-        <View style={styles.searchBar}>
-          <Image
-            source={require('../../assets/images/search.png')}
-            style={styles.searchIcon}
+          {/* Header Section */}
+          <Header
+            title="FLOWRZ" // Dynamic title
+            showCartIcon={true} // Show cart icon
+            showNotificationIcon={true} // Show notification icon
+            showProfileIcon={true} // Show profile icon
+            onCartPress={() => navigation.navigate('CartPage')}
+            onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
+            onProfilePress={() => navigation.navigate('ProfileScreen')}
           />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search your flower"
-            placeholderTextColor="#aaa"
-          />
-        </View>
-        <View style={styles.iconButtonfilter}>
-          <Image
-            source={require('../../assets/images/filter.png')}
-            style={styles.filtericon}
-          />
-        </View>
-      </View>
-
-      {/* Banner Section */}
-      <View style={styles.bannerContainer}>
-        <ScrollView
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-        >
-          {banners.map((banner) => (
-            <Image key={banner.id} source={banner.image} style={styles.banner} />
-          ))}
-        </ScrollView>
-      </View>
-
-        {/* <View style={styles.newSectionContainer}>
-          <TouchableOpacity style={styles.newSectionButtonSingle}>
-            <Image source={require('../../assets/images/location.png')} style={styles.newSectionIcon} />
-            <Text style={styles.newSectionText}>Where</Text>
-          </TouchableOpacity>
-          <View style={styles.newSectionRow}>
-            <TouchableOpacity style={styles.newSectionButton}>
-              <Image source={require('../../assets/images/calender.png')} style={styles.newSectionIcon} />
-              <Text style={styles.newSectionText}>Delivery Date</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.newSectionButton, styles.giftButton]}>
-              <Image source={require('../../assets/images/giftgrey.png')} style={styles.newSectionIcon} />
-              <Text style={styles.newSectionText}>Gift Selection</Text>
-            </TouchableOpacity>
+          {/* Search Bar and Filter */}
+          <View style={styles.searchSection}>
+            <View style={styles.searchBar}>
+              <Image
+                source={require('../../assets/images/search.png')}
+                style={styles.searchIcon}
+              />
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Search your flower"
+                placeholderTextColor="#aaa"
+              />
+            </View>
+            <View style={styles.iconButtonfilter}>
+              <Image
+                source={require('../../assets/images/filter.png')}
+                style={styles.filtericon}
+              />
+            </View>
           </View>
-          <TouchableOpacity
-                  style={styles.trackButton}
-                  onPress={() => navigation.navigate('OrderTracking')} // Move the onPress here
-                >
-                  <LinearGradient
-                    colors={["#FF7E5F", "#FD3A84"]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
-                    style={styles.trackButtonGradient}
-                  >
-                    <View style={styles.trackButtonContent}>
-                      <Text style={styles.trackButtonText}>Send a gift now</Text>
-                    </View>
-                  </LinearGradient>
-                </TouchableOpacity>
-        </View> */}
 
-      {/* Categories Section */}
-      <View style={styles.categoriesContainer}>
-        <View style={styles.categoriesHeader}>
-          <Text style={styles.categoriesTitle}>Categories</Text>
-          <TouchableOpacity>
-            <Text style={styles.categoriesSeeAll}>See all</Text>
-          </TouchableOpacity>
-        </View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {categories.map((item) => (
-            <LinearGradient
-              key={item.id}
-              colors={['#DE8542', '#FE5993']} // Pink gradient colors
-              style={styles.gradientBorder}
+          {/* Banner Section */}
+          <View style={styles.bannerContainer}>
+            <ScrollView
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
             >
-              <TouchableOpacity style={styles.categoryCard}>
-                <ImageBackground source={item.image} style={styles.categoryImage}>
-                  <View style={styles.overlay}>
-                    <Text style={styles.categoryText}>{item.name}</Text>
-                  </View>
-                </ImageBackground>
-              </TouchableOpacity>
-            </LinearGradient>
-          ))}
-        </ScrollView>
-      </View>
-        {/* Popular Stores Section */}
-        <View style={styles.popularStoresContainer}>
-          <View style={styles.popularStoresHeader}>
-            <Text style={styles.popularStoresTitle}>Stores</Text>
-            <TouchableOpacity>
-              <Text style={styles.popularStoresSeeAll}>See all</Text>
-            </TouchableOpacity>
+              {banners.map((banner) => (
+                <Image key={banner.id} source={banner.image} style={styles.banner} />
+              ))}
+            </ScrollView>
           </View>
-          <FlatList
-            data={popularStoresData}
-            renderItem={renderPopularStoreItem}
-            keyExtractor={(item) => item.id}
-            showsVerticalScrollIndicator={false}
-          />
+
+          <View style={styles.newSectionContainer}>
+            <TouchableOpacity style={styles.newSectionButtonSingle}>
+              <Image source={require('../../assets/images/location.png')} style={styles.newSectionIcon} />
+              <Text style={styles.newSectionText}>Where</Text>
+            </TouchableOpacity>
+            <View style={styles.newSectionRow}>
+              <TouchableOpacity style={styles.newSectionButton}>
+                <Image source={require('../../assets/images/calender.png')} style={styles.newSectionIcon} />
+                <Text style={styles.newSectionText}>Delivery Date</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.newSectionButton, styles.giftButton]}>
+                <Image source={require('../../assets/images/giftgrey.png')} style={styles.newSectionIcon} />
+                <Text style={styles.newSectionText}>Gift Selection</Text>
+              </TouchableOpacity>
+            </View>
+            <ButtonPrimary
+              buttonText="Send Gift Now"
+              onPress={() => navigation.navigate('')}
+              buttonWidth={Dimensions.get('window').width * 0.8} // Set width to 80% of the screen width
+              buttonHeight={40}
+              fontSize={18}
+              gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
+            />
+          </View>
+
+          {/* Categories Section */}
+          <View style={styles.categoriesContainer}>
+  <View style={styles.categoriesHeader}>
+    <Text style={styles.categoriesTitle}>Occasions</Text>
+    <TouchableOpacity>
+      <Text style={styles.categoriesSeeAll}>See all</Text>
+    </TouchableOpacity>
+  </View>
+  <View style={styles.categoriesGrid}>
+    {categories.map((item) => (
+      <View key={item.id} style={styles.categoryCard}>
+  <View style={styles.categoryImageContainer}>
+    <Image source={item.image} style={styles.categoryImage} />
+  </View>
+  <Text style={styles.categoryText}>{item.name}</Text> {/* Text outside the circle */}
+</View>
+
+    ))}
+  </View>
+</View>
+
+
+          {/* Popular Stores Section */}
+          <View style={styles.popularStoresContainer}>
+            <View style={styles.popularStoresHeader}>
+              <Text style={styles.popularStoresTitle}>Stores</Text>
+              <TouchableOpacity>
+                <Text style={styles.popularStoresSeeAll}>See all</Text>
+              </TouchableOpacity>
+            </View>
+            <FlatList
+              data={popularStoresData}
+              renderItem={renderPopularStoreItem}
+              keyExtractor={(item) => item.id}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
+
+
+
         </View>
-
-
-
-    </View>
-    </ScrollView>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -278,31 +271,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F5F5F5',
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) + -10 : 0, // Default to 0 if undefined
-    backgroundColor: '#F5F5F5',
-  },
-  appTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  headerIcons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  iconButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 8,
-    marginTop:10  },
+
+
+
   iconButtonfilter: {
     width: 30,
     height: 30,
@@ -312,11 +283,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 8,
   },
-  headerIcon: {
-    width: 24,
-    height: 24,
-    borderRadius: 10,
-  },
+
   filtericon: {
     width: 15,
     height: 15,
@@ -328,7 +295,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: '#ddd',
     marginLeft: 8,
-    marginTop:10,
+    marginTop: 10,
   },
   searchSection: {
 
@@ -338,28 +305,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     marginTop: 8,
   },
-  trackButton: {
-    marginVertical: 8,
-    alignSelf: 'center', // Centers the button horizontally
-    width: '100%', // Matches the parent container width
-  },
-  trackButtonGradient: {
-    padding: 2, // Gradient border thickness
-    borderRadius: 12, // Ensures the gradient border matches the button's radius
-  },
-  trackButtonContent: {
-    backgroundColor: '#FFF', // White background inside the gradient border
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 12,
-  },
-  trackButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#FD3A84', // Matches the gradient color for text
-    textAlign: 'center',
-  },
+
+
   searchBar: {
     flex: 1,
     flexDirection: 'row',
@@ -377,7 +324,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 12,
-    color:'#000',
+    color: '#000',
   },
   bannerContainer: {
     width: width - 32,
@@ -396,53 +343,16 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
 
-  categoriesContainer: {
-    marginHorizontal: 16,
-    marginBottom: 20,
-  },
-  categoriesHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  categoriesTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  categoriesSeeAll: {
-    fontSize: 14,
-    color: '#000',
-  },
-  gradientBorder: {
-    borderRadius: 14, // Slightly larger than categoryCard
-    padding: 2, // Space for the gradient border
-    marginRight: 16,
-  },
 
-  categoryCard: {
-    width: 100,
-    height: 125, // Make the card square
-    borderRadius: 12,
-    overflow: 'hidden',
-  },
-  categoryImage: {
-    width: '100%', // Full width of the container
-    height: '100%', // Full height of the container
-    justifyContent: 'flex-end', // Place text at the bottom
-    alignItems: 'center',
-  },
+
+
+
+
   overlay: {
     backgroundColor: 'rgba(0, 0, 0, 0.0)', // Semi-transparent overlay for better text visibility
     width: '100%',
     alignItems: 'center',
     paddingVertical: 4,
-  },
-  categoryText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
   },
 
   imageContainer: {
@@ -451,18 +361,6 @@ const styles = StyleSheet.create({
     borderRadius: 12, // Match the gradient border radius if necessary
     overflow: 'hidden', // Ensures the image doesn't overflow the container
 
-  },
-  categoryText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#fff',
-    backgroundColor: '#FE5993', // Pink background
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 8,
-    marginTop: 8,
-    overflow: 'hidden',
   },
 
   listContainer: {
@@ -624,22 +522,66 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#444',
   },
-  favoriteButton: {
-    position: 'absolute',
-    top: 10,
-    right: 5,
-    width: 22,
-    height: 22,
-    backgroundColor: '#fff',
-    borderRadius: 16,
+
+
+  //Category Card
+  categoriesContainer: {
+    marginHorizontal: 16,
+    marginBottom: 20,
+  },
+  categoriesHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  categoriesTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  categoriesSeeAll: {
+    fontSize: 14,
+    color: '#000',
+  },
+
+
+
+
+
+  categoriesGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap', // Allows wrapping to the next row
+    justifyContent: 'space-between', // Ensures even horizontal spacing
+    marginTop: 10,
+    rowGap: 20, // Adds vertical spacing between rows
+  },
+  categoryCard: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginHorizontal: 5, // Space between items
   },
-  favoriteIcon: {
-    width: 15,
-    height: 15,
-    resizeMode: 'contain',
+  categoryImageContainer: {
+    width: 65, // Set the circle width
+    height: 65, // Set the circle height
+    borderRadius: 35, // Makes it perfectly circular
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5', // Optional background color for the circle
+    overflow: 'hidden', // Ensures the content doesn't overflow
   },
+  categoryImage: {
+    width: '100%', // Make the image fill the circle
+    height: '100%',
+    resizeMode: 'cover', // Ensures the image maintains its aspect ratio
+  },
+  categoryText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#000',
+    marginTop: 8, // Space between the circle and the text
+  },
+
 
 });
 
