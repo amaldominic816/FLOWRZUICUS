@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,39 +8,42 @@ import {
   ScrollView,
   TextInput,
   StatusBar,
+  Dimensions,
 } from 'react-native';
-import Svg, {Path} from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import HeaderInner from '../../screens/components/Headerinner';
+import ButtonPrimary from '../../screens/components/ButtonPrimary';
+
 
 
 const CartPage = () => {
   const navigation = useNavigation();
   const [cartItems, setCartItems] = useState([
-    {id: 1, name: 'Tulips', price: 40, quantity: 1, image: require('../../assets/images/flower.png')},
-    {id: 2, name: 'Yellow Roses', price: 350, quantity: 1, image: require('../../assets/images/in1.png')},
-    {id: 3, name: 'Lavender', price: 55, quantity: 1, image: require('../../assets/images/in2.png')},
-    {id: 4, name: 'White Orchid', price: 40, quantity: 1, image: require('../../assets/images/in3.png')},
-    {id: 5, name: 'White drchid', price: 40, quantity: 1, image: require('../../assets/images/in4.png')},
+    { id: 1, name: 'Tulips', price: 40, quantity: 1, image: require('../../assets/images/flower.png') },
+    { id: 2, name: 'Yellow Roses', price: 350, quantity: 1, image: require('../../assets/images/in1.png') },
+    { id: 3, name: 'Lavender', price: 55, quantity: 1, image: require('../../assets/images/in2.png') },
+    { id: 4, name: 'White Orchid', price: 40, quantity: 1, image: require('../../assets/images/in3.png') },
+    { id: 5, name: 'White drchid', price: 40, quantity: 1, image: require('../../assets/images/in4.png') },
   ]);
   const [promoCode, setPromoCode] = useState('');
 
   const handleIncrease = (id) => {
-    setCartItems(cartItems.map(item => item.id === id ? {...item, quantity: item.quantity + 1} : item));
+    setCartItems(cartItems.map(item => item.id === id ? { ...item, quantity: item.quantity + 1 } : item));
   };
 
   const handleDecrease = (id) => {
-    setCartItems(cartItems.map(item => item.id === id && item.quantity > 1 ? {...item, quantity: item.quantity - 1} : item));
+    setCartItems(cartItems.map(item => item.id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item));
   };
 
   const calculateTotal = () => {
     const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
     const deliveryFee = 5.0;
-    return {subtotal, deliveryFee, total: subtotal + deliveryFee};
+    return { subtotal, deliveryFee, total: subtotal + deliveryFee };
   };
 
-  const {subtotal, deliveryFee, total} = calculateTotal();
+  const { subtotal, deliveryFee, total } = calculateTotal();
 
   return (
     <View style={styles.container}>
@@ -52,14 +55,14 @@ const CartPage = () => {
         showCartIcon={false}
         onBackPress={() => navigation.goBack()}
         onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
-        onCartPress={()=>navigation.navigate('CartPage')}
+        onCartPress={() => navigation.navigate('CartPage')}
       />
-      <ScrollView style={styles.content} contentContainerStyle={{paddingBottom: 100}}>
+      <ScrollView style={styles.content} contentContainerStyle={{ paddingBottom: 100 }}>
         {/* Cart Items */}
         {cartItems.map(item => (
           <TouchableOpacity
             key={item.id}
-            style={styles.cartItem} 
+            style={styles.cartItem}
             onPress={() => navigation.navigate('ProductOverview')}>
             <Image source={item.image} style={styles.cartItemImage} />
             <View style={styles.cartItemDetails}>
@@ -91,7 +94,7 @@ const CartPage = () => {
             placeholderTextColor="#000"
           />
           <TouchableOpacity style={styles.applyButton}>
-            <LinearGradient colors={['#FF7E5F', '#FD3A84']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={styles.applyGradient}>
+            <LinearGradient colors={['#FF7E5F', '#FD3A84']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.applyGradient}>
               <Text style={styles.applyButtonText}>Apply</Text>
             </LinearGradient>
           </TouchableOpacity>
@@ -115,37 +118,36 @@ const CartPage = () => {
         </View>
 
         {/* Footer Button */}
-        <TouchableOpacity onPress={() => navigation.navigate('CheckoutPage')}>
-          <LinearGradient
-            colors={['#FF7E5F', '#FD3A84']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
-            style={styles.continueButton}>
-            <Text style={styles.continueButtonText}>Continue</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+        <ButtonPrimary
+                  buttonText="Continue"
+                  onPress={() => navigation.navigate('CheckoutPage')}
+                  buttonWidth={Dimensions.get('window').width *0.9} // Set width to 80% of the screen width
+                  buttonHeight={50}
+                  fontSize={20}
+                  gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
+                />
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: '#F9F9F9'},
+  container: { flex: 1, backgroundColor: '#F9F9F9' },
 
-  header: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 16},
-  content: {flex: 1},
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 16 },
+  content: { flex: 1 },
   floatingContainer: {
     backgroundColor: '#FFF',
     padding: 16,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: -2},
+    shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 0,
     marginBottom: 0,
-    borderRadius:10, // Increase space if needed
+    borderRadius: 10, // Increase space if needed
   },
 
   cartItem: {
@@ -155,13 +157,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderRadius: 10,
     padding: 10,
-    marginTop:10,
+    marginTop: 10,
   },
-  cartItemImage: {width: 60, height: 60, borderRadius: 10},
-  cartItemDetails: {flex: 1, marginLeft: 10},
-  itemName: {fontSize: 16, fontWeight: 'bold'},
-  itemPrice: {fontSize: 14, color: '#777'},
-  quantityControls: {flexDirection: 'row', alignItems: 'center'},
+  cartItemImage: { width: 60, height: 60, borderRadius: 10 },
+  cartItemDetails: { flex: 1, marginLeft: 10 },
+  itemName: { fontSize: 16, fontWeight: 'bold' },
+  itemPrice: { fontSize: 14, color: '#777' },
+  quantityControls: { flexDirection: 'row', alignItems: 'center' },
   quantityButton: {
     width: 30,
     height: 30,
@@ -170,8 +172,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  quantityText: {fontSize: 16, color: '#000'},
-  quantity: {fontSize: 16, marginHorizontal: 10},
+  quantityText: { fontSize: 16, color: '#000' },
+  quantity: { fontSize: 16, marginHorizontal: 10 },
   promoSection: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -179,7 +181,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
@@ -192,7 +194,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 10,
   },
-  applyButton: {marginLeft: 10},
+  applyButton: { marginLeft: 10 },
   applyGradient: {
     borderRadius: 10,
     paddingVertical: 12, // Ensure proper height
@@ -201,8 +203,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  
-  applyButtonText: {color: '#FFF', fontSize: 14, fontWeight: 'bold'},
+
+  applyButtonText: { color: '#FFF', fontSize: 14, fontWeight: 'bold' },
   summarySection: {
     backgroundColor: '#F6CFAC',
     borderRadius: 10,
@@ -214,10 +216,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 8,
   },
-  summaryLabel: {fontSize: 14, color: '#555'},
-  summaryValue: {fontSize: 14, color: '#555'},
-  summaryValueBold: {fontSize: 16, fontWeight: 'bold', color: '#000'},
-  divider: {height: 1, backgroundColor: '#D2AE8FFF', marginVertical: 8},
+  summaryLabel: { fontSize: 14, color: '#555' },
+  summaryValue: { fontSize: 14, color: '#555' },
+  summaryValueBold: { fontSize: 16, fontWeight: 'bold', color: '#000' },
+  divider: { height: 1, backgroundColor: '#D2AE8FFF', marginVertical: 8 },
   continueButton: {
     width: '100%',
     paddingVertical: 12, // Increased padding for better visibility
@@ -226,8 +228,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 5, // Add some margin at the bottom
   },
-  
-  continueButtonText: {fontSize: 16, fontWeight: 'bold', color: '#FFF'},
+
+  continueButtonText: { fontSize: 16, fontWeight: 'bold', color: '#FFF' },
   iconButton2: {
     width: 40,
     height: 40,
@@ -236,7 +238,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
     elevation: 2,
