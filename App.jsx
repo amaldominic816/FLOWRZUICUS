@@ -313,11 +313,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 35,
     height: 35,
-    marginTop:20,
+    marginTop:10,
     borderRadius: 25, // Circular shape
   },
   tabIcon: {
-    marginTop:0,
+    marginTop:10,
+    marginBottom:10,
     width: 22,
     height: 22,
     resizeMode: 'contain',
@@ -326,6 +327,7 @@ const styles = StyleSheet.create({
     marginTop:20,
     width: 22,
     height: 22,
+    marginBottom:30,
     resizeMode: 'contain',
   },
 
