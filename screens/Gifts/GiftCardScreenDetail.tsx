@@ -9,9 +9,13 @@ import {
   ScrollView,
   StatusBar,
   TextInput,
+  Dimensions,
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
+import ButtonOutlined from '../components/ButtonOutlined';
+import ButtonPrimary from '../components/ButtonPrimary';
+import HeaderInner from '../components/Headerinner';
 
 const giftCards = [
   {
@@ -44,23 +48,15 @@ const GiftCardScreenDetail = ({ navigation }) => {
     <View style={styles.container}>
       <StatusBar backgroundColor="#F5F5F5" barStyle="dark-content" />
 
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.iconButton2} onPress={() => navigation.goBack()}>
-          <Svg width="24" height="24" viewBox="0 0 24 24">
-            <Path d="M15 19l-7-7 7-7" stroke="#000" strokeWidth="2" fill="none" />
-          </Svg>
-        </TouchableOpacity>
-        <Text style={styles.headerText}>Gift Card & Message</Text>
-        <View style={styles.headerIcons}>
-          <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate('CartPage')}>
-            <Image source={require('../../assets/images/cart.png')} style={styles.headerIconImage} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
-            <Image source={require('../../assets/images/notification.png')} style={styles.headerIconImage} />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <HeaderInner
+        title="Giftcard&Message"
+        showBackButton={true}
+        showNotificationIcon={true}
+        showCartIcon={true}
+        onBackPress={() => navigation.goBack()}
+        onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
+        onCartPress={()=>navigation.navigate('CartPage')}
+      />
 
       {/* Tabs */}
       <View style={styles.tabBar}>
@@ -166,19 +162,23 @@ const GiftCardScreenDetail = ({ navigation }) => {
 
       {/* Bottom Button Container */}
       <View style={styles.bottomContainer}>
-        <TouchableOpacity style={styles.previewButton} onPress={() => console.log('Preview')}>
-          <Text style={styles.previewButtonText}>Preview</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.saveButton} onPress={() => console.log('Save & Continue')}>
-          <LinearGradient
-            colors={['#FF7E5F', '#FD3A84']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.saveButtonGradient}
-          >
-            <Text style={styles.saveButtonText}>Save & Continue</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+      <ButtonOutlined
+        buttonText="Preview"
+        onPress={() => navigation.navigate('')}
+        buttonWidth={Dimensions.get('window').width * 0.4} // 90% of the screen width
+        buttonHeight={40} // Custom height
+        fontSize={12} // Custom font size
+        borderColor="#FF7E5F" // Custom border color
+        textColor="#FF7E5F" // Custom text color
+      />
+          <ButtonPrimary
+          buttonText="Save & Continue"
+          onPress={() => navigation.navigate('RegistrationPage')}
+          buttonWidth={Dimensions.get('window').width * 0.4} // Set width to 80% of the screen width
+          buttonHeight={40}
+          fontSize={12}
+          gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
+        />
       </View>
     </View>
   );
