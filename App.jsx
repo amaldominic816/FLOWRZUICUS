@@ -125,7 +125,7 @@ const TabNavigator = () => (
         );
       },
       tabBarStyle: {
-        height: 50, // Adjust the height of the tab bar
+        height: 60, // Adjust the height of the tab bar
         paddingBottom: 0, // Remove padding at the bottom
       },
       tabBarShowLabel: false, // Disable labels in the bottom navigation
@@ -275,11 +275,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 0, // Space above the button
   },
-  buttonWrapper: {
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 40, // Add more space if needed
-  },
+
 
   button: {
     borderRadius: 10,
@@ -317,9 +313,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 35,
     height: 35,
+    marginTop:20,
     borderRadius: 25, // Circular shape
   },
   tabIcon: {
+    marginTop:0,
+    width: 22,
+    height: 22,
+    resizeMode: 'contain',
+  },
+  tabItem:{
+    marginTop:20,
     width: 22,
     height: 22,
     resizeMode: 'contain',
