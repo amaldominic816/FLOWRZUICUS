@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TextInput, StyleSheet, FlatList, TouchableOpacity, StatusBar, Dimensions, ScrollView, ImageBackground } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { SafeAreaView, Platform } from 'react-native';
 
 
 
@@ -137,6 +138,7 @@ const HomePage = ({ navigation }) => {
     </TouchableOpacity>
   );
   return (
+    <SafeAreaView style={styles.container}>
     <ScrollView>
     <View style={styles.container}>
       <StatusBar backgroundColor="#F5F5F5" barStyle="dark-content" />
@@ -279,6 +281,7 @@ const HomePage = ({ navigation }) => {
 
     </View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -294,7 +297,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
-    marginTop:40,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 10 : 40, // Adjust for Android
     backgroundColor: '#F5F5F5',
   },
   appTitle: {
