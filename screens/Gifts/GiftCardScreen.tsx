@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Dimensions,
   StatusBar,
+  SafeAreaView,
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
@@ -63,6 +64,8 @@ const GiftCardScreen = ({navigation}) => {
   );
 
   return (
+
+    <SafeAreaView style={styles.container}>
     <View style={styles.container}>
       {/* Set StatusBar */}
       <StatusBar backgroundColor="#F9F9F9" barStyle="dark-content" />
@@ -125,6 +128,7 @@ const GiftCardScreen = ({navigation}) => {
         contentContainerStyle={styles.myGiftList}
       />
     </View>
+    </SafeAreaView>
   );
 };
 

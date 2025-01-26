@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  SafeAreaView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from '../../screens/components/Header';
@@ -13,6 +14,7 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
 
   return (
+    <SafeAreaView style={styles.container}>
     <View style={styles.container}>
       {/* Top Bar */}
       <Header
@@ -98,6 +100,7 @@ const ProfileScreen = () => {
         </View>
       </View>
     </View>
+    </SafeAreaView>
   );
 };
 

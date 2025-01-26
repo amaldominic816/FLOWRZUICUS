@@ -21,7 +21,7 @@ const orders = [
   },
 ];
 
-const MyOrdersScreen = () => {
+const MyOrdersScreen = ({navigation}) => {
   const renderItem = ({ item }) => (
     <View style={styles.orderCard}>
       {/* Top Section: Image + Details + Badge */}
