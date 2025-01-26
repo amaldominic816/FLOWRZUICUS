@@ -5,10 +5,12 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  Dimensions,
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import HeaderInner from '../../screens/components/Headerinner';
+import ButtonPrimary from '../components/ButtonPrimary';
 
 
 const MyWalletScreen = ({navigation}) => {
@@ -39,15 +41,14 @@ const MyWalletScreen = ({navigation}) => {
         </Text>
 
         {/* Wallet Balance Button */}
-        <TouchableOpacity style={styles.balanceButton}>
-          <LinearGradient
-            colors={['#FF7E5F', '#FD3A84']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.gradient}>
-            <Text style={styles.balanceText}>AED 0.00</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+        <ButtonPrimary
+                 buttonText="Save & Continue"
+                 onPress={() => navigation.navigate('RegistrationPage')}
+                 buttonWidth={Dimensions.get('window').width * 0.8}
+                 buttonHeight={40}
+                 fontSize={12}
+                 gradientColors={['#DE8542', '#FE5993']}
+               />
 
         {/* Transaction History Link */}
         <TouchableOpacity>

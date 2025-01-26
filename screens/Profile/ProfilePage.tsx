@@ -58,7 +58,7 @@ const ProfileScreen = () => {
               icon: require('../../assets/images/savedaddress.png'),
               navigateTo:'AddAddressScreen',
             },
-            { title: 'Occasions', icon: require('../../assets/images/occasion.png'),
+            { title: 'Occasions', icon: require('../../assets/images/calender.png'),
               navigateTo:'MyOccasionsScreen',
              },
             {

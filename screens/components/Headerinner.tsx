@@ -56,7 +56,7 @@ const HeaderInner = ({
           {showCartIcon && (
             <TouchableOpacity style={styles.iconButton} onPress={onCartPress}>
               <Image
-                source={require('../../assets/images/cart.png')}
+                source={require('../../assets/images/bagcart.jpg')}
                 style={styles.iconImage}
               />
             </TouchableOpacity>
