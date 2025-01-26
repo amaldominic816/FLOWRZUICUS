@@ -294,6 +294,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
+    marginTop:40,
     backgroundColor: '#F5F5F5',
   },
   appTitle: {
@@ -312,7 +313,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 8,
-  },
+    marginTop:10  },
   iconButtonfilter: {
     width: 30,
     height: 30,

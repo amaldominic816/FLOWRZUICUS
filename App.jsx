@@ -285,20 +285,34 @@ subtext: {
     marginTop:20, // Space above the button
 },
 buttonWrapper: {
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 20, // Space at the bottom of the screen
+  width: '100%',
+  alignItems: 'center',
+  marginBottom: 40, // Add more space if needed
 },
+
 button: {
-    borderRadius: 10,
-    alignItems: 'center',
-    paddingVertical: 15,
-    shadowColor: '#ccc',
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
+  borderRadius: 10,
+  alignItems: 'center',
+  justifyContent: 'center', // Center text vertically
+  height: 50, // Fixed height for the button
+  width: '80%', // Dynamic width based on screen size
+  shadowColor: '#ccc',
+  shadowOffset: { width: 0, height: 5 },
+  shadowOpacity: 0.2,
+  shadowRadius: 5,
+  elevation: 5,
 },
+
+buttonText: {
+  color: '#fff',
+  fontSize: 18,
+  fontWeight: 'bold',
+  textTransform: 'uppercase',
+  textAlign: 'center', // Center text horizontally
+},
+
+
+
 logo: {
   width: 200, // Adjust width as needed
   height: 200, // Adjust height as needed
@@ -306,13 +320,7 @@ logo: {
   marginTop: 20, // Adds some space from the top
   marginBottom: 0, // Adds space below the logo
 },
-buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-    textAlign: 'center',
-},
+
     tabItemSelected: {
       justifyContent: 'center',
       alignItems: 'center',

@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 15,
+    marginTop:40,
     backgroundColor: '#F9F9F9',
   },
   trackButton: {

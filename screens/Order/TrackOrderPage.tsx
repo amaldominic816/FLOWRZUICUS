@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   },
   header: {
     position: 'absolute',
-    top: 40, // Adjusted for the transparent status bar
+    top: 40,
     left: 0,
     right: 0,
     flexDirection: 'row',

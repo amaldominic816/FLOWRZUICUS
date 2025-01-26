@@ -117,22 +117,32 @@ const styles = StyleSheet.create({
     inputFilled: {
         borderColor: '#00C851',
     },
-    button: {
-        borderRadius: 8,
+    buttonWrapper: {
+        width: '100%',
         alignItems: 'center',
-        paddingVertical: 15,
-        marginBottom: 0,
+        marginBottom: 40, // Add more space if needed
+      },
+      
+      button: {
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center', // Center text vertically
+        height: 50, // Fixed height for the button
+        width: '80%', // Dynamic width based on screen size
         shadowColor: '#ccc',
-        shadowOffset: { width: 0, height: 4 },
+        shadowOffset: { width: 0, height: 5 },
         shadowOpacity: 0.2,
-        shadowRadius: 1,
+        shadowRadius: 5,
         elevation: 5,
-    },
-    buttonText: {
-        fontSize: 16,
-        fontWeight: 'bold',
+      },
+      
+      buttonText: {
         color: '#fff',
-    },
+        fontSize: 18,
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+        textAlign: 'center', // Center text horizontally
+      },
     resendText: {
         marginTop: 20,
         fontSize: 14,

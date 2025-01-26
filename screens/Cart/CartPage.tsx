@@ -141,18 +141,10 @@ const CartPage = () => {
 
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: '#F9F9F9'},
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#F9F9F9',
-  },
-  content: {padding: 16},
+  safeArea: {flex: 1, backgroundColor: '#F9F9F9'},
+  header: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 16},
+  content: {flex: 1},
   floatingContainer: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
     backgroundColor: '#FFF',
     padding: 16,
     borderTopLeftRadius: 20,
@@ -162,7 +154,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 5,
+    marginBottom: 16, // Increase space if needed
   },
+
   cartItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -209,17 +203,19 @@ const styles = StyleSheet.create({
   applyButton: {marginLeft: 10},
   applyGradient: {
     borderRadius: 10,
-    paddingVertical: 10,
+    paddingVertical: 12, // Ensure proper height
     paddingHorizontal: 20,
+    minWidth: 100, // Set a minimum width if necessary
     justifyContent: 'center',
     alignItems: 'center',
   },
+  
   applyButtonText: {color: '#FFF', fontSize: 14, fontWeight: 'bold'},
   summarySection: {
     backgroundColor: '#F6CFAC',
     borderRadius: 10,
     padding: 16,
-    marginBottom: 16,
+    marginBottom: 40,
   },
   summaryRow: {
     flexDirection: 'row',
@@ -232,11 +228,13 @@ const styles = StyleSheet.create({
   divider: {height: 1, backgroundColor: '#D2AE8FFF', marginVertical: 8},
   continueButton: {
     width: '100%',
-    paddingVertical: 14,
+    paddingVertical: 12, // Increased padding for better visibility
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 20, // Add some margin at the bottom
   },
+  
   continueButtonText: {fontSize: 16, fontWeight: 'bold', color: '#FFF'},
   iconButton2: {
     width: 40,
