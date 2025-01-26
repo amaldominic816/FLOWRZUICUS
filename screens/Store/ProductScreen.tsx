@@ -12,6 +12,7 @@ import {
 import Svg, {Path} from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import ButtonPrimary from '../components/ButtonPrimary';
+import HeaderInner from '../components/Headerinner';
 const screenWidth = Dimensions.get('window').width;
 const ProductOverview = ({navigation}) => {
   const [quantity, setQuantity] = useState(1);
@@ -27,33 +28,15 @@ const ProductOverview = ({navigation}) => {
       <StatusBar backgroundColor="#F5F5F5" barStyle="dark-content" />
 
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.iconButton2}>
-          <Svg width="24" height="24" viewBox="0 0 24 24">
-            <Path
-              d="M15 19l-7-7 7-7"
-              stroke="#000"
-              strokeWidth="2"
-              fill="none"
-            />
-          </Svg>
-        </TouchableOpacity>
-        <Text style={styles.headerText}>Product Overview</Text>
-        <View style={styles.headerIcons}>
-        <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate('CartPage')}>
-        <Image
-              source={require('../../assets/images/cart.png')}
-              style={styles.headerIconImage}
-            />
-        </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
-            <Image
-              source={require('../../assets/images/notification.png')}
-              style={styles.headerIconImage}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <HeaderInner
+        title="Product OverView"
+        showBackButton={true}
+        showNotificationIcon={true}
+        showCartIcon={true}
+        onBackPress={() => navigation.goBack()}
+        onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
+        onCartPress={()=>navigation.navigate('CartPage')}
+      />
 
       {/* Main Content */}
       <ScrollView style={styles.content}>
@@ -203,25 +186,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 8,
   },
-  headerIconImage: {
-    width: 24,
-    height: 24,
-    resizeMode: 'contain',
-  },
-  iconButton2: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#FFE0C4',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
-    marginLeft: 8,
-  },
+
 
   headerText: {fontSize: 18, fontWeight: 'bold'},
   content: {padding: 16},
@@ -286,36 +251,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 16,
   },
-  addToCartButton: {
-    borderRadius: 8,
-        alignItems: 'center',
-        paddingVertical: 15,
-        marginBottom: 0,
-        shadowColor: '#ccc',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.2,
-        shadowRadius: 1,
-        elevation: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-    textAlign: 'center',
-},
-  buttonGap: {
-    width: 16,
-  },
-  addToCartText: {color: '#fff', fontSize: 18, fontWeight: 'bold'},
-  favoriteButton: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+
+
+
 });
 
 export default ProductOverview;
