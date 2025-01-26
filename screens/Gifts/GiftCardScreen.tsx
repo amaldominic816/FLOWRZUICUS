@@ -14,6 +14,7 @@ import {
 import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import Header from '../../screens/components/Header';
+import ButtonOutlined from '../components/ButtonOutlined';
 
 const { width } = Dimensions.get('window');
 
@@ -93,21 +94,18 @@ const GiftCardScreen = ({navigation}) => {
         </ScrollView>
       </View>
 
-      <TouchableOpacity
-        style={styles.trackButton}
-        onPress={() => navigation.navigate('GiftCardScreenDetail')} // Move the onPress here
-      >
-        <LinearGradient
-          colors={["#FF7E5F", "#FD3A84"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.trackButtonGradient}
-        >
-          <View style={styles.trackButtonContent}>
-            <Text style={styles.trackButtonText}>Send a gift now</Text>
-          </View>
-        </LinearGradient>
-      </TouchableOpacity>
+      <View style={styles.buttonWrapper}>
+  <ButtonOutlined
+    buttonText="Send a Gift now"
+    onPress={() => navigation.navigate('GiftCardScreenDetail')}
+    buttonWidth={Dimensions.get('window').width * 0.9} // 90% of the screen width
+    buttonHeight={50} // Custom height
+    fontSize={18} // Custom font size
+    borderColor="#FF7E5F" // Custom border color
+    textColor="#FF7E5F" // Custom text color
+  />
+</View>
+
 
       {/* Gift Cards Section */}
       <FlatList
@@ -137,6 +135,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F9F9F9',
   },
+  buttonWrapper: {
+    paddingHorizontal: 16, // Add padding on both sides
+    marginTop: 10,         // Optional: Add some margin above the button
+  },
+  
   topBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -145,29 +148,7 @@ const styles = StyleSheet.create({
     marginTop:40,
     backgroundColor: '#F9F9F9',
   },
-  trackButton: {
-    marginVertical: 8,
-    padding:15,
-    alignSelf: 'center', // Centers the button horizontally
-    width: '100%', // Matches the parent container width
-  },
-  trackButtonGradient: {
-    padding: 2, // Gradient border thickness
-    borderRadius: 12, // Ensures the gradient border matches the button's radius
-  },
-  trackButtonContent: {
-    backgroundColor: '#FFF', // White background inside the gradient border
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 12,
-  },
-  trackButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#FD3A84', // Matches the gradient color for text
-    textAlign: 'center',
-  },
+
   backButton: {
     padding: 8,
   },
