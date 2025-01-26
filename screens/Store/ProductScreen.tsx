@@ -186,7 +186,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 8,
   },
-
+  headerIconImage: {
+    width: 24,
+    height: 24,
+    resizeMode: 'contain',
+  },
+  iconButton2: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#FFE0C4',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
+    marginLeft: 8,
+  },
 
   headerText: {fontSize: 18, fontWeight: 'bold'},
   content: {padding: 16},
@@ -251,9 +269,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 16,
   },
-
-
-
+  addToCartButton: {
+    borderRadius: 8,
+        alignItems: 'center',
+        paddingVertical: 15,
+        marginBottom: 0,
+        shadowColor: '#ccc',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 1,
+        elevation: 5,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    textAlign: 'center',
+},
+  buttonGap: {
+    width: 16,
+  },
+  addToCartText: {color: '#fff', fontSize: 18, fontWeight: 'bold'},
+  favoriteButton: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default ProductOverview;
