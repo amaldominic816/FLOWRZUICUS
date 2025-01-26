@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Header from '../../screens/components/Header';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -14,24 +15,15 @@ const ProfileScreen = () => {
   return (
     <View style={styles.container}>
       {/* Top Bar */}
-      <View style={styles.topBar}>
-        <Text style={styles.topBarText}>Profile</Text>
-        <View style={styles.topBarIcons}>
-          <TouchableOpacity style={styles.iconContainer}>
-            <Image
-              source={require('../../assets/images/cart.png')} // Replace with your cart icon path
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconContainer}>
-            <Image
-              source={require('../../assets/images/notification.png')} // Replace with your notification icon path
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-
+      <Header
+        title="Profile" // Dynamic title
+        showCartIcon={true} // Show cart icon
+        showNotificationIcon={true} // Show notification icon
+        showProfileIcon={false} // Show profile icon
+        onCartPress={() => navigation.navigate('CartPage')}
+        onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
+        onProfilePress={() => navigation.navigate('ProfileScreen')}
+      />
       {/* Profile Section */}
       <View style={styles.profileSection}>
         <Image

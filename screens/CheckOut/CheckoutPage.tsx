@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
+import HeaderInner from '../../screens/components/Headerinner';
+
 
 const CheckoutPage = ({navigation}) => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
@@ -16,24 +18,19 @@ const CheckoutPage = ({navigation}) => {
 
   return (
     <View style={styles.container}>
+       {/* Header Section */}
+       <HeaderInner
+        title="Checkout"
+        showBackButton={true}
+        showNotificationIcon={true}
+        showCartIcon={true}
+        onBackPress={() => navigation.goBack()}
+        onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
+        onCartPress={()=>navigation.navigate('CartPage')}
+      />
+
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Header Section */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.iconButton2}>
-            <Svg width="24" height="24" viewBox="0 0 24 24">
-              <Path d="M15 19l-7-7 7-7" stroke="#000" strokeWidth="2" fill="none" />
-            </Svg>
-          </TouchableOpacity>
-          <Text style={styles.headerText}>Payment</Text>
-          <View style={styles.headerIcons}>
-            <TouchableOpacity style={styles.iconButtonn}>
-              <Image source={require('../../assets/images/cart.png')} style={styles.iconImage} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButtonn}>
-              <Image source={require('../../assets/images/notification.png')} style={styles.iconImage} />
-            </TouchableOpacity>
-          </View>
-        </View>
+
 
         {/* Delivery Address Section */}
         <View style={styles.deliveryAddressRow}>

@@ -12,6 +12,8 @@ import {
 import Svg, {Path} from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
+import HeaderInner from '../../screens/components/Headerinner';
+
 
 const CartPage = () => {
   const navigation = useNavigation();
@@ -42,29 +44,17 @@ const CartPage = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#F9F9F9" barStyle="dark-content" />
 
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.iconButton2}onPress={() => navigation.goBack()}>
-          <Svg width="24" height="24" viewBox="0 0 24 24">
-            <Path
-              d="M15 19l-7-7 7-7"
-              stroke="#000"
-              strokeWidth="2"
-              fill="none"
-            />
-          </Svg>
-        </TouchableOpacity>
-        <Text style={styles.headerText}>Cart</Text>
-        <View style={styles.headerIcons}>
-          <TouchableOpacity style={styles.iconButtonn}>
-            <Image source={require('../../assets/images/notification.png')} style={styles.iconImage} onPress={() => navigation.navigate('PushNotificationsScreen')}/>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <ScrollView style={styles.content} contentContainerStyle={{paddingBottom: 300}}>
+      <HeaderInner
+        title="Cart"
+        showBackButton={true}
+        showNotificationIcon={true}
+        showCartIcon={false}
+        onBackPress={() => navigation.goBack()}
+        onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
+        onCartPress={()=>navigation.navigate('CartPage')}
+      />
+      <ScrollView style={styles.content} contentContainerStyle={{paddingBottom: 100}}>
         {/* Cart Items */}
         {cartItems.map(item => (
           <TouchableOpacity
@@ -141,7 +131,7 @@ const CartPage = () => {
 
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: '#F9F9F9'},
-  safeArea: {flex: 1, backgroundColor: '#F9F9F9'},
+
   header: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 16},
   content: {flex: 1},
   floatingContainer: {
@@ -153,8 +143,9 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: -2},
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 5,
-    marginBottom: 16, // Increase space if needed
+    elevation: 0,
+    marginBottom: 0,
+    borderRadius:10, // Increase space if needed
   },
 
   cartItem: {
@@ -164,6 +155,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderRadius: 10,
     padding: 10,
+    marginTop:10,
   },
   cartItemImage: {width: 60, height: 60, borderRadius: 10},
   cartItemDetails: {flex: 1, marginLeft: 10},
@@ -215,7 +207,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F6CFAC',
     borderRadius: 10,
     padding: 16,
-    marginBottom: 40,
+    marginBottom: 10,
   },
   summaryRow: {
     flexDirection: 'row',
@@ -232,7 +224,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20, // Add some margin at the bottom
+    marginBottom: 5, // Add some margin at the bottom
   },
   
   continueButtonText: {fontSize: 16, fontWeight: 'bold', color: '#FFF'},

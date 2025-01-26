@@ -8,6 +8,10 @@ import {
   StyleSheet,
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
+import HeaderInner from '../../screens/components/Headerinner';
+import { useNavigation } from '@react-navigation/native';
+
+
 
 const notifications = [
   {
@@ -61,6 +65,7 @@ const notifications = [
 ];
 
 const PushNotificationsScreen = () => {
+  const navigation = useNavigation();
   const handleCardPress = (id) => {
     console.log(`Card with ID ${id} clicked!`);
   };
@@ -85,29 +90,15 @@ const PushNotificationsScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Top Bar */}
-      <View style={styles.topBar}>
-        <TouchableOpacity style={styles.iconButton2}>
-          <Svg width="24" height="24" viewBox="0 0 24 24">
-            <Path d="M15 19l-7-7 7-7" stroke="#000" strokeWidth="2" fill="none" />
-          </Svg>
-        </TouchableOpacity>
-        <Text style={styles.topBarText}>Push notifications</Text>
-        <View style={styles.topBarIcons}>
-          <TouchableOpacity style={styles.iconContainer}>
-            <Image
-              source={require('../../assets/images/cart.png')}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconContainer}>
-            <Image
-              source={require('../../assets/images/notification.png')}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
+       <HeaderInner
+        title="Notifications"
+        showBackButton={true}
+        showNotificationIcon={true}
+        showCartIcon={true}
+        onBackPress={() => navigation.goBack()}
+        onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
+        onCartPress={()=>navigation.navigate('CartPage')}
+      />
 
       {/* Notifications List */}
       <FlatList

@@ -51,24 +51,14 @@ const myGifts = [
   },
 ];
 
-const GiftCardScreen = ({navigation}) => {
-  const renderGiftCard = ({ item }) => (
-    <View>
-    </View>
-  );
-
-  const renderMyGift = ({ item }) => (
-    <View>
-    </View>
-  );
-
+const RewardsScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       {/* Set StatusBar */}
       <StatusBar backgroundColor="#F9F9F9" barStyle="dark-content" />
 
       <Header
-        title="Gift Card " // Dynamic title
+        title="Rewards" // Dynamic title
         showCartIcon={true} // Show cart icon
         showNotificationIcon={true} // Show notification icon
         showProfileIcon={true} // Show profile icon
@@ -77,53 +67,6 @@ const GiftCardScreen = ({navigation}) => {
         onProfilePress={() => navigation.navigate('ProfileScreen')}
       />
 
-      {/* Banner Section */}
-      <View style={styles.bannerContainer}>
-        <ScrollView
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-        >
-          {banners.map((banner) => (
-            <Image key={banner.id} source={banner.image} style={styles.banner} />
-          ))}
-        </ScrollView>
-      </View>
-
-      <TouchableOpacity
-        style={styles.trackButton}
-        onPress={() => navigation.navigate('GiftCardScreenDetail')} // Move the onPress here
-      >
-        <LinearGradient
-          colors={["#FF7E5F", "#FD3A84"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.trackButtonGradient}
-        >
-          <View style={styles.trackButtonContent}>
-            <Text style={styles.trackButtonText}>Send a gift now</Text>
-          </View>
-        </LinearGradient>
-      </TouchableOpacity>
-
-      {/* Gift Cards Section */}
-      <FlatList
-        data={giftCards}
-        renderItem={renderGiftCard}
-        keyExtractor={(item) => item.id}
-        horizontal
-        contentContainerStyle={styles.giftCardList}
-        showsHorizontalScrollIndicator={false}
-      />
-
-      {/* My Gift Cards Section */}
-      <Text style={styles.sectionTitle}>My gift card</Text>
-      <FlatList
-        data={myGifts}
-        renderItem={renderMyGift}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.myGiftList}
-      />
     </View>
   );
 };
@@ -271,4 +214,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GiftCardScreen;
+export default RewardsScreen;

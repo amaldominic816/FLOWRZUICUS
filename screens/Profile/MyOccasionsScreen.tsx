@@ -8,6 +8,8 @@ import {
   StyleSheet,
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
+import HeaderInner from '../../screens/components/Headerinner';
+
 
 const occasions = [
   {
@@ -27,7 +29,7 @@ const occasions = [
   },
 ];
 
-const MyOccasionsScreen = () => {
+const MyOccasionsScreen = ({navigation}) => {
   const renderOccasion = ({ item }) => (
     <TouchableOpacity style={styles.occasionCard}>
       <Image source={item.image} style={styles.occasionImage} />
@@ -38,28 +40,15 @@ const MyOccasionsScreen = () => {
   return (
     <View style={styles.container}>
       {/* Top Bar */}
-      <View style={styles.topBar}>
-        <TouchableOpacity style={styles.backButton}>
-          <Svg width="24" height="24" viewBox="0 0 24 24">
-            <Path d="M15 19l-7-7 7-7" stroke="#000" strokeWidth="2" fill="none" />
-          </Svg>
-        </TouchableOpacity>
-        <Text style={styles.title}>My Occasions</Text>
-        <View style={styles.icons}>
-          <TouchableOpacity>
-            <Image
-              source={require('../../assets/images/cart.png')}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Image
-              source={require('../../assets/images/notification.png')}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <HeaderInner
+        title="Occasions"
+        showBackButton={true}
+        showNotificationIcon={true}
+        showCartIcon={true}
+        onBackPress={() => navigation.goBack()}
+        onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
+        onCartPress={()=>navigation.navigate('CartPage')}
+      />
 
       {/* Quick Add Section */}
       <View style={styles.quickAddSection}>

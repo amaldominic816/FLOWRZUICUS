@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, Image, TextInput, StyleSheet, FlatList, TouchableOpacity, StatusBar, Dimensions, ScrollView, ImageBackground } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView, Platform } from 'react-native';
+import Header from '../../screens/components/Header';
+
 
 
 
@@ -144,31 +146,15 @@ const HomePage = ({ navigation }) => {
       <StatusBar backgroundColor="#F5F5F5" barStyle="dark-content" />
 
       {/* Header Section */}
-      <View style={styles.header}>
-        <Text style={styles.appTitle}>FLOWRZ</Text>
-        <View style={styles.headerIcons}>
-          <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate('CartPage')}>
-            <Image
-              source={require('../../assets/images/cart.png')}
-              style={styles.headerIcon}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate('PushNotificationsScreen')}>
-            <Image
-              source={require('../../assets/images/notification.png')}
-              style={styles.headerIcon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
-            <Image
-            source={require('../../assets/images/profile-picture.png')}
-            style={styles.profileIcon}
-            />
-            </TouchableOpacity>
-        </View>
-      </View>
-
+      <Header
+        title="FLOWRZ" // Dynamic title
+        showCartIcon={true} // Show cart icon
+        showNotificationIcon={true} // Show notification icon
+        showProfileIcon={true} // Show profile icon
+        onCartPress={() => navigation.navigate('CartPage')}
+        onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
+        onProfilePress={() => navigation.navigate('ProfileScreen')}
+      />
       {/* Search Bar and Filter */}
       <View style={styles.searchSection}>
         <View style={styles.searchBar}>
@@ -342,12 +328,15 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: '#ddd',
     marginLeft: 8,
+    marginTop:10,
   },
   searchSection: {
+
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: 16,
     marginBottom: 8,
+    marginTop: 8,
   },
   trackButton: {
     marginVertical: 8,

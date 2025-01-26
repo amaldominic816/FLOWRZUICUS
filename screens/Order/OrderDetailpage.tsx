@@ -2,30 +2,22 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image,ScrollView, } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
+import HeaderInner from '../../screens/components/Headerinner';
+
 
 
 const OrderDetails = ({ navigation }) => {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-      {/* Header Section */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.iconButton2}>
-          <Svg width="24" height="24" viewBox="0 0 24 24">
-            <Path d="M15 19l-7-7 7-7" stroke="#000" strokeWidth="2" fill="none" />
-          </Svg>
-        </TouchableOpacity>
-
-        <Text style={styles.headerTitle}>Order Details</Text>
-
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <TouchableOpacity style={styles.iconButtonn}>
-            <Image source={require('../../assets/images/cart.png')} style={styles.iconImage} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButtonn}>
-            <Image source={require('../../assets/images/notification.png')} style={styles.iconImage} />
-          </TouchableOpacity>
-        </View>
-      </View>
+     <HeaderInner
+        title="Order Details"
+        showBackButton={true}
+        showNotificationIcon={true}
+        showCartIcon={true}
+        onBackPress={() => navigation.goBack()}
+        onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
+        onCartPress={()=>navigation.navigate('CartPage')}
+      />
 
       {/* Order Status Section */}
       <View style={styles.orderContainer}>

@@ -33,6 +33,7 @@ import MyWalletScreen from './screens/Profile/MyWalletScreen';
 import GiftScreen from './screens/Gifts/GiftCardScreen';
 import GiftCardScreenDetail  from './screens/Gifts/GiftCardScreenDetail';
 import StoreOverviewPage from './screens/Store/StoreOverviewPage';
+import RewardsScreen from './screens/Rewards/RewardsScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -87,12 +88,7 @@ const SplashScreen = ({ navigation }) => {
       </View>
   );
 };
-// Placeholder Screens for Rewards, Gift, and Profile
-const RewardsScreen = () => (
-    <View style={styles.center}>
-        <Text>Rewards Screen</Text>
-    </View>
-);
+
 // Bottom Tab Navigator
 const TabNavigator = () => (
   <Tab.Navigator

@@ -6,35 +6,23 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
+import HeaderInner from '../../screens/components/Headerinner';
 
-const AddAddressScreen = () => {
+
+const AddAddressScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       {/* Top Bar */}
-      <View style={styles.topBar}>
-        <TouchableOpacity style={styles.backButton}>
-          <Svg width="24" height="24" viewBox="0 0 24 24">
-            <Path d="M15 19l-7-7 7-7" stroke="#000" strokeWidth="2" fill="none" />
-          </Svg>
-        </TouchableOpacity>
-        <Text style={styles.title}>Saved Addresses</Text>
-        <View style={styles.icons}>
-          <TouchableOpacity>
-            <Image
-              source={require('../../assets/images/cart.png')}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Image
-              source={require('../../assets/images/notification.png')}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <HeaderInner
+        title="Address"
+        showBackButton={true}
+        showNotificationIcon={true}
+        showCartIcon={true}
+        onBackPress={() => navigation.goBack()}
+        onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
+        onCartPress={()=>navigation.navigate('CartPage')}
+      />
 
       {/* Add New Address Button */}
        <TouchableOpacity style={styles.addAddressButton}>
@@ -60,8 +48,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F9F9F9',
-    paddingLeft: 20,
-    paddingRight:20,
+
   },
   topBar: {
     flexDirection: 'row',
@@ -90,6 +77,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 20,
+    marginLeft:20,
+    marginRight:20,
     justifyContent: 'center',
     alignItems: 'center',
   },

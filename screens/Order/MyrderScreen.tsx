@@ -8,6 +8,8 @@ import {
   StyleSheet,
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
+import HeaderInner from '../../screens/components/Headerinner';
+
 
 const orders = [
   {
@@ -69,29 +71,15 @@ const MyOrdersScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Top Bar */}
-      <View style={styles.topBar}>
-        <TouchableOpacity style={styles.backButton}>
-          <Svg width="24" height="24" viewBox="0 0 24 24">
-            <Path d="M15 19l-7-7 7-7" stroke="#000" strokeWidth="2" fill="none" />
-          </Svg>
-        </TouchableOpacity>
-        <Text style={styles.title}>My Orders</Text>
-        <View style={styles.icons}>
-          <TouchableOpacity>
-            <Image
-              source={require('../../assets/images/cart.png')}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Image
-              source={require('../../assets/images/notification.png')}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
+   <HeaderInner
+        title="My Orders"
+        showBackButton={true}
+        showNotificationIcon={true}
+        showCartIcon={true}
+        onBackPress={() => navigation.goBack()}
+        onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
+        onCartPress={()=>navigation.navigate('CartPage')}
+      />
 
       {/* Orders List */}
       <FlatList
