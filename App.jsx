@@ -69,7 +69,7 @@ const SplashScreen = ({ navigation }) => {
         />
 
         <ButtonPrimary
-          buttonText="Register"
+          buttonText="Register Now"
           onPress={() => navigation.navigate('RegistrationPage')}
           buttonWidth={Dimensions.get('window').width * 0.8} // Set width to 80% of the screen width
           buttonHeight={50}

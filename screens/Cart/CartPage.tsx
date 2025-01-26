@@ -93,11 +93,14 @@ const CartPage = () => {
             style={styles.promoInput}
             placeholderTextColor="#000"
           />
-          <TouchableOpacity style={styles.applyButton}>
-            <LinearGradient colors={['#FF7E5F', '#FD3A84']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.applyGradient}>
-              <Text style={styles.applyButtonText}>Apply</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+           <ButtonPrimary
+                  buttonText="Apply"
+                  onPress={() => navigation.navigate('CheckoutPage')}
+                  buttonWidth={Dimensions.get('window').width *0.2} // Set width to 80% of the screen width
+                  buttonHeight={30}
+                  fontSize={12}
+                  gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
+                />
         </View>
 
         {/* Summary Section */}
@@ -146,7 +149,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 0,
-    marginBottom: 0,
+    marginBottom: 10,
     borderRadius: 10, // Increase space if needed
   },
 
@@ -220,14 +223,6 @@ const styles = StyleSheet.create({
   summaryValue: { fontSize: 14, color: '#555' },
   summaryValueBold: { fontSize: 16, fontWeight: 'bold', color: '#000' },
   divider: { height: 1, backgroundColor: '#D2AE8FFF', marginVertical: 8 },
-  continueButton: {
-    width: '100%',
-    paddingVertical: 12, // Increased padding for better visibility
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 5, // Add some margin at the bottom
-  },
 
   continueButtonText: { fontSize: 16, fontWeight: 'bold', color: '#FFF' },
   iconButton2: {

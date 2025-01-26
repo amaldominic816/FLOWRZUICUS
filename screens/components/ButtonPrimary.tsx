@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
-    textTransform: 'uppercase',
+
     textAlign: 'center',
   },
 });
