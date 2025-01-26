@@ -15,7 +15,7 @@ const Header = ({
     if (Platform.OS === 'android') {
       return (StatusBar.currentHeight ?? 0) + -20;
     }
-    return 40; // iOS default
+    return 0; // iOS default
   };
 
   return (
@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 8,
+    elevation:2,
   },
   icon: {
     width: 24,

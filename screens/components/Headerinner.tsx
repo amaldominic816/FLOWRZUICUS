@@ -25,7 +25,7 @@ const HeaderInner = ({
     if (Platform.OS === 'android') {
       return (StatusBar.currentHeight ?? 0) + -20;
     }
-    return 40; // SafeAreaView handles iOS
+    return 0; // SafeAreaView handles iOS
   };
 
   return (
@@ -110,7 +110,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
-    elevation: 2,
   },
   backButton: {
     backgroundColor: '#FFE0C4', // Specific background for the back button
