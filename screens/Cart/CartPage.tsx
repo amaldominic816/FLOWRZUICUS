@@ -15,6 +15,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import HeaderInner from '../../screens/components/Headerinner';
 import ButtonPrimary from '../../screens/components/ButtonPrimary';
+import Colors from '../components/Colors';
 
 
 
@@ -135,12 +136,12 @@ const CartPage = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F9F9F9' },
+  container: { flex: 1, backgroundColor: Colors.background },
 
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 16 },
   content: { flex: 1 },
   floatingContainer: {
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.background,
     padding: 16,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -156,7 +157,7 @@ const styles = StyleSheet.create({
   cartItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.secondary,
     marginBottom: 16,
     borderRadius: 10,
     padding: 10,
@@ -164,8 +165,8 @@ const styles = StyleSheet.create({
   },
   cartItemImage: { width: 60, height: 60, borderRadius: 10 },
   cartItemDetails: { flex: 1, marginLeft: 10 },
-  itemName: { fontSize: 16, fontWeight: 'bold' },
-  itemPrice: { fontSize: 14, color: '#777' },
+  itemName: { fontSize: 16,  fontFamily:'DMSans-Bold' },
+  itemPrice: { fontSize: 14, color: '#777', fontFamily:'DMSans-SemiBold' },
   quantityControls: { flexDirection: 'row', alignItems: 'center' },
   quantityButton: {
     width: 30,
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  quantityText: { fontSize: 16, color: '#000' },
+  quantityText: { fontSize: 16, color: '#000' , fontFamily:'DMSans-Bold',},
   quantity: { fontSize: 16, marginHorizontal: 10 },
   promoSection: {
     flexDirection: 'row',
@@ -194,20 +195,11 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     fontSize: 14,
+    fontFamily:'DMSans-Regular',
     backgroundColor: '#fff',
     borderRadius: 10,
   },
-  applyButton: { marginLeft: 10 },
-  applyGradient: {
-    borderRadius: 10,
-    paddingVertical: 12, // Ensure proper height
-    paddingHorizontal: 20,
-    minWidth: 100, // Set a minimum width if necessary
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
 
-  applyButtonText: { color: '#FFF', fontSize: 14, fontWeight: 'bold' },
   summarySection: {
     backgroundColor: '#F6CFAC',
     borderRadius: 10,
@@ -219,40 +211,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 8,
   },
-  summaryLabel: { fontSize: 14, color: '#555' },
-  summaryValue: { fontSize: 14, color: '#555' },
-  summaryValueBold: { fontSize: 16, fontWeight: 'bold', color: '#000' },
+  summaryLabel: { fontSize: 14, color: '#555', fontFamily:'DMSans-Regular' },
+  summaryValue: { fontSize: 14, color: '#555', fontFamily:'DMSans-SemiBold', },
+  summaryValueBold: { fontSize: 16,  fontFamily:'DMSans-Bold', color: '#000' },
   divider: { height: 1, backgroundColor: '#D2AE8FFF', marginVertical: 8 },
 
-  continueButtonText: { fontSize: 16, fontWeight: 'bold', color: '#FFF' },
-  iconButton2: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#FFE0C4',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
-    marginLeft: 8,
-  },
-  iconButtonn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 8,
-  },
-  iconImage: {
-    width: 24,
-    height: 24,
-    borderRadius: 10,
-  },
+  continueButtonText: { fontSize: 16,  fontFamily:'DMSans-Bold', color: '#FFF' },
+
 });
 
 export default CartPage;

@@ -11,6 +11,7 @@ import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import HeaderInner from '../../screens/components/Headerinner';
 import ButtonPrimary from '../components/ButtonPrimary';
+import Colors from '../components/Colors';
 
 
 const MyWalletScreen = ({navigation}) => {
@@ -42,8 +43,8 @@ const MyWalletScreen = ({navigation}) => {
 
         {/* Wallet Balance Button */}
         <ButtonPrimary
-                 buttonText="Save & Continue"
-                 onPress={() => navigation.navigate('RegistrationPage')}
+                 buttonText="Add Money"
+                 onPress={() => navigation.navigate('')}
                  buttonWidth={Dimensions.get('window').width * 0.8}
                  buttonHeight={40}
                  fontSize={12}
@@ -62,39 +63,18 @@ const MyWalletScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: Colors.background,
   },
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
-    backgroundColor: '#F9F9F9',
-  },
-  backButton: {
-    padding: 8,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  icons: {
-    flexDirection: 'row',
-  },
-  icon: {
-    width: 24,
-    height: 24,
-    marginHorizontal: 8,
-  },
+
   walletSection: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
+    marginTop: 20,
   },
   iconWrapper: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     padding: 20,
     borderRadius: 50,
     marginBottom: 15,
@@ -106,7 +86,7 @@ const styles = StyleSheet.create({
   },
   walletTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
     color: '#F25485',
     marginBottom: 5,
   },
@@ -115,6 +95,7 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
     marginBottom: 20,
+    fontFamily:'DMSans-Regular',
   },
   balanceButton: {
     width: '60%',
@@ -129,12 +110,12 @@ const styles = StyleSheet.create({
   },
   balanceText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
     color: '#fff',
   },
   transactionHistory: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
     color: '#F25485',
     marginTop: 20,
   },

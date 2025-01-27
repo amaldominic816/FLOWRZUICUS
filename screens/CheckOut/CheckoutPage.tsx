@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Dimensions
 import HeaderInner from '../../screens/components/Headerinner';
 import ButtonPrimary from '../components/ButtonPrimary';
 import DatePicker from 'react-native-date-picker';
+import Colors from '../components/Colors';
 
 const CheckoutPage = ({ navigation }) => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
@@ -35,8 +36,7 @@ const CheckoutPage = ({ navigation }) => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Name and Delivery Type Section */}
         <View style={styles.deliveryTypeContainer}>
-          <Text style={styles.sectionTitleLeft}>Name</Text>
-          <Text style={styles.userName}>Salim Al Tajir</Text>
+          <Text style={styles.userName}>Delivery Type</Text>
 
           <View style={styles.deliveryTypeOptions}>
             <TouchableOpacity
@@ -156,6 +156,7 @@ const CheckoutPage = ({ navigation }) => {
           <TextInput
             style={styles.noteInput}
             placeholder="Any delivery instructions or special notes?"
+            placeholderTextColor={Colors.placeholder}
             multiline
             value={deliveryNote}
             onChangeText={setDeliveryNote}
@@ -217,7 +218,7 @@ const CheckoutPage = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: Colors.background,
   },
   scrollContainer: {
     padding: 16,
@@ -235,7 +236,7 @@ const styles = StyleSheet.create({
   },
   deliveryTypeContainer: {
     marginBottom: 16,
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.secondary,
     borderRadius: 8,
     padding: 16,
     shadowColor: '#000',
@@ -245,9 +246,10 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
     color: '#333',
     marginBottom: 16,
+
   },
   deliveryTypeOptions: {
     flexDirection: 'row',
@@ -267,27 +269,29 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF5F0',
   },
   deliveryTypeText: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#666',
+    fontFamily:'DMSans-Regular',
   },
   deliveryTypeTextSelected: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#FF7E5F',
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Regular',
   },
   sectionTitleLeft: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontFamily:'DMSans-Bold',
     textAlign: 'left',
   },
   pickupText: {
     fontSize: 14,
+    fontFamily:'DMSans-Regular',
     color: '#666',
     textAlign: 'center',
   },
   noteContainer: {
     marginBottom: 16,
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.secondary,
     borderRadius: 8,
     padding: 16,
     shadowColor: '#000',
@@ -298,10 +302,8 @@ const styles = StyleSheet.create({
   noteInput: {
     marginTop: 8,
     padding: 10,
-    borderWidth: 1,
-    borderColor: '#DDD',
     borderRadius: 8,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: Colors.secondary,
     fontSize: 14,
     textAlignVertical: 'top',
     minHeight: 60,
@@ -315,45 +317,13 @@ const styles = StyleSheet.create({
   iconImage: {
     width: 24,
     height: 24,
-    borderRadius: 10
+    borderRadius: 10,
   },
   content: { padding: 16 },
-  cartItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFF',
-    marginBottom: 16,
-    borderRadius: 10,
-    padding: 10,
-  },
-  iconButtonn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 8,
-  },
-  headerText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000',
-    textAlign: 'left',
-    flex: 1,
-  },
-  headerIcons: {
-    flexDirection: 'row',
-  },
-  cartIcon: {
-    width: 24,
-    height: 24,
-    marginRight: 8,
-  },
-  notificationIcon: {
-    width: 24,
-    height: 24,
-  },
+
+
+
+
   deliveryAddressRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -362,7 +332,7 @@ const styles = StyleSheet.create({
   },
   dateTimeContainer: {
     marginBottom: 16,
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.secondary,
     borderRadius: 8,
     padding: 16,
     shadowColor: '#000',
@@ -376,27 +346,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dateTimeText: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#333',
+    fontFamily:'DMSans-Regular',
   },
   changeText: {
     fontSize: 16,
-    color: '#007BFF',
-    fontWeight: 'bold',
+    color: Colors.info,
+    fontFamily:'DMSans-Regular',
   },
   addButton: {
-    backgroundColor: '#F9F9F9',
-    borderRadius: 20,
+    backgroundColor: Colors.secondary,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 2, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
   },
   sectionContainer: {
     marginBottom: 24,
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.secondary,
     borderRadius: 8,
     padding: 16,
     shadowColor: '#000',
@@ -414,12 +385,13 @@ const styles = StyleSheet.create({
   },
   addressLabel: {
     fontSize: 14,
+    fontFamily:'DMSans-Regular',
     color: '#999',
     marginBottom: 4,
   },
   addressName: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
   },
   iconRow: {
     flexDirection: 'row',
@@ -434,10 +406,12 @@ const styles = StyleSheet.create({
   addressDetails: {
     fontSize: 14,
     color: '#666',
+    fontFamily:'DMSans-Regular',
   },
   addressCity: {
     fontSize: 14,
     color: '#999',
+    fontFamily:'DMSans-Regular',
   },
   paymentOption: {
     flexDirection: 'row',
@@ -463,6 +437,7 @@ const styles = StyleSheet.create({
   paymentText: {
     fontSize: 16,
     flex: 1,
+    fontFamily:'DMSans-Regular',
   },
   radioButton: {
     width: 24,
@@ -505,11 +480,12 @@ const styles = StyleSheet.create({
   summaryText: {
     fontSize: 14,
     color: '#555',
+    fontFamily:'DMSans-Regular',
   },
   totalText: {
     fontSize: 16,
-    fontWeight: 'bold',
     color: '#000',
+    fontFamily:'DMSans-Bold',
   },
 
 

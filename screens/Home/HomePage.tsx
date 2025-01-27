@@ -4,6 +4,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView, Platform } from 'react-native';
 import Header from '../../screens/components/Header';
 import ButtonPrimary from '../components/ButtonPrimary';
+import Colors from '../components/Colors';
+
 
 
 
@@ -147,7 +149,7 @@ const HomePage = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.container}>
-          <StatusBar backgroundColor="#F5F5F5" barStyle="dark-content" />
+          <StatusBar backgroundColor={Colors.background} barStyle="dark-content" />
 
           {/* Header Section */}
           <Header
@@ -169,7 +171,7 @@ const HomePage = ({ navigation }) => {
               <TextInput
                 style={styles.searchInput}
                 placeholder="Search your flower"
-                placeholderTextColor="#aaa"
+                placeholderTextColor={Colors.placeholder}
               />
             </View>
             <View style={styles.iconButtonfilter}>
@@ -193,7 +195,7 @@ const HomePage = ({ navigation }) => {
             </ScrollView>
           </View>
 
-          <View style={styles.newSectionContainer}>
+          {/* <View style={styles.newSectionContainer}>
             <TouchableOpacity style={styles.newSectionButtonSingle}>
               <Image source={require('../../assets/images/location.png')} style={styles.newSectionIcon} />
               <Text style={styles.newSectionText}>Where</Text>
@@ -216,28 +218,29 @@ const HomePage = ({ navigation }) => {
               fontSize={18}
               gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
             />
-          </View>
+          </View> */}
 
           {/* Categories Section */}
           <View style={styles.categoriesContainer}>
-  <View style={styles.categoriesHeader}>
-    <Text style={styles.categoriesTitle}>Occasions</Text>
-    <TouchableOpacity>
-      <Text style={styles.categoriesSeeAll}>See all</Text>
-    </TouchableOpacity>
-  </View>
-  <View style={styles.categoriesGrid}>
-    {categories.map((item) => (
-      <View key={item.id} style={styles.categoryCard}>
-  <View style={styles.categoryImageContainer}>
-    <Image source={item.image} style={styles.categoryImage} />
-  </View>
-  <Text style={styles.categoryText}>{item.name}</Text> {/* Text outside the circle */}
-</View>
+            <View style={styles.categoriesHeader}>
+              <Text style={styles.categoriesTitle}>Occasions</Text>
+              <TouchableOpacity>
+                <Text style={styles.categoriesSeeAll}>See all</Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScrollView}>
+              {categories.map((item) => (
+                <View key={item.id} style={styles.categoryCard}>
+                  <View style={styles.categoryImageContainer}>
+                    <Image source={item.image} style={styles.categoryImage} />
+                    <Text style={styles.categoryInnerText}>{item.name}</Text> {/* Inner text inside the circle */}
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
 
-    ))}
-  </View>
-</View>
+
 
 
           {/* Popular Stores Section */}
@@ -269,7 +272,7 @@ const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.background,
   },
 
 
@@ -278,7 +281,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 20,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 8,
@@ -293,7 +296,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#ddd',
+    backgroundColor: Colors.secondary,
     marginLeft: 8,
     marginTop: 10,
   },
@@ -311,7 +314,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     borderRadius: 8,
     paddingHorizontal: 12,
     height: 35,
@@ -325,6 +328,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 12,
     color: '#000',
+    fontFamily:'DMSans-Light',
   },
   bannerContainer: {
     width: width - 32,
@@ -334,7 +338,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 12,
     overflow: 'hidden',
-    backgroundColor: '#fff',
+    backgroundColor: Colors.background,
     elevation: 2,
   },
   banner: {
@@ -342,11 +346,6 @@ const styles = StyleSheet.create({
     height: 150,
     resizeMode: 'cover',
   },
-
-
-
-
-
 
   overlay: {
     backgroundColor: 'rgba(0, 0, 0, 0.0)', // Semi-transparent overlay for better text visibility
@@ -369,7 +368,7 @@ const styles = StyleSheet.create({
   },
   card: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     borderRadius: 8,
     marginBottom: 10,
     overflow: 'hidden',
@@ -385,15 +384,11 @@ const styles = StyleSheet.create({
   info: {
     flex: 1,
   },
-  title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
   address: {
     fontSize: 14,
     color: '#666',
     marginBottom: 6,
+    fontFamily:'DMSans-Regular',
   },
   ratingContainer: {
     flexDirection: 'row',
@@ -474,15 +469,16 @@ const styles = StyleSheet.create({
   },
   popularStoresTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
   },
   popularStoresSeeAll: {
     fontSize: 14,
     color: '#000',
+    fontFamily:'DMSans-Light',
   },
   popularStoreCardSingle: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     borderRadius: 12,
     padding: 10,
     marginBottom: 10,
@@ -497,17 +493,19 @@ const styles = StyleSheet.create({
   },
   popularStoreInfoSingle: {
     flex: 1,
+    fontFamily:'DMSans-Regular',
   },
   popularStoreNameSingle: {
     fontSize: 16,
-    fontWeight: 'bold',
     color: '#000',
     marginBottom: 4,
+    fontFamily:'DMSans-Bold',
   },
   popularStoreLocationSingle: {
     fontSize: 14,
     color: '#666',
     marginBottom: 6,
+    fontFamily:'DMSans-Regular',
   },
   popularStoreRatingRow: {
     flexDirection: 'row',
@@ -521,6 +519,7 @@ const styles = StyleSheet.create({
   popularStoreRatingSingle: {
     fontSize: 14,
     color: '#444',
+    fontFamily:'DMSans-Medium',
   },
 
 
@@ -537,16 +536,19 @@ const styles = StyleSheet.create({
   },
   categoriesTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
   },
   categoriesSeeAll: {
     fontSize: 14,
     color: '#000',
+    fontFamily:'DMSans-Light',
   },
 
 
 
-
+  categoriesScrollView: {
+    paddingVertical: 10, // Adds spacing vertically
+  },
 
   categoriesGrid: {
     flexDirection: 'row',
@@ -558,30 +560,36 @@ const styles = StyleSheet.create({
   categoryCard: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 5, // Space between items
-  },
-  categoryImageContainer: {
-    width: 65, // Set the circle width
-    height: 65, // Set the circle height
-    borderRadius: 35, // Makes it perfectly circular
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5F5F5', // Optional background color for the circle
-    overflow: 'hidden', // Ensures the content doesn't overflow
-  },
-  categoryImage: {
-    width: '100%', // Make the image fill the circle
-    height: '100%',
-    resizeMode: 'cover', // Ensures the image maintains its aspect ratio
-  },
-  categoryText: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#000',
-    marginTop: 8, // Space between the circle and the text
+    marginRight: 15, // Adds space between each card horizontally
   },
 
+  categoryImageContainer: {
+    width: 80, // Circle width
+    height: 80, // Circle height
+    borderRadius: 40, // Makes it circular
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.secondary, // Optional background color
+    overflow: 'hidden', // Ensures no content spills over
+    position: 'relative', // Allows absolute positioning for the text
+  },
+  categoryImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover', // Ensures the image fits inside the circle
+  },
+
+  categoryInnerText: {
+    position: 'absolute', // Places text at the bottom
+    bottom: 5, // Adjust this to place text near the bottom edge
+    fontSize: 12,
+    fontFamily:'DMSans-Light',
+    color: '#FFF', // Contrast color for visibility
+    textAlign: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background for better visibility
+    paddingHorizontal: 5,
+    borderRadius: 5,
+  },
 
 });
 

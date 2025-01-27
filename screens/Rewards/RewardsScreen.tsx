@@ -13,6 +13,7 @@ import {
 import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import Header from '../../screens/components/Header';
+import Colors from '../components/Colors';
 
 const { width } = Dimensions.get('window');
 
@@ -55,7 +56,7 @@ const RewardsScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       {/* Set StatusBar */}
-      <StatusBar backgroundColor="#F9F9F9" barStyle="dark-content" />
+      <StatusBar backgroundColor={Colors.background} barStyle="dark-content" />
 
       <Header
         title="Rewards" // Dynamic title
@@ -74,7 +75,7 @@ const RewardsScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: Colors.background,
   },
   topBar: {
     flexDirection: 'row',
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15,
     marginTop:40,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: Colors.background,
   },
   trackButton: {
     marginVertical: 8,

@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, StatusBar, Dimensions } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
+import ButtonPrimary from '../components/ButtonPrimary';
 
 const OrderTracking = ({ navigation }) => {
   return (
@@ -105,16 +106,14 @@ const OrderTracking = ({ navigation }) => {
   </View>
 
   {/* Save Button */}
-  <TouchableOpacity style={styles.saveButton}>
-    <LinearGradient
-      colors={['#FF7E5F', '#FD3A84']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}
-      style={styles.saveButtonGradient}
-    >
-      <Text style={styles.saveButtonText}>Done</Text>
-    </LinearGradient>
-  </TouchableOpacity>
+  <ButtonPrimary
+            buttonText="Done"
+            onPress={() => navigation.goBack()}
+            buttonWidth={Dimensions.get('window').width * 0.9} // Set width to 80% of the screen width
+            buttonHeight={50}
+            fontSize={20}
+            gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
+          />
 </View>
 
 
@@ -139,7 +138,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
     color: '#000',
   },
   iconButton2: {
@@ -188,12 +187,13 @@ const styles = StyleSheet.create({
   },
   deliveryBoyName: {
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily:'DMSans-SemiBold',
     color: '#000',
   },
   deliveryBoyRole: {
     fontSize: 14,
     color: '#7E7E7E',
+    fontFamily:'DMSans-Regular',
   },
   callButton: {
     width: 40,
@@ -245,22 +245,24 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     color: '#000',
+    fontFamily:'DMSans-Regular',
   },
   infoLabel: {
     fontSize: 14,
     color: '#7E7E7E',
     marginBottom: 4,
+    fontFamily:'DMSans-Regular',
   },
   infoValue: {
     fontSize: 16,
-    fontWeight: '600',
     color: '#000',
+    fontFamily:'DMSans-SemiBold',
   },
   dashedLineContainer: {
     position: 'absolute',
-    left: 20, // Aligns with the icons
+    left: 35, // Aligns with the icons
     top: 44, // Positions between the first and second row
-    bottom: 0,
+    bottom: 120,
     width: 1,
     borderStyle: 'dashed',
     borderWidth: 1,

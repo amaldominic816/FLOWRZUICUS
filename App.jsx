@@ -36,6 +36,8 @@ import GiftScreen from './screens/Gifts/GiftCardScreen';
 import GiftCardScreenDetail from './screens/Gifts/GiftCardScreenDetail';
 import StoreOverviewPage from './screens/Store/StoreOverviewPage';
 import RewardsScreen from './screens/Rewards/RewardsScreen';
+import EditProfileScreen from './screens/Profile/EditProfileScreen';
+import HelpScreen  from './screens/Profile/HelpScreen';
 
 
 const Stack = createStackNavigator();
@@ -232,6 +234,16 @@ const AppNavigator = () => (
       component={StoreOverviewPage}
       options={{ headerShown: false }}
     />
+        <Stack.Screen
+      name="EditProfileScreen"
+      component={EditProfileScreen}
+      options={{ headerShown: false }}
+    />
+     <Stack.Screen
+      name="HelpScreen"
+      component={HelpScreen}
+      options={{ headerShown: false }}
+    />
     <Stack.Screen
       name="Main"
       component={TabNavigator}
@@ -275,6 +287,7 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     paddingHorizontal: 20,
     marginTop: 10, // Space above the subtext
+    fontFamily:'DMSans-Regular',
   },
 
 

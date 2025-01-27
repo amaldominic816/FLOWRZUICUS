@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import HeaderInner from '../../screens/components/Headerinner';
+import Colors from '../components/Colors';
 
 
 const orders = [
@@ -95,36 +96,15 @@ const MyOrdersScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
+    backgroundColor:Colors.background,
   },
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
-    backgroundColor: '#F9F9F9',
-  },
-  backButton: {
-    padding: 8,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  icons: {
-    flexDirection: 'row',
-  },
-  icon: {
-    width: 24,
-    height: 24,
-    marginHorizontal: 8,
-  },
+
+
   listContainer: {
     padding: 10,
   },
   orderCard: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     borderRadius: 10,
     padding: 15,
     marginBottom: 10,
@@ -148,13 +128,15 @@ const styles = StyleSheet.create({
   },
   orderNumber: {
     fontSize: 12,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
+
     color: '#333',
   },
   deliveryDate: {
     fontSize: 10,
     color: '#666',
     marginTop: 5,
+    fontFamily:'DMSans-Regular',
   },
   statusBadge: {
     alignItems: 'center',
@@ -174,7 +156,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 12,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
     color: '#F25485',
     textAlign: 'center',
   },
@@ -203,13 +185,13 @@ const styles = StyleSheet.create({
   },
   rateText: {
     fontSize: 12,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
     color: '#F25485',
     marginLeft: 5,
   },
   messageText: {
     fontSize: 12,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
     color: '#F25485',
     marginLeft: 5,
   },

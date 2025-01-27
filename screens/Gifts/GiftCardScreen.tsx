@@ -15,6 +15,7 @@ import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import Header from '../../screens/components/Header';
 import ButtonOutlined from '../components/ButtonOutlined';
+import Colors from '../components/Colors';
 
 const { width } = Dimensions.get('window');
 
@@ -69,7 +70,7 @@ const GiftCardScreen = ({navigation}) => {
     <SafeAreaView style={styles.container}>
     <View style={styles.container}>
       {/* Set StatusBar */}
-      <StatusBar backgroundColor="#F9F9F9" barStyle="dark-content" />
+      <StatusBar backgroundColor={Colors.background} barStyle="dark-content" />
 
       <Header
         title="Gift Card " // Dynamic title
@@ -133,38 +134,16 @@ const GiftCardScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: Colors.background,
   },
   buttonWrapper: {
     paddingHorizontal: 16, // Add padding on both sides
     marginTop: 10,         // Optional: Add some margin above the button
   },
   
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
-    marginTop:40,
-    backgroundColor: '#F9F9F9',
-  },
 
-  backButton: {
-    padding: 8,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  icons: {
-    flexDirection: 'row',
-  },
-  icon: {
-    width: 24,
-    height: 24,
-    marginHorizontal: 8,
-  },
+
+
   bannerContainer: {
     width: width - 32,
     height: 150,
@@ -173,7 +152,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 12,
     overflow: 'hidden',
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
   },
   banner: {
     width: width - 32,
@@ -184,7 +163,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   giftCard: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     borderRadius: 10,
     marginRight: 10,
     alignItems: 'center',
@@ -215,7 +194,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
     color: '#333',
     paddingHorizontal: 15,
     marginVertical: 10,
@@ -224,7 +203,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   myGiftCard: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     borderRadius: 10,
     padding: 15,
     marginBottom: 10,

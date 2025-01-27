@@ -6,100 +6,120 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from '../../screens/components/Header';
+import Colors from '../components/Colors';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
 
   return (
     <SafeAreaView style={styles.container}>
-    <View style={styles.container}>
-      {/* Top Bar */}
-      <Header
-        title="Profile" // Dynamic title
-        showCartIcon={true} // Show cart icon
-        showNotificationIcon={true} // Show notification icon
-        showProfileIcon={false} // Show profile icon
-        onCartPress={() => navigation.navigate('CartPage')}
-        onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
-        onProfilePress={() => navigation.navigate('ProfileScreen')}
-      />
-      {/* Profile Section */}
-      <View style={styles.profileSection}>
-        <Image
-          source={require('../../assets/images/profile-picture.png')} // Replace with dynamic image source
-          style={styles.profileImage}
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        {/* Top Bar */}
+        <Header
+          title="Profile" // Dynamic title
+          showCartIcon={true} // Show cart icon
+          showNotificationIcon={true} // Show notification icon
+          showProfileIcon={false} // Show profile icon
+          onCartPress={() => navigation.navigate('CartPage')}
+          onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
+          onProfilePress={() => navigation.navigate('ProfileScreen')}
         />
-        <View>
-          <Text style={styles.profileName}>Salim Al Tajir</Text>
-          <Text style={styles.profileEmail}>smn7552@gmail.com</Text>
+        {/* Profile Section */}
+        <View style={styles.profileSection}>
+          <Image
+            source={require('../../assets/images/profile-picture.png')} // Replace with dynamic image source
+            style={styles.profileImage}
+          />
+          <View style={styles.profileInfo}>
+            <Text style={styles.profileName}>Salim Al Tajir</Text>
+            <Text style={styles.profileEmail}>smn7552@gmail.com</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => navigation.navigate('EditProfileScreen')} // Navigate to the profile edit screen
+          >
+            <Image
+              source={require('../../assets/images/ed.png')}
+              style={styles.editIcon}
+            />
+          </TouchableOpacity>
         </View>
-      </View>
 
-      {/* Account Settings */}
-      <View style={styles.accountSettings}>
-        <Text style={styles.accountSettingsTitle}>Account Setting</Text>
+        {/* Account Settings */}
+        <View style={styles.accountSettings}>
+          <Text style={styles.accountSettingsTitle}>Account Setting</Text>
 
-        {/* Account Options */}
-        <View style={styles.settingsContainer}>
-          {[
-            {
-              title: 'My Order',
-              icon: require('../../assets/images/ordervan.png'),
-              navigateTo: 'MyOrdersScreen', // Page to navigate
-            },
-            { title: 'Invoices', icon: require('../../assets/images/invoice.png'),
-              navigateTo:'InvoicesScreen',
-             },
-            {
-              title: 'Saved Addresses',
-              icon: require('../../assets/images/savedaddress.png'),
-              navigateTo:'AddAddressScreen',
-            },
-            { title: 'Occasions', icon: require('../../assets/images/calender.png'),
-              navigateTo:'MyOccasionsScreen',
-             },
-            {
-              title: 'Floward Wallet',
-              icon: require('../../assets/images/wallet.png'),
-              isCurrency: true,
-              currency: 'AED',
-              navigateTo:'MyWalletScreen',
-            },
-            {
-              title: 'Terms and Conditions',
-              icon: require('../../assets/images/Terms.png'),
-            },
-          ].map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.settingItem}
-              onPress={() => {
-                if (item.navigateTo) {
-                  navigation.navigate(item.navigateTo);
-                }
-              }}
-            >
-              <View style={styles.settingLeft}>
-                <Image source={item.icon} style={styles.settingIcon} />
-                <Text style={styles.settingText}>{item.title}</Text>
-              </View>
-              <View style={styles.settingRight}>
-                {item.isCurrency && (
-                  <Text style={styles.currency}>{item.currency}</Text>
-                )}
-                <Image
-                  source={require('../../assets/images/arrow-right.png')}
-                  style={styles.arrowIcon}
-                />
-              </View>
-            </TouchableOpacity>
-          ))}
+          {/* Account Options */}
+          <View style={styles.settingsContainer}>
+            {[
+              {
+                title: 'My Order',
+                icon: require('../../assets/images/ordervan.png'),
+                navigateTo: 'MyOrdersScreen', // Page to navigate
+              },
+              {
+                title: 'Invoices',
+                icon: require('../../assets/images/invoice.png'),
+                navigateTo: 'InvoicesScreen',
+              },
+              {
+                title: 'Saved Addresses',
+                icon: require('../../assets/images/savedaddress.png'),
+                navigateTo: 'AddAddressScreen',
+              },
+              {
+                title: 'Occasions',
+                icon: require('../../assets/images/calender.png'),
+                navigateTo: 'MyOccasionsScreen',
+              },
+              {
+                title: 'Floward Wallet',
+                icon: require('../../assets/images/wallet.png'),
+                isCurrency: true,
+                currency: 'AED',
+                navigateTo: 'MyWalletScreen',
+              },
+              {
+                title: 'Help & Support',
+                icon: require('../../assets/images/help.png'),
+                navigateTo: 'HelpScreen',
+              },
+              {
+                title: 'Terms and Conditions',
+                icon: require('../../assets/images/Terms.png'),
+              },
+            ].map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.settingItem}
+                onPress={() => {
+                  if (item.navigateTo) {
+                    navigation.navigate(item.navigateTo);
+                  }
+                }}
+              >
+                <View style={styles.settingLeft}>
+                  <Image source={item.icon} style={styles.settingIcon} />
+                  <Text style={styles.settingText}>{item.title}</Text>
+                </View>
+                <View style={styles.settingRight}>
+                  {item.isCurrency && (
+                    <Text style={styles.currency}>{item.currency}</Text>
+                  )}
+                  <Image
+                    source={require('../../assets/images/arrow-right.png')}
+                    style={styles.arrowIcon}
+                  />
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
-      </View>
-    </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -107,47 +127,16 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: Colors.background,
   },
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
-    backgroundColor: '#f9f9f9',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-  },
-  topBarText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  topBarIcons: {
-    flexDirection: 'row',
-  },
-  iconContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 30,
-    padding: 8,
-    marginLeft: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-  },
-  icon: {
-    width: 24,
-    height: 24,
+  scrollViewContent: {
+    paddingBottom: 20,
   },
   profileSection: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: Colors.background,
     marginBottom: 10,
   },
   profileImage: {
@@ -156,17 +145,29 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginRight: 15,
   },
+  profileInfo: {
+    flex: 1,
+  },
   profileName: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
     color: '#333',
   },
   profileEmail: {
     fontSize: 14,
     color: '#666',
+    fontFamily:'DMSans-Regular',
+  },
+  editButton: {
+    padding: 8,
+  },
+  editIcon: {
+    width: 24,
+    height: 24,
+    resizeMode: 'contain',
   },
   accountSettings: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     padding: 15,
     borderRadius: 20,
     marginHorizontal: 10,
@@ -174,13 +175,13 @@ const styles = StyleSheet.create({
   },
   accountSettingsTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
     marginBottom: 15,
     color: '#333',
   },
   settingsContainer: {
     borderRadius: 10,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     paddingVertical: 10,
   },
   settingItem: {
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 10,
     borderRadius: 10,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: Colors.background,
   },
   settingLeft: {
     flexDirection: 'row',
@@ -206,6 +207,7 @@ const styles = StyleSheet.create({
   settingText: {
     fontSize: 16,
     color: '#333',
+    fontFamily:'DMSans-Regular',
   },
   settingRight: {
     flexDirection: 'row',
@@ -213,8 +215,8 @@ const styles = StyleSheet.create({
   },
   currency: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#e94e77',
+    fontFamily:'DMSans-Bold',
+    color: Colors.Gradient2,
     marginRight: 5,
   },
   arrowIcon: {

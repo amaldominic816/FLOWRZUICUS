@@ -14,6 +14,8 @@ import {
 import ButtonOutlined from '../components/ButtonOutlined';
 import ButtonPrimary from '../components/ButtonPrimary';
 import HeaderInner from '../components/Headerinner';
+import OutlinedButton from '../components/OutlinedButton';
+import Colors from '../components/Colors';
 
 const giftCards = [
   {
@@ -37,14 +39,14 @@ const giftCards = [
 ];
 
 const GiftCardScreenDetail = ({ navigation }) => {
-  const [activeTab, setActiveTab] = useState('selectCard');
+  const [activeTab, setActiveTab] = useState('addMessage');
   const [selectedCard, setSelectedCard] = useState(null);
 
   const handleSelectCard = (id) => setSelectedCard(id);
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#F5F5F5" barStyle="dark-content" />
+      <StatusBar backgroundColor={Colors.background} barStyle="dark-content" />
 
       <HeaderInner
         title="Giftcard&Message"
@@ -59,12 +61,12 @@ const GiftCardScreenDetail = ({ navigation }) => {
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
         {/* Tabs */}
         <View style={styles.tabBar}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[styles.tabButton, activeTab === 'selectCard' && styles.activeTabButton]}
             onPress={() => setActiveTab('selectCard')}
           >
             <Text style={[styles.tabText, activeTab === 'selectCard' && styles.activeTabText]}>Select Card</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             style={[styles.tabButton, activeTab === 'addMessage' && styles.activeTabButton]}
             onPress={() => setActiveTab('addMessage')}
@@ -75,7 +77,7 @@ const GiftCardScreenDetail = ({ navigation }) => {
 
         {/* Tab Content */}
         <View style={styles.content}>
-          {activeTab === 'selectCard' && (
+          {/* {activeTab === 'selectCard' && (
             <FlatList
               data={giftCards}
               keyExtractor={(item) => item.id}
@@ -91,7 +93,7 @@ const GiftCardScreenDetail = ({ navigation }) => {
               )}
               contentContainerStyle={styles.cardList}
             />
-          )}
+          )} */}
           {activeTab === 'addMessage' && (
             <View style={styles.addMessageContainer}>
               <TextInput
@@ -101,13 +103,23 @@ const GiftCardScreenDetail = ({ navigation }) => {
                 multiline
                 numberOfLines={4}
               />
-              <Text style={styles.characterLimitText}>180 Characters Left</Text>
 
               <View style={styles.suggestionsContainer}>
-                <Text style={styles.suggestionsText}>Not sure what to say?</Text>
-                <TouchableOpacity>
-                  <Text style={styles.suggestionsLink}>Try Suggested Messages</Text>
-                </TouchableOpacity>
+              <OutlinedButton
+        title="Generate"
+        icon={require('../../assets/images/ai.png')} // Replace with your actual icon path
+        onPress={()=> navigation.navigate('')}
+        style={styles.customButton}
+      />
+                <ButtonPrimary
+          buttonText="Try Suggested Messages"
+          onPress={() => navigation.navigate('')}
+          buttonWidth={Dimensions.get('window').width * 0.4}
+          buttonHeight={42}
+          fontSize={14}
+          gradientColors={['#DE8542', '#FE5993']}
+
+        />
               </View>
               <View style={[styles.pasteLinkContainer, { height: 40 }]}>
                 <Image
@@ -117,21 +129,21 @@ const GiftCardScreenDetail = ({ navigation }) => {
                 <TextInput
                   style={styles.pasteInput}
                   placeholder="Paste your link"
-                  placeholderTextColor="#888"
+                  placeholderTextColor={Colors.placeholder}
                 />
               </View>
 
               <TextInput
                 style={[styles.input, { height: 40 }]}
                 placeholder="To: Optional"
-                placeholderTextColor="#888"
+                placeholderTextColor={Colors.placeholder}
               />
 
               <View style={[styles.fromContainer, { height: 50 }]}>
                 <TextInput
                   style={styles.fromInput}
                   placeholder="From: Optional"
-                  placeholderTextColor="#888"
+                  placeholderTextColor={Colors.placeholder}
                 />
                 <TouchableOpacity style={styles.signatureButton}>
                   <Image
@@ -172,7 +184,10 @@ const GiftCardScreenDetail = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.background,
+  },
+  customButton: {
+    marginTop: 0, // Add spacing between buttons
   },
   tabBar: {
     flexDirection: 'row',
@@ -188,11 +203,13 @@ const styles = StyleSheet.create({
   tabText: {
     color: '#777',
     fontSize: 16,
+    fontFamily:'DMSans-Regular',
+
   },
   pasteLinkContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F9F9F9',
+    backgroundColor: Colors.background,
     borderRadius: 8,
     borderColor: '#ddd',
     paddingHorizontal: 12,
@@ -208,6 +225,8 @@ const styles = StyleSheet.create({
     flex: 1,
     color: '#000',
     fontSize: 14,
+    fontFamily:'DMSans-Regular',
+
   },
   activeTabButton: {
     borderBottomWidth: 2,
@@ -215,7 +234,8 @@ const styles = StyleSheet.create({
   },
   activeTabText: {
     color: '#FF6F61',
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
+
   },
   content: {
     paddingHorizontal: 16,
@@ -224,7 +244,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   cardContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#ddd',
@@ -242,16 +262,19 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
+
     marginTop: 8,
   },
   cardPrice: {
     fontSize: 14,
+    fontFamily:'DMSans-Regular',
+
     color: '#888',
     marginTop: 4,
   },
   addMessageContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     borderRadius: 12,
     padding: 10,
     marginTop: 10,
@@ -266,18 +289,22 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     borderRadius: 8,
     paddingHorizontal: 12,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: Colors.background,
     color: '#000',
   },
   messageInput: {
     height: 100,
     textAlignVertical: 'top',
+    fontFamily:'DMSans-Regular',
+
   },
   characterLimitText: {
     color: '#888',
     fontSize: 12,
     textAlign: 'right',
     marginBottom: 16,
+    fontFamily:'DMSans-Regular',
+
   },
   suggestionsContainer: {
     flexDirection: 'row',
@@ -288,17 +315,20 @@ const styles = StyleSheet.create({
   suggestionsText: {
     fontSize: 14,
     color: '#555',
+    fontFamily:'DMSans-Regular',
+
   },
   suggestionsLink: {
     fontSize: 14,
     color: '#FF6F61',
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
+
   },
   fromContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.background,
     borderRadius: 12,
     paddingHorizontal: 16,
   },
@@ -307,6 +337,8 @@ const styles = StyleSheet.create({
     marginRight: 16,
     fontSize: 14,
     color: '#333',
+    fontFamily:'DMSans-Regular',
+
   },
   signatureButton: {
     flexDirection: 'row',
@@ -320,6 +352,8 @@ const styles = StyleSheet.create({
   },
   signatureText: {
     fontSize: 14,
+    fontFamily:'DMSans-Regular',
+
     color: '#333',
     fontWeight: '500',
   },

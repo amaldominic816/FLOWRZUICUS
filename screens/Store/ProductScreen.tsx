@@ -13,6 +13,7 @@ import Svg, {Path} from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import ButtonPrimary from '../components/ButtonPrimary';
 import HeaderInner from '../components/Headerinner';
+import Colors from '../components/Colors';
 const screenWidth = Dimensions.get('window').width;
 const ProductOverview = ({navigation}) => {
   const [quantity, setQuantity] = useState(1);
@@ -112,13 +113,13 @@ const ProductOverview = ({navigation}) => {
             <TouchableOpacity
               style={[
                 styles.tabButton,
-                activeTab === 'cardTips' && styles.activeTabButton,
+                activeTab === 'careTips' && styles.activeTabButton,
               ]}
-              onPress={() => setActiveTab('cardTips')}>
+              onPress={() => setActiveTab('careTips')}>
               <Text
                 style={[
                   styles.tabText,
-                  activeTab === 'cardTips' && styles.activeTabText,
+                  activeTab === 'careTips' && styles.activeTabText,
                 ]}>
                 Card Tips
               </Text>
@@ -127,18 +128,23 @@ const ProductOverview = ({navigation}) => {
 
           {activeTab === 'description' && (
             <Text style={styles.description}>
-              Our collection of floral products is carefully curated to bring
-              beauty, joy, and freshness to every moment. From vibrant bouquets
-              to elegant arrangements, each product is crafted with precision
-              and love.
+           Yellow tulips are a vibrant and cheerful variety of tulips that radiate positivity and warmth. Their bright golden-yellow petals are reminiscent of sunshine, making them a popular choice for spreading happiness and lifting spirits. Symbolizing joy, friendship, and new beginnings, yellow tulips are perfect for celebrating special moments or simply brightening someone’s day.
+
+These stunning flowers bloom in the spring, often standing tall with strong green stems and a delicate cup-shaped bloom. Whether arranged in a bouquet or planted in a garden, yellow tulips add a touch of elegance and a splash of color to any setting. Their timeless beauty and uplifting hue make them a favorite among flower enthusiasts and a perfect representation of hope and optimism. 🌞🌷
             </Text>
           )}
-          {activeTab === 'cardTips' && (
+          {activeTab === 'careTips' && (
             <Text style={styles.description}>
-              Our collection of floral products is carefully curated to bring
-              beauty, joy, and freshness to every moment. From vibrant bouquets
-              to elegant arrangements, each product is crafted with precision
-              and love.
+              ✂️ Trim Stems: Cut stems at a 45° angle for better water absorption.{'\n'}
+💧 Fresh Water: Change vase water every 2-3 days to keep it clean.{'\n'}
+🥤 Flower Food: Add flower food or a DIY mix of sugar, bleach, and lemon juice.{'\n'}
+🍃 Remove Leaves: Take off leaves below the waterline to avoid rotting.{'\n'}
+🌤️ Avoid Sunlight: Keep flowers away from direct sun and heat.{'\n'}
+🌬️ No Drafts: Avoid placing flowers near fans, ACs, or vents.{'\n'}
+🌡️ Cool Storage: Refrigerate flowers overnight to prolong freshness.{'\n'}
+💦 Mist Daily: Spray petals lightly to keep them hydrated.{'\n'}
+🥀 Remove Wilted Blooms: Take out dying flowers to protect the fresh ones.{'\n'}
+🍎 Keep Away from Fruits: Avoid placing flowers near ripening fruits.{'\n'}
             </Text>
           )}
         </View>
@@ -169,55 +175,26 @@ const ProductOverview = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: '#F5F5F5'},
+  container: {flex: 1, backgroundColor: Colors.background},
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
   },
-  headerIcons: {flexDirection: 'row'},
-  iconButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 8,
-  },
-  headerIconImage: {
-    width: 24,
-    height: 24,
-    resizeMode: 'contain',
-  },
-  iconButton2: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#FFE0C4',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
-    marginLeft: 8,
-  },
 
-  headerText: {fontSize: 18, fontWeight: 'bold'},
+
   content: {padding: 16},
   productImage: {
     width: '80%',
     height: undefined,
-    aspectRatio: 1.2, // Maintain the aspect ratio
+    aspectRatio: 1.2,
     borderRadius: 20,
     alignSelf: 'center',
-    resizeMode: 'contain', // Ensures the full image is displayed without cropping
+    resizeMode: 'contain',
   },
   detailsBox: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     borderRadius: 20,
     padding: 16,
     marginTop: 16,
@@ -228,8 +205,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  productName: {fontSize: 20, fontWeight: 'bold'},
-  price: {fontSize: 18, color: '#000', marginTop: 4},
+  productName: {fontSize: 20, fontFamily:'DMSans-Bold'},
+  price: {fontSize: 18, color: '#000', marginTop: 4,fontFamily:'DMSans-Regular'},
   quantityContainer: {flexDirection: 'row', alignItems: 'center'},
   quantityButton: {
     paddingVertical: 6,
@@ -238,16 +215,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginHorizontal: 8,
   },
-  quantityText: {fontSize: 18},
+  quantityText: {fontSize: 18,fontFamily:'DMSans-Regular'},
   includes: {marginTop: 24},
-  sectionTitle: {fontSize: 18, fontWeight: 'bold', marginBottom: 8},
+  sectionTitle: {fontSize: 18, fontFamily:'DMSans-Bold', marginBottom: 8},
   includesImagesContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   includesImage: {width: 70, height: 70, borderRadius: 10},
   tabContentBox: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     borderRadius: 20,
     padding: 16,
     marginTop: 16,
@@ -261,41 +238,24 @@ const styles = StyleSheet.create({
   tabButton: {flex: 1, alignItems: 'center', padding: 12},
   tabText: {color: '#777'},
   activeTabButton: {borderBottomWidth: 2, borderColor: '#FF6F61'},
-  activeTabText: {color: '#FF6F61', fontWeight: 'bold'},
-  description: {fontSize: 12, color: '#555', fontFamily: 'General Sans Regular'},
+  activeTabText: {color: '#FF6F61', fontFamily:'DMSans-Bold'},
+  description: {fontSize: 12, color: '#555', fontFamily:'DMSans-Regular'},
 
   footerButtons: {
     flexDirection: 'row',
     alignItems: 'center',
     margin: 16,
   },
-  addToCartButton: {
-    borderRadius: 8,
-        alignItems: 'center',
-        paddingVertical: 15,
-        marginBottom: 0,
-        shadowColor: '#ccc',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.2,
-        shadowRadius: 1,
-        elevation: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-    textAlign: 'center',
-},
+
+
   buttonGap: {
     width: 16,
   },
-  addToCartText: {color: '#fff', fontSize: 18, fontWeight: 'bold'},
   favoriteButton: {
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     justifyContent: 'center',
     alignItems: 'center',
   },

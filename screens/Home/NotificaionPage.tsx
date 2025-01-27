@@ -10,6 +10,7 @@ import {
 import Svg, { Path } from 'react-native-svg';
 import HeaderInner from '../../screens/components/Headerinner';
 import { useNavigation } from '@react-navigation/native';
+import Colors from '../components/Colors';
 
 
 
@@ -115,52 +116,11 @@ const PushNotificationsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
+    backgroundColor:Colors.background,
   },
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
-    backgroundColor: '#f9f9f9',
-  },
-  topBarText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  topBarIcons: {
-    flexDirection: 'row',
-  },
-  iconButton2: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#FFE0C4',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
-    marginRight: 16,
-  },
-  iconContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    padding: 8,
-    marginLeft: 10,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-  },
-  icon: {
-    width: 24,
-    height: 24,
-  },
+
+
+ 
   notificationList: {
     padding: 10,
   },
@@ -168,7 +128,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     padding: 15,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     borderRadius: 10,
     marginBottom: 10,
     elevation: 2,
@@ -193,16 +153,21 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
+
     color: '#333',
   },
   notificationTime: {
     fontSize: 12,
     color: '#999',
+    fontFamily:'DMSans-Regular',
+
   },
   notificationMessage: {
     fontSize: 13,
     color: '#555',
+    fontFamily:'DMSans-Regular',
+
   },
 });
 

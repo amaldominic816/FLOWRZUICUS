@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import HeaderInner from '../../screens/components/Headerinner';
+import Colors from '../components/Colors';
 
 
 const occasions = [
@@ -77,50 +78,30 @@ const MyOccasionsScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: Colors.background,
   },
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
-    backgroundColor: '#F9F9F9',
-  },
-  backButton: {
-    padding: 8,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  icons: {
-    flexDirection: 'row',
-  },
-  icon: {
-    width: 24,
-    height: 24,
-    marginHorizontal: 8,
-  },
+
   quickAddSection: {
     paddingHorizontal: 15,
     paddingVertical: 10,
+    marginTop: 20,
   },
   quickAddTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
     color: '#333',
   },
   quickAddSubtitle: {
     fontSize: 14,
     color: '#666',
     marginVertical: 5,
+    fontFamily:'DMSans-Regular',
   },
   occasionList: {
     marginTop: 10,
   },
   occasionCard: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     borderRadius: 10,
     padding: 10,
     alignItems: 'center',
@@ -136,7 +117,7 @@ const styles = StyleSheet.create({
   },
   occasionTitle: {
     fontSize: 12,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
     color: '#333',
     textAlign: 'center',
   },
@@ -148,6 +129,7 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 14,
     color: '#555',
+    fontFamily:'DMSans-Regular',
   },
 });
 

@@ -7,9 +7,8 @@ import {
   StyleSheet,
   Image,
 } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
 import HeaderInner from '../../screens/components/Headerinner';
-
+import Colors from '../components/Colors';
 
 const invoices = [
   {
@@ -41,7 +40,7 @@ const invoices = [
   },
 ];
 
-const InvoicesScreen = ({navigation}) => {
+const InvoicesScreen = ({ navigation }) => {
   const renderItem = ({ item }) => (
     <View style={styles.invoiceCard}>
       <Text style={styles.orderId}>Order ID: {item.orderId}</Text>
@@ -65,18 +64,22 @@ const InvoicesScreen = ({navigation}) => {
         showNotificationIcon={true}
         showCartIcon={true}
         onBackPress={() => navigation.goBack()}
-        onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
-        onCartPress={()=>navigation.navigate('CartPage')}
+        onNotificationPress={() =>
+          navigation.navigate('PushNotificationsScreen')
+        }
+        onCartPress={() => navigation.navigate('CartPage')}
       />
-
 
       {/* Invoices List */}
-      <FlatList
-        data={invoices}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContainer}
-      />
+      <View style={styles.listWrapper}>
+        <FlatList
+          data={invoices}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContainer}
+          showsVerticalScrollIndicator={false} // Hide vertical scroll bar for cleaner UI
+        />
+      </View>
     </View>
   );
 };
@@ -84,36 +87,18 @@ const InvoicesScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: Colors.background,
   },
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
-    backgroundColor: '#F9F9F9',
-  },
-  backButton: {
-    padding: 8,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  icons: {
-    flexDirection: 'row',
-  },
-  icon: {
-    width: 24,
-    height: 24,
-    marginHorizontal: 8,
+  listWrapper: {
+    flex: 1,
+    marginTop: 20, // Add margin at the top to separate content from the header
   },
   listContainer: {
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingBottom: 20, // Add padding at the bottom for better spacing
   },
   invoiceCard: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     borderRadius: 10,
     padding: 15,
     marginBottom: 10,
@@ -121,13 +106,14 @@ const styles = StyleSheet.create({
   },
   orderId: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'DMSans-Bold',
     marginBottom: 5,
   },
   detailText: {
     fontSize: 14,
     color: '#555',
     marginBottom: 5,
+    fontFamily: 'DMSans-Regular',
   },
   button: {
     marginTop: 10,
@@ -139,7 +125,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#F25485',
     fontSize: 14,
-    fontWeight: 'bold',
+    fontFamily: 'DMSans-Bold',
   },
 });
 

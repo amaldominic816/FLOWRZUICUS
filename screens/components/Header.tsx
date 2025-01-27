@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, Platform, StatusBar } from 'react-native';
+import Colors from './Colors';
 
 const Header = ({ 
   title = 'Header', // Default title
@@ -28,7 +29,7 @@ const Header = ({
         {showCartIcon && (
           <TouchableOpacity style={styles.iconButton} onPress={onCartPress}>
             <Image
-              source={require('../../assets/images/bagcart.jpg')}
+              source={require('../../assets/images/flowercart.png')}
               style={styles.icon}
             />
           </TouchableOpacity>
@@ -60,12 +61,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.background,
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
     color: '#000',
+    fontFamily:'DMSans-Bold',
   },
   iconsContainer: {
     flexDirection: 'row',
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 8,

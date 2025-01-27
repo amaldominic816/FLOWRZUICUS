@@ -1,24 +1,25 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image,ScrollView, Dimensions, } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions, } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import HeaderInner from '../../screens/components/Headerinner';
 import ButtonOutlined from '../components/ButtonOutlined';
 import ButtonPrimary from '../components/ButtonPrimary';
+import Colors from '../components/Colors';
 
 
 
 const OrderDetails = ({ navigation }) => {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-     <HeaderInner
+      <HeaderInner
         title="Order Details"
         showBackButton={true}
         showNotificationIcon={true}
         showCartIcon={true}
         onBackPress={() => navigation.goBack()}
         onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
-        onCartPress={()=>navigation.navigate('CartPage')}
+        onCartPress={() => navigation.navigate('CartPage')}
       />
 
       {/* Order Status Section */}
@@ -40,14 +41,14 @@ const OrderDetails = ({ navigation }) => {
         </View>
 
         <ButtonOutlined
-        buttonText="Track Order"
-        onPress={() => navigation.navigate('OrderTracking')}
-        buttonWidth={Dimensions.get('window').width * 0.8} // 90% of the screen width
-        buttonHeight={50} // Custom height
-        fontSize={15} // Custom font size
-        borderColor="#FF7E5F" // Custom border color
-        textColor="#FF7E5F" // Custom text color
-      />
+          buttonText="Track Order"
+          onPress={() => navigation.navigate('OrderTracking')}
+          buttonWidth={Dimensions.get('window').width * 0.8} // 90% of the screen width
+          buttonHeight={50} // Custom height
+          fontSize={15} // Custom font size
+          borderColor="#FF7E5F" // Custom border color
+          textColor="#FF7E5F" // Custom text color
+        />
 
 
 
@@ -79,13 +80,13 @@ const OrderDetails = ({ navigation }) => {
         </View>
 
         <ButtonPrimary
-                buttonText="Need Help ?"
-                onPress={() => navigation.navigate('')}
-                buttonWidth={Dimensions.get('window').width * 0.8} // Set width to 80% of the screen width
-                buttonHeight={50}
-                fontSize={15}
-                gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
-              />
+          buttonText="Need Help ?"
+          onPress={() => navigation.navigate('')}
+          buttonWidth={Dimensions.get('window').width * 0.8} // Set width to 80% of the screen width
+          buttonHeight={50}
+          fontSize={15}
+          gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
+        />
       </View>
 
       {/* Delivery Section */}
@@ -147,15 +148,7 @@ const OrderDetails = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: Colors.background,
   },
   contentContainer: {
     paddingBottom: 20, // Add some padding for better spacing at the bottom
@@ -185,13 +178,13 @@ const styles = StyleSheet.create({
   iconImage: { width: 24, height: 24 },
   headerTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
     color: '#000',
   },
   deliveryContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.secondary,
     borderRadius: 10,
     padding: 16,
     shadowColor: '#000',
@@ -205,7 +198,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#F2F2F2',
+    backgroundColor: Colors.secondary,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
@@ -222,25 +215,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#7E7E7E',
     marginBottom: 4,
+    fontFamily:'DMSans-Regular',
   },
   deliveryDate: {
     fontSize: 16,
     fontWeight: '600',
     color: '#000',
+    fontFamily:'DMSans-Regular',
   },
-  
-  iconButton2: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#FFE0C4',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-  },
+
+
   orderContainer: {
     margin: 16,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.secondary,
     borderRadius: 10,
     padding: 16,
     shadowColor: '#000',
@@ -257,42 +244,22 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     marginRight: 16,
-    resizeMode:'contain',
+    resizeMode: 'contain',
   },
   orderNumber: {
     fontSize: 16,
     fontWeight: '600',
     color: '#000',
+    fontFamily:'DMSans-Regular',
   },
   copyText: {
     fontSize: 12,
     color: '#FF8A80',
-  },
-  trackButton: {
-    marginVertical: 8,
-    alignSelf: 'center', // Centers the button horizontally
-    width: '100%', // Matches the parent container width
-  },
-  trackButtonGradient: {
-    padding: 2, // Gradient border thickness
-    borderRadius: 12, // Ensures the gradient border matches the button's radius
-  },
-  trackButtonContent: {
-    backgroundColor: '#FFF', // White background inside the gradient border
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 12,
-  },
-  trackButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#FD3A84', // Matches the gradient color for text
-    textAlign: 'center',
+    fontFamily:'DMSans-Regular',
   },
   deliveryStatus: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
     marginTop: 8,
   },
   deliveryMessage: {
@@ -321,20 +288,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
     color: '#7E7E7E',
+    fontFamily:'DMSans-Regular',
   },
-  needHelpButton: {
-    backgroundColor: '#FF8A80',
-    paddingVertical: 14,
-    alignItems: 'center',
-    borderRadius: 10,
-    marginTop: 8,
-  },
-  needHelpText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
+
+
   productContainer: {
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.secondary,
     borderRadius: 10,
     padding: 16,
     marginHorizontal: 16,
@@ -359,21 +318,23 @@ const styles = StyleSheet.create({
   },
   productName: {
     fontSize: 16,
-    fontWeight: '600',
+
     color: '#000',
+    fontFamily:'DMSans-SemiBold',
   },
   productQty: {
     fontSize: 14,
     color: '#7E7E7E',
     marginTop: 4,
+    fontFamily:'DMSans-Regular',
   },
   productPrice: {
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily:'DMSans-SemiBold',
     color: '#000',
   },
   paymentContainer: {
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.secondary,
     borderRadius: 10,
     padding: 16,
     marginHorizontal: 16,
@@ -391,10 +352,11 @@ const styles = StyleSheet.create({
   paymentLabel: {
     fontSize: 14,
     color: '#7E7E7E',
+    fontFamily:'DMSans-Regular',
   },
   paymentValue: {
     fontSize: 14,
-    fontWeight: '600',
+    fontFamily:'DMSans-SemiBold',
     color: '#000',
   },
   paymentNote: {
@@ -402,6 +364,7 @@ const styles = StyleSheet.create({
     color: '#7E7E7E',
     marginTop: 8,
     marginBottom: 16,
+    fontFamily:'DMSans-Regular',
   },
 });
 

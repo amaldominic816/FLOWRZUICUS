@@ -10,6 +10,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
+import Colors from './Colors';
 
 const HeaderInner = ({
   title = 'Header', // Default title
@@ -56,7 +57,7 @@ const HeaderInner = ({
           {showCartIcon && (
             <TouchableOpacity style={styles.iconButton} onPress={onCartPress}>
               <Image
-                source={require('../../assets/images/bagcart.jpg')}
+                source={require('../../assets/images/flowercart.png')}
                 style={styles.iconImage}
               />
             </TouchableOpacity>
@@ -80,18 +81,18 @@ const HeaderInner = ({
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: '#F9F9F9',
+    backgroundColor: Colors.secondary,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: Colors.background,
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily:'DMSans-Bold',
     color: '#000',
   },
   iconsContainer: {
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#FFF', // Default white background for all icons
+    backgroundColor: Colors.secondary, // Default white background for all icons
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 8,
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   backButton: {
-    backgroundColor: '#FFE0C4', // Specific background for the back button
+    backgroundColor: Colors.backbutton, // Specific background for the back button
   },
   iconImage: {
     width: 24,
