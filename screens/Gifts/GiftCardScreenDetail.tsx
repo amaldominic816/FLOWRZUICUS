@@ -106,7 +106,7 @@ const GiftCardScreenDetail = ({ navigation }) => {
 
               <View style={styles.suggestionsContainer}>
               <OutlinedButton
-        title="Generate"
+        title="Ask AI"
         icon={require('../../assets/images/ai.png')} // Replace with your actual icon path
         onPress={()=> navigation.navigate('')}
         style={styles.customButton}
@@ -115,8 +115,8 @@ const GiftCardScreenDetail = ({ navigation }) => {
           buttonText="Try Suggested Messages"
           onPress={() => navigation.navigate('')}
           buttonWidth={Dimensions.get('window').width * 0.4}
-          buttonHeight={42}
-          fontSize={14}
+          buttonHeight={40}
+          fontSize={12}
           gradientColors={['#DE8542', '#FE5993']}
 
         />

@@ -77,7 +77,7 @@ const ProfileScreen = () => {
                 navigateTo: 'MyOccasionsScreen',
               },
               {
-                title: 'Floward Wallet',
+                title: 'Flowrz Wallet',
                 icon: require('../../assets/images/wallet.png'),
                 isCurrency: true,
                 currency: 'AED',

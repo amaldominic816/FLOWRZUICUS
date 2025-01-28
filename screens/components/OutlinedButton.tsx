@@ -29,10 +29,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   icon: {
-    width: 20,
+    width: 35,
     height: 20,
     resizeMode: 'contain',
-    marginRight: 30,
   },
   text: {
     fontSize: 16,

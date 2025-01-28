@@ -121,7 +121,7 @@ const ProductOverview = ({navigation}) => {
                   styles.tabText,
                   activeTab === 'careTips' && styles.activeTabText,
                 ]}>
-                Card Tips
+                Care Tips
               </Text>
             </TouchableOpacity>
           </View>
@@ -154,7 +154,7 @@ These stunning flowers bloom in the spring, often standing tall with strong gree
       <View style={styles.footerButtons}>
       <ButtonPrimary
           buttonText="Add to Cart"
-          onPress={() => navigation.navigate('')}
+          onPress={() => navigation.navigate('CartPage')}
           buttonWidth={Dimensions.get('window').width * 0.7} // Set width to 80% of the screen width
           buttonHeight={50}
           fontSize={20}

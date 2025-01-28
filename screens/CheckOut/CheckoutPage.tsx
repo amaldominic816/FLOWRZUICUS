@@ -35,47 +35,68 @@ const CheckoutPage = ({ navigation }) => {
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Name and Delivery Type Section */}
+        {/* Delivery Type Section */}
         <View style={styles.deliveryTypeContainer}>
-          <Text style={styles.userName}>Delivery Type</Text>
+          <Text style={styles.sectionTitle}>Select Pickup Method</Text>
 
           <View style={styles.deliveryTypeOptions}>
             <TouchableOpacity
-              style={[
-                styles.deliveryTypeBox,
-                deliveryType === 'delivery' && styles.deliveryTypeSelected,
-              ]}
+              style={[styles.deliveryTypeBox, deliveryType === 'delivery' && styles.deliveryTypeSelected]}
               onPress={() => setDeliveryType('delivery')}
             >
-              <Text
-                style={
-                  deliveryType === 'delivery'
-                    ? styles.deliveryTypeTextSelected
-                    : styles.deliveryTypeText
-                }
-              >
+              <Image source={require('../../assets/images/delivery.png')} style={styles.deliveryIcon} />
+              <Text style={deliveryType === 'delivery' ? styles.deliveryTypeTextSelected : styles.deliveryTypeText}>
                 Delivery
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[
-                styles.deliveryTypeBox,
-                deliveryType === 'pickup' && styles.deliveryTypeSelected,
-              ]}
+              style={[styles.deliveryTypeBox, deliveryType === 'pickup' && styles.deliveryTypeSelected]}
               onPress={() => setDeliveryType('pickup')}
             >
-              <Text
-                style={
-                  deliveryType === 'pickup'
-                    ? styles.deliveryTypeTextSelected
-                    : styles.deliveryTypeText
-                }
-              >
+              <Image source={require('../../assets/images/store.png')} style={styles.deliveryIcon} />
+              <Text style={deliveryType === 'pickup' ? styles.deliveryTypeTextSelected : styles.deliveryTypeText}>
                 Pickup from Store
               </Text>
             </TouchableOpacity>
           </View>
+
+          {/* ETA or Delivery Time Section */}
+          {deliveryType === 'pickup' ? (
+            <View style={styles.etaContainer}>
+              <TouchableOpacity style={styles.etaBox}><Text style={styles.etaText}>10 Min <Text style={styles.etaLabel}>ETA</Text></Text></TouchableOpacity>
+              <TouchableOpacity style={styles.etaBox}><Text style={styles.etaText}>30 Min <Text style={styles.etaLabel}>ETA</Text></Text></TouchableOpacity>
+              <TouchableOpacity style={styles.etaBox}><Text style={styles.etaText}>45 Min <Text style={styles.etaLabel}>ETA</Text></Text></TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.deliveryTimeContainer}>
+              <Text style={styles.sectionTitle}>Delivery Time</Text>
+              <TouchableOpacity onPress={() => setShowPicker(true)}>
+                <Text style={styles.dateTimeText}>{selectedDate.toLocaleString('en-US', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}</Text>
+                <Text style={styles.changeText}>Change</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
+
+        <DatePicker
+          modal
+          open={showPicker}
+          date={selectedDate}
+          onConfirm={(date) => {
+            setShowPicker(false);
+            setSelectedDate(date);
+          }}
+          onCancel={() => {
+            setShowPicker(false);
+          }}
+        />
 
         {/* Delivery Address Section */}
         <View style={styles.deliveryAddressRow}>
@@ -115,40 +136,6 @@ const CheckoutPage = ({ navigation }) => {
             <Text style={styles.pickupText}>You have selected to pick up your order from the store.</Text>
           </View>
         )}
-
-        {/* Pick Date and Time Section */}
-        <View style={styles.dateTimeContainer}>
-          <Text style={styles.sectionTitleLeft}>
-            {deliveryType === 'delivery' ? 'Delivery Time' : 'Pickup Time'}
-          </Text>
-          <View style={styles.dateTimeRow}>
-            <Text style={styles.dateTimeText}>
-              {selectedDate.toLocaleString('en-US', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
-            </Text>
-            <TouchableOpacity onPress={() => setShowPicker(true)}>
-              <Text style={styles.changeText}>Change</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <DatePicker
-          modal
-          open={showPicker}
-          date={selectedDate}
-          onConfirm={(date) => {
-            setShowPicker(false);
-            setSelectedDate(date);
-          }}
-          onCancel={() => {
-            setShowPicker(false);
-          }}
-        />
 
         {/* Add Note Section */}
         <View style={styles.noteContainer}>
@@ -234,58 +221,33 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
   },
-  deliveryTypeContainer: {
-    marginBottom: 16,
-    backgroundColor: Colors.secondary,
-    borderRadius: 8,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-  },
-  userName: {
-    fontSize: 16,
-    fontFamily:'DMSans-Bold',
-    color: '#333',
-    marginBottom: 16,
-
-  },
-  deliveryTypeOptions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  deliveryTypeBox: {
-    flex: 1,
+  deliveryTimeContainer: {
+    marginTop: 12,
     padding: 12,
-    marginHorizontal: 4,
+    backgroundColor:Colors.background,
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#DDD',
-    alignItems: 'center',
   },
-  deliveryTypeSelected: {
-    borderColor: '#FF7E5F',
-    backgroundColor: '#FFF5F0',
-  },
-  deliveryTypeText: {
-    fontSize: 12,
-    color: '#666',
-    fontFamily:'DMSans-Regular',
-  },
-  deliveryTypeTextSelected: {
-    fontSize: 12,
-    color: '#FF7E5F',
-    fontFamily:'DMSans-Regular',
-  },
+  deliveryTypeContainer: { backgroundColor: Colors.secondary, padding: 16, borderRadius: 8, marginBottom: 16 },
+  deliveryTypeOptions: { flexDirection: 'row', justifyContent: 'space-between' },
+  deliveryTypeBox: { flex: 1, padding: 12, marginHorizontal: 4, borderRadius: 8, borderWidth: 1, borderColor: '#DDD', alignItems: 'center' },
+  deliveryTypeSelected: { borderColor: '#FF7E5F', backgroundColor: '#FFF5F0' },
+  deliveryTypeText: { fontSize: 12, color: '#666' },
+  deliveryTypeTextSelected: { fontSize: 12, color: '#FF7E5F' },
+  deliveryIcon: { width: 24, height: 24, marginBottom: 4, resizeMode: 'contain' },
+  etaContainer: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 },
+  etaBox: { backgroundColor: Colors.background, padding: 12, borderRadius: 8, flex: 1, marginHorizontal: 4, alignItems: 'center' },
+  etaText: { fontSize: 14, fontFamily: 'DMSans-Bold' },
+  etaLabel: { color: '#FF7E5F' },
+  sectionTitle: { fontSize: 16, fontFamily: 'DMSans-Bold', marginBottom: 8 },
+
   sectionTitleLeft: {
     fontSize: 16,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
     textAlign: 'left',
   },
   pickupText: {
     fontSize: 14,
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
     color: '#666',
     textAlign: 'center',
   },
@@ -340,20 +302,19 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
   },
-  dateTimeRow: {
+  deliveryTimeRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   dateTimeText: {
     fontSize: 14,
-    color: '#333',
-    fontFamily:'DMSans-Regular',
+    fontWeight: 'bold',
   },
   changeText: {
-    fontSize: 16,
-    color: Colors.info,
-    fontFamily:'DMSans-Regular',
+    color: Colors.primary,
+    fontSize: 14,
+    textAlign: 'right',
   },
   addButton: {
     backgroundColor: Colors.secondary,
@@ -385,13 +346,13 @@ const styles = StyleSheet.create({
   },
   addressLabel: {
     fontSize: 14,
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
     color: '#999',
     marginBottom: 4,
   },
   addressName: {
     fontSize: 16,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
   },
   iconRow: {
     flexDirection: 'row',
@@ -406,12 +367,12 @@ const styles = StyleSheet.create({
   addressDetails: {
     fontSize: 14,
     color: '#666',
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   addressCity: {
     fontSize: 14,
     color: '#999',
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   paymentOption: {
     flexDirection: 'row',
@@ -437,7 +398,7 @@ const styles = StyleSheet.create({
   paymentText: {
     fontSize: 16,
     flex: 1,
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   radioButton: {
     width: 24,
@@ -480,12 +441,12 @@ const styles = StyleSheet.create({
   summaryText: {
     fontSize: 14,
     color: '#555',
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   totalText: {
     fontSize: 16,
     color: '#000',
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
   },
 
 
