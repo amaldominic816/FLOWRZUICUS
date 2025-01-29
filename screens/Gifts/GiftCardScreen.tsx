@@ -90,7 +90,7 @@ const GiftCardScreen = ({ navigation }) => {
         <StatusBar backgroundColor={Colors.background} barStyle="dark-content" />
 
         <Header
-          title="Gift Card & Message"
+          title="Gift "
           showCartIcon={true}
           showNotificationIcon={true}
           showProfileIcon={true}

@@ -45,14 +45,12 @@ const GiftCardScreenDetail = ({ navigation }) => {
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false); // State for bottom sheet visibility
 
   const handleSelectCard = (id) => setSelectedCard(id);
-  
-
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.background} barStyle="dark-content" />
 
       <HeaderInner
-        title="Giftcard&Message"
+        title="Gift Message"
         showBackButton={true}
         showNotificationIcon={true}
         showCartIcon={true}
@@ -115,7 +113,7 @@ const GiftCardScreenDetail = ({ navigation }) => {
         style={styles.customButton}
       />
                 <ButtonPrimary
-          buttonText="Try Suggested Messages"
+          buttonText="Suggested Messages"
           onPress={() => setIsBottomSheetVisible(true)} // Open the bottom sheet
           buttonWidth={Dimensions.get('window').width * 0.4}
           buttonHeight={40}
@@ -300,7 +298,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   messageInput: {
-    height: 100,
+    height: 250,
     textAlignVertical: 'top',
     fontFamily:'DMSans-Regular',
 

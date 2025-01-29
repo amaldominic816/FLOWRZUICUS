@@ -58,7 +58,7 @@ const ProfileScreen = () => {
             {[
               {
                 title: 'My Order',
-                icon: require('../../assets/images/ordervan.png'),
+                icon: require('../../assets/images/delivery.png'),
                 navigateTo: 'MyOrdersScreen', // Page to navigate
               },
               {
@@ -68,7 +68,7 @@ const ProfileScreen = () => {
               },
               {
                 title: 'Saved Addresses',
-                icon: require('../../assets/images/savedaddress.png'),
+                icon: require('../../assets/images/locationdd.png'),
                 navigateTo: 'AddAddressScreen',
               },
               {

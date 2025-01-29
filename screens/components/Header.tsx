@@ -29,7 +29,7 @@ const Header = ({
         {showCartIcon && (
           <TouchableOpacity style={styles.iconButton} onPress={onCartPress}>
             <Image
-              source={require('../../assets/images/flowercart.png')}
+              source={require('../../assets/images/cart.png')}
               style={styles.icon}
             />
           </TouchableOpacity>
