@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState }from 'react';
 import {
   View,
   Text,
@@ -7,14 +7,16 @@ import {
   StyleSheet,
   Dimensions,
 } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
-import LinearGradient from 'react-native-linear-gradient';
+
 import HeaderInner from '../../screens/components/Headerinner';
 import ButtonPrimary from '../components/ButtonPrimary';
 import Colors from '../components/Colors';
+import TransactionHistoryBottomSheet from '../components/TransactionHistoryBottomSheet'; // Import the bottom sheet component
+
 
 
 const MyWalletScreen = ({navigation}) => {
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false); // State for bottom sheet visibility
   return (
     <View style={styles.container}>
       {/* Top Bar */}
@@ -52,10 +54,14 @@ const MyWalletScreen = ({navigation}) => {
                />
 
         {/* Transaction History Link */}
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => setIsBottomSheetVisible(true)}>
           <Text style={styles.transactionHistory}>Transaction history</Text>
         </TouchableOpacity>
       </View>
+      <TransactionHistoryBottomSheet
+        isVisible={isBottomSheetVisible}
+        onClose={() => setIsBottomSheetVisible(false)} // Close the bottom sheet
+      />
     </View>
   );
 };

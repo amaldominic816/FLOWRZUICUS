@@ -16,6 +16,7 @@ import ButtonPrimary from '../components/ButtonPrimary';
 import HeaderInner from '../components/Headerinner';
 import OutlinedButton from '../components/OutlinedButton';
 import Colors from '../components/Colors';
+import SuggestedMessagesBottomSheet from '../components/SuggestedMessagesBottomSheet'; 
 
 const giftCards = [
   {
@@ -41,8 +42,10 @@ const giftCards = [
 const GiftCardScreenDetail = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('addMessage');
   const [selectedCard, setSelectedCard] = useState(null);
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false); // State for bottom sheet visibility
 
   const handleSelectCard = (id) => setSelectedCard(id);
+  
 
   return (
     <View style={styles.container}>
@@ -113,7 +116,7 @@ const GiftCardScreenDetail = ({ navigation }) => {
       />
                 <ButtonPrimary
           buttonText="Try Suggested Messages"
-          onPress={() => navigation.navigate('')}
+          onPress={() => setIsBottomSheetVisible(true)} // Open the bottom sheet
           buttonWidth={Dimensions.get('window').width * 0.4}
           buttonHeight={40}
           fontSize={12}
@@ -157,6 +160,10 @@ const GiftCardScreenDetail = ({ navigation }) => {
           )}
         </View>
       </ScrollView>
+      <SuggestedMessagesBottomSheet
+        isVisible={isBottomSheetVisible}
+        onClose={() => setIsBottomSheetVisible(false)} // Close the bottom sheet
+      />
 
       <View style={styles.bottomContainer}>
         <ButtonOutlined

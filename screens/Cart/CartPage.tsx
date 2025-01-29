@@ -86,7 +86,7 @@ const CartPage = () => {
       {/* Floating Section */}
       <View style={styles.floatingContainer}>
         {/* Promo Code Section */}
-        <View style={styles.promoSection}>
+        {/* <View style={styles.promoSection}>
           <TextInput
             placeholder="Promo Code"
             value={promoCode}
@@ -102,7 +102,7 @@ const CartPage = () => {
                   fontSize={12}
                   gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
                 />
-        </View>
+        </View> */}
 
         {/* Summary Section */}
         <View style={styles.summarySection}>

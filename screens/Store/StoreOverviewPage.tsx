@@ -19,15 +19,15 @@ const StoreOverviewPage = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('Products');
 
   const products = [
-    { id: '1', name: 'Pink Tulips', price: '$130', image: require('../../assets/images/flower.png'), isNew: true },
+    { id: '1', name: 'Pink Tulips', price: '$130', image: require('../../assets/images/j1.png'), isNew: true },
     { id: '2', name: 'Yellow Tulips', price: '$150', image: require('../../assets/images/j1.png'), isNew: true },
-    { id: '3', name: 'Pink Tulips', price: '$130', image: require('../../assets/images/j2.png'), isNew: false },
+    { id: '3', name: 'Pink Tulips', price: '$130', image: require('../../assets/images/in4.png'), isNew: false },
     { id: '4', name: 'Yellow Tulips', price: '$150', image: require('../../assets/images/j3.png'), isNew: true },
-    { id: '5', name: 'Pink Tulips', price: '$130', image: require('../../assets/images/flower.png'), isNew: false },
+    { id: '5', name: 'Pink Tulips', price: '$130', image: require('../../assets/images/in2.png'), isNew: false },
     { id: '6', name: 'Yellow Tulips', price: '$150', image: require('../../assets/images/j1.png'), isNew: true },
     { id: '7', name: 'Pink Tulips', price: '$130', image: require('../../assets/images/j2.png'), isNew: false },
     { id: '8', name: 'Yellow Tulips', price: '$150', image: require('../../assets/images/j3.png'), isNew: true },
-    { id: '9', name: 'Pink Tulips', price: '$130', image: require('../../assets/images/flower.png'), isNew: false },
+    { id: '9', name: 'Pink Tulips', price: '$130', image: require('../../assets/images/in3.png'), isNew: false },
     { id: '10', name: 'Yellow Tulips', price: '$150', image: require('../../assets/images/j1.png'), isNew: true },
     { id: '11', name: 'Yellow Tulips', price: '$150', image: require('../../assets/images/j3.png'), isNew: true },
     { id: '12', name: 'Pink Tulips', price: '$130', image: require('../../assets/images/j2.png'), isNew: false },

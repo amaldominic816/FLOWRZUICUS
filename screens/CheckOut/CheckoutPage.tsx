@@ -19,6 +19,8 @@ const CheckoutPage = ({ navigation }) => {
     { id: 'creditcard', name: 'Credit Card', icon: require('../../assets/images/creditcard.png') },
     { id: 'paypal', name: 'PayPal', icon: require('../../assets/images/paypal.png') },
   ];
+    const [promoCode, setPromoCode] = useState('');
+  
 
   return (
     <View style={styles.container}>
@@ -148,8 +150,30 @@ const CheckoutPage = ({ navigation }) => {
             value={deliveryNote}
             onChangeText={setDeliveryNote}
           />
+          
         </View>
+  {/* Floating Section */}
 
+  <View style={styles.PromoContainer}>
+        {/* Promo Code Section */}
+        <View style={styles.promoSection}>
+          <TextInput
+            placeholder="Promo Code"
+            value={promoCode}
+            onChangeText={setPromoCode}
+            style={styles.promoInput}
+            placeholderTextColor="#000"
+          />
+           <ButtonPrimary
+                  buttonText="Apply"
+                  onPress={() => navigation.navigate('CheckoutPage')}
+                  buttonWidth={Dimensions.get('window').width *0.2} // Set width to 80% of the screen width
+                  buttonHeight={30}
+                  fontSize={12}
+                  gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
+                />
+        </View>
+        </View>
         {/* Payment Method Section */}
         <Text style={styles.sectionTitleLeft}>Payment Method</Text>
         {paymentMethods.map((method) => (
@@ -245,6 +269,27 @@ const styles = StyleSheet.create({
     fontFamily: 'DMSans-Bold',
     textAlign: 'left',
   },
+  promoSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+    marginBottom: 16,
+  },
+  promoInput: {
+    flex: 1,
+    padding: 10,
+    fontSize: 14,
+    fontFamily:'DMSans-Regular',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+  },
   pickupText: {
     fontSize: 14,
     fontFamily: 'DMSans-Regular',
@@ -254,6 +299,16 @@ const styles = StyleSheet.create({
   noteContainer: {
     marginBottom: 16,
     backgroundColor: Colors.secondary,
+    borderRadius: 8,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+  },
+  PromoContainer:{
+    marginBottom: 16,
+    backgroundColor: Colors.background,
     borderRadius: 8,
     padding: 16,
     shadowColor: '#000',

@@ -81,7 +81,7 @@ const OrderDetails = ({ navigation }) => {
 
         <ButtonPrimary
           buttonText="Need Help ?"
-          onPress={() => navigation.navigate('')}
+          onPress={() => navigation.navigate('HelpScreen')}
           buttonWidth={Dimensions.get('window').width * 0.8} // Set width to 80% of the screen width
           buttonHeight={50}
           fontSize={15}
