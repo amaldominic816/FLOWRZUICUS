@@ -38,7 +38,7 @@ import StoreOverviewPage from './screens/Store/StoreOverviewPage';
 import RewardsScreen from './screens/Rewards/RewardsScreen';
 import EditProfileScreen from './screens/Profile/EditProfileScreen';
 import HelpScreen  from './screens/Profile/HelpScreen';
-
+import SearchProducts from './screens/Home/SearchProducts';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -242,6 +242,11 @@ const AppNavigator = () => (
      <Stack.Screen
       name="HelpScreen"
       component={HelpScreen}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="SearchProducts"
+      component={SearchProducts}
       options={{ headerShown: false }}
     />
     <Stack.Screen

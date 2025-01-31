@@ -4,12 +4,14 @@ import HeaderInner from '../../screens/components/Headerinner';
 import ButtonPrimary from '../components/ButtonPrimary';
 import DatePicker from 'react-native-date-picker';
 import Colors from '../components/Colors';
+import Modal from 'react-native-modal';
 
 const CheckoutPage = ({ navigation }) => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
   const [deliveryType, setDeliveryType] = useState('delivery'); // Default to 'delivery'
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
+  const [showBottomSheet, setShowBottomSheet] = useState(false);
   const [deliveryNote, setDeliveryNote] = useState('');
 
   const paymentMethods = [
@@ -20,8 +22,12 @@ const CheckoutPage = ({ navigation }) => {
     { id: 'paypal', name: 'PayPal', icon: require('../../assets/images/paypal.png') },
   ];
     const [promoCode, setPromoCode] = useState('');
-  
-
+    const handleDateSelection = (option) => {
+      if (option === 'pick') {
+        setShowPicker(true);
+      }
+      setShowBottomSheet(false);
+    };
   return (
     <View style={styles.container}>
       {/* Header Section */}
@@ -72,18 +78,20 @@ const CheckoutPage = ({ navigation }) => {
             </View>
           ) : (
             <View style={styles.deliveryTimeContainer}>
-              <Text style={styles.sectionTitle}>Delivery Time</Text>
-              <TouchableOpacity onPress={() => setShowPicker(true)}>
-                <Text style={styles.dateTimeText}>{selectedDate.toLocaleString('en-US', {
+            <Text style={styles.sectionTitle}>Delivery Time</Text>
+            <TouchableOpacity onPress={() => setShowBottomSheet(true)}>
+              <Text style={styles.dateTimeText}>
+                {selectedDate.toLocaleString('en-US', {
                   day: '2-digit',
                   month: '2-digit',
                   year: 'numeric',
                   hour: '2-digit',
                   minute: '2-digit',
-                })}</Text>
-                <Text style={styles.changeText}>Change</Text>
-              </TouchableOpacity>
-            </View>
+                })}
+              </Text>
+              <Text style={styles.changeText}>Change</Text>
+            </TouchableOpacity>
+          </View>
           )}
         </View>
 

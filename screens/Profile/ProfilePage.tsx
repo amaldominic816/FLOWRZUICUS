@@ -58,7 +58,7 @@ const ProfileScreen = () => {
             {[
               {
                 title: 'My Order',
-                icon: require('../../assets/images/delivery.png'),
+                icon: require('../../assets/images/van.png'),
                 navigateTo: 'MyOrdersScreen', // Page to navigate
               },
               {

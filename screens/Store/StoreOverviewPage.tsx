@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -7,9 +7,21 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
+  Modal,
+  Animated,
+  PanResponder,
+  Dimensions,
+  TextInput,
+  Keyboard,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient'; // For gradient button
 import HeaderInner from '../components/Headerinner';
 import Colors from '../components/Colors';
+import { launchImageLibrary } from 'react-native-image-picker';
+import ButtonPrimary from '../components/ButtonPrimary';
+
+
+const { height } = Dimensions.get('window'); // Get screen height
 
 const StoreOverviewPage = ({ navigation }) => {
   const storeName = 'Yellow Roses';
@@ -17,6 +29,18 @@ const StoreOverviewPage = ({ navigation }) => {
   const rating = 4.9;
   const totalReviews = 73;
   const [activeTab, setActiveTab] = useState('Products');
+  const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
+  const panY = useRef(new Animated.Value(height)).current; // Start off-screen
+  const selectImage = () => {
+    launchImageLibrary({ mediaType: 'photo' }, (response) => {
+      if (response.assets && response.assets.length > 0) {
+        const selectedImage = response.assets[0];
+        console.log('Image selected:', selectedImage);
+        // Handle the selected image (e.g., display it or upload it)
+      }
+    });
+  };
+  const [isTyping, setIsTyping] = useState(false); // Track if typing in TextInput
 
   const products = [
     { id: '1', name: 'Pink Tulips', price: '$130', image: require('../../assets/images/j1.png'), isNew: true },
@@ -33,6 +57,48 @@ const StoreOverviewPage = ({ navigation }) => {
     { id: '12', name: 'Pink Tulips', price: '$130', image: require('../../assets/images/j2.png'), isNew: false },
   ];
 
+  const gradientColors = ['#DE8542', '#FE5993']; // Gradient colors for the button
+  const [note, setNote] = useState('');
+
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => !isTyping, // Disable gesture if typing
+    onMoveShouldSetPanResponder: () => !isTyping,
+    onPanResponderMove: (_, gestureState) => {
+      if (gestureState.dy > 0) {
+        panY.setValue(gestureState.dy);
+      }
+    },
+    onPanResponderRelease: (_, gestureState) => {
+      if (gestureState.dy > 100) {
+        closeBottomSheet();
+      } else {
+        Animated.spring(panY, {
+          toValue: 0,
+          useNativeDriver: false, // Changed to false
+        }).start();
+      }
+    },
+  });
+  
+  // Open Bottom Sheet
+  const openBottomSheet = () => {
+    setBottomSheetVisible(true);
+    Animated.timing(panY, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: false, // Changed to false
+    }).start();
+  };
+
+  // Close Bottom Sheet and dismiss keyboard
+  const closeBottomSheet = () => {
+    Keyboard.dismiss(); // Dismiss keyboard
+    Animated.timing(panY, {
+      toValue: height,
+      duration: 300,
+      useNativeDriver: false, // Changed to false
+    }).start(() => setBottomSheetVisible(false));
+  };
   return (
     <View style={styles.container}>
       <HeaderInner
@@ -94,6 +160,80 @@ const StoreOverviewPage = ({ navigation }) => {
           />
         )}
       </ScrollView>
+
+      {/* Floating Button with Gradient */}
+      <TouchableOpacity onPress={openBottomSheet} style={styles.floatingButton}>
+        <LinearGradient
+          colors={gradientColors}
+          style={styles.gradient}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+        >
+          <Text style={styles.floatingButtonText}>Customize Order</Text>
+        </LinearGradient>
+      </TouchableOpacity>
+
+      {/* Bottom Sheet */}
+    <Modal
+  transparent
+  visible={isBottomSheetVisible}
+  onRequestClose={closeBottomSheet}
+  animationType="none"
+>
+  <View style={styles.bottomSheetOverlay} pointerEvents="box-none">
+    <Animated.View
+      style={[
+        styles.bottomSheet,
+        {
+          transform: [{ translateY: panY }],
+        },
+      ]}
+      {...panResponder.panHandlers}
+    >
+      <View style={styles.bottomSheetHeader}>
+        <Text style={styles.bottomSheetTitle}>Customize Order</Text>
+        <TouchableOpacity onPress={closeBottomSheet}>
+          <Text style={styles.closeButton}>Close</Text>
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView
+        contentContainerStyle={styles.bottomSheetContent}
+        keyboardShouldPersistTaps="handled"
+      >
+       <TextInput
+  style={styles.noteInput}
+  placeholder="Add a few notes to help you later"
+  placeholderTextColor="#999"
+  multiline
+  value={note}
+  onFocus={() => setIsTyping(true)}  // Disable gesture while typing
+  onBlur={() => setIsTyping(false)}   // Re-enable gesture when done typing
+  onChangeText={(text) => setNote(text)}
+/>
+
+        <TouchableOpacity style={styles.uploadContainer} onPress={selectImage}>
+          <LinearGradient colors={['#ffe5e7', '#ffe5e7']} style={styles.gradientBackground}>
+            <Image source={require('../../assets/images/upload-img.png')} style={styles.uploadIcon} />
+            <Text style={styles.uploadText}>Click To Upload Or Drag And Drop</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+
+        <View style={styles.buttonWrapper}>
+  <ButtonPrimary
+    buttonText="Send my Order"
+    onPress={() => navigation.navigate('CartPage')}
+    buttonWidth={Dimensions.get('window').width * 0.7}
+    buttonHeight={40}
+    fontSize={18}
+    gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
+  />
+</View>
+      </ScrollView>
+    </Animated.View>
+  </View>
+</Modal>
+
     </View>
   );
 };
@@ -104,11 +244,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   scrollContent: {
-    paddingBottom: 20, // To allow some space at the bottom
+    paddingBottom: 20,
   },
   storeName: {
     fontSize: 18,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
     marginBottom: 5,
   },
   locationContainer: {
@@ -120,7 +260,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 5,
     color: '#666',
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   ratingContainer: {
     flexDirection: 'row',
@@ -130,7 +270,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 5,
     color: '#666',
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   icon: {
     width: 16,
@@ -163,12 +303,12 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 16,
     color: '#000',
-    fontFamily:'DMSans-SemiBold',
+    fontFamily: 'DMSans-SemiBold',
   },
   activeTabText: {
     fontWeight: 'bold',
     color: '#FF5733',
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
   },
   activeIndicator: {
     height: 3,
@@ -210,7 +350,7 @@ const styles = StyleSheet.create({
   },
   newText: {
     fontSize: 12,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
     color: '#fff',
   },
   wishlistButton: {
@@ -234,16 +374,116 @@ const styles = StyleSheet.create({
   },
   productName: {
     fontSize: 16,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
   },
   productPrice: {
     fontSize: 14,
     color: '#666',
-    fontFamily:'DMSans-SemiBold',
+    fontFamily: 'DMSans-SemiBold',
   },
   flatListContent: {
     paddingBottom: 20,
   },
+  floatingButton: {
+    position: 'absolute',
+    bottom: 20,
+    alignSelf: 'center',
+    borderRadius: 10, // Reduced size
+    overflow: 'hidden', // Ensure gradient doesn't overflow
+  },
+  gradient: {
+    paddingVertical: 12, // Reduced size
+    paddingHorizontal: 24, // Reduced size
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  floatingButtonText: {
+    color: '#fff',
+    fontSize: 14, // Reduced font size
+    fontFamily: 'DMSans-Bold',
+  },
+  bottomSheetOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  bottomSheet: {
+    height: height * 0.6,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+  },
+  bottomSheetHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  bottomSheetTitle: {
+    fontSize: 18,
+    fontFamily: 'DMSans-Bold',
+    color: '#333',
+  },
+  closeButton: {
+    fontSize: 16,
+    color: '#FF5733',
+    fontFamily: 'DMSans-SemiBold',
+  },
+  bottomSheetContent: {
+    flex: 1,
+    paddingHorizontal: 10,
+  },
+  noteInput: {
+    backgroundColor: '#f5f5f5',
+    padding: 15,
+    borderRadius: 10,
+    fontFamily: 'DMSans-Regular',
+    fontSize: 14,
+    color: '#333',
+    height: 125,
+    marginBottom: 20,
+    textAlignVertical: 'top',
+  },
+  uploadContainer: {
+    borderWidth: 1,
+    borderColor: '#f9c9d9',
+    borderRadius: 10,
+    overflow: 'hidden',
+    height: 150,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ffe5e7',
+  },
+  uploadIcon: {
+    width: 50,
+    height: 50,
+    marginBottom: 10,
+    tintColor: '#DE6070',
+  },
+  uploadText: {
+    fontSize: 14,
+    color: '#DE6070',
+    fontFamily: 'DMSans-SemiBold',
+    textAlign: 'center',
+  },
+  gradientBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  buttonWrapper: {
+    position: 'absolute',
+    bottom: 20,
+    left: '58%',
+    transform: [{ translateX: -Dimensions.get('window').width * 0.4 }], // Center the button horizontally
+    alignItems: 'center',
+  },
+
 });
 
 export default StoreOverviewPage;

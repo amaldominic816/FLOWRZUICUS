@@ -9,7 +9,7 @@ const ButtonPrimary = ({
   buttonWidth = Dimensions.get('window').width * 0.8, // Default to 80% of the screen width
   buttonHeight = 50, // Default height
   fontSize = 18, // Default font size for the text
-  gradientColors = ['#DE8542', '#FE5993'], // Default gradient colors
+  gradientColors = ['#DE8542', '#FE5993 '], // Default gradient colors
 }) => {
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.8}>

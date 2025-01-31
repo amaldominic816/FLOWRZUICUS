@@ -168,11 +168,18 @@ const HomePage = ({ navigation }) => {
                 source={require('../../assets/images/search.png')}
                 style={styles.searchIcon}
               />
-              <TextInput
-                style={styles.searchInput}
-                placeholder="Search your flower"
-                placeholderTextColor={Colors.placeholder}
-              />
+             <TextInput
+  style={styles.searchInput}
+  placeholder="Search your flower"
+  placeholderTextColor={Colors.placeholder}
+  onSubmitEditing={(event) => {
+    const searchQuery = event.nativeEvent.text; // Get the search input value
+    if (searchQuery.trim().length > 0) {
+      navigation.navigate('SearchProducts', { query: searchQuery }); // Navigate to SearchProducts
+    }
+  }}
+/>
+
             </View>
             <View style={styles.iconButtonfilter}>
               <Image
@@ -194,31 +201,6 @@ const HomePage = ({ navigation }) => {
               ))}
             </ScrollView>
           </View>
-
-          {/* <View style={styles.newSectionContainer}>
-            <TouchableOpacity style={styles.newSectionButtonSingle}>
-              <Image source={require('../../assets/images/location.png')} style={styles.newSectionIcon} />
-              <Text style={styles.newSectionText}>Where</Text>
-            </TouchableOpacity>
-            <View style={styles.newSectionRow}>
-              <TouchableOpacity style={styles.newSectionButton}>
-                <Image source={require('../../assets/images/calender.png')} style={styles.newSectionIcon} />
-                <Text style={styles.newSectionText}>Delivery Date</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.newSectionButton, styles.giftButton]}>
-                <Image source={require('../../assets/images/giftgrey.png')} style={styles.newSectionIcon} />
-                <Text style={styles.newSectionText}>Gift Selection</Text>
-              </TouchableOpacity>
-            </View>
-            <ButtonPrimary
-              buttonText="Send Gift Now"
-              onPress={() => navigation.navigate('')}
-              buttonWidth={Dimensions.get('window').width * 0.8} // Set width to 80% of the screen width
-              buttonHeight={40}
-              fontSize={18}
-              gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
-            />
-          </View> */}
 
           {/* Categories Section */}
           <View style={styles.categoriesContainer}>
