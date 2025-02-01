@@ -81,7 +81,7 @@ const HeaderInner = ({
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.secondry, // Updated from Colors.secondary
   },
   header: {
     flexDirection: 'row',
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
     color: '#000',
   },
   iconsContainer: {
@@ -121,5 +121,6 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
 });
+
 
 export default HeaderInner;

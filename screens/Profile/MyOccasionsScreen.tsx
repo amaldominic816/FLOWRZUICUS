@@ -8,11 +8,13 @@ import {
   StyleSheet,
   Modal,
   TextInput,
+  Dimensions,
 } from 'react-native';
 import DatePicker from 'react-native-date-picker';
-import LinearGradient from 'react-native-linear-gradient';
 import HeaderInner from '../../screens/components/Headerinner';
 import Colors from '../components/Colors';
+// Import ButtonPrimary component
+import ButtonPrimary from '../components/ButtonPrimary';
 
 const initialQuickAddOptions = [
   {
@@ -203,17 +205,18 @@ const MyOccasionsScreen = ({ navigation }) => {
         />
       </View>
 
-      {/* Floating "Add Occasion" Button with Linear Gradient */}
-      <TouchableOpacity onPress={handleAddPress} style={styles.addButtonWrapper}>
-        <LinearGradient
-          colors={[Colors.Gradient1, Colors.Gradient2]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.addButton}
-        >
-          <Text style={styles.addButtonText}>Add Occasion</Text>
-        </LinearGradient>
-      </TouchableOpacity>
+      {/* Floating "Add Occasion" Button using ButtonPrimary */}
+      <View style={styles.addButtonWrapper}>
+        <ButtonPrimary
+          buttonText="Add Occasion"
+          onPress={handleAddPress}
+          // Adjust these values as needed for your design
+          buttonWidth={120}
+          buttonHeight={40}
+          fontSize={16}
+          gradientColors={[Colors.Gradient1, Colors.Gradient2]}
+        />
+      </View>
 
       {/* Modal Popup Form */}
       <Modal visible={modalVisible} animationType="slide" transparent>
@@ -290,28 +293,28 @@ const MyOccasionsScreen = ({ navigation }) => {
               }}
             />
 
-            {/* Modal Buttons with Linear Gradient */}
+            {/* Modal Buttons using ButtonPrimary */}
             <View style={styles.modalButtons}>
-              <TouchableOpacity onPress={handleCancel} style={styles.modalButtonWrapper}>
-                <LinearGradient
-                  colors={[Colors.Gradient1, Colors.Gradient2]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={styles.modalButton}
-                >
-                  <Text style={styles.modalButtonText}>Cancel</Text>
-                </LinearGradient>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleSave} style={styles.modalButtonWrapper}>
-                <LinearGradient
-                  colors={[Colors.Gradient1, Colors.Gradient2]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={styles.modalButton}
-                >
-                  <Text style={styles.modalButtonText}>Save</Text>
-                </LinearGradient>
-              </TouchableOpacity>
+              <View style={styles.modalButtonWrapper}>
+                <ButtonPrimary
+                  buttonText="Cancel"
+                  onPress={handleCancel}
+                  buttonWidth="100%"
+                  buttonHeight={40}
+                  fontSize={14}
+                  gradientColors={[Colors.Gradient1, Colors.Gradient2]}
+                />
+              </View>
+              <View style={styles.modalButtonWrapper}>
+                <ButtonPrimary
+                  buttonText="Save"
+                  onPress={handleSave}
+                  buttonWidth="100%"
+                  buttonHeight={40}
+                  fontSize={14}
+                  gradientColors={[Colors.Gradient1, Colors.Gradient2]}
+                />
+              </View>
             </View>
           </View>
         </View>
@@ -400,9 +403,10 @@ const styles = StyleSheet.create({
   },
   addButtonWrapper: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 25,
     right: 20,
   },
+  // These styles were used by the old button implementations.
   addButton: {
     padding: 15,
     borderRadius: 30,
@@ -469,11 +473,6 @@ const styles = StyleSheet.create({
   modalButtonWrapper: {
     flex: 1,
     marginHorizontal: 5,
-  },
-  modalButton: {
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
   },
   modalButtonText: {
     fontSize: 14,

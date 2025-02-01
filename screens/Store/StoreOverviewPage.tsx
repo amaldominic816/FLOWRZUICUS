@@ -162,16 +162,17 @@ const StoreOverviewPage = ({ navigation }) => {
       </ScrollView>
 
       {/* Floating Button with Gradient */}
-      <TouchableOpacity onPress={openBottomSheet} style={styles.floatingButton}>
-        <LinearGradient
-          colors={gradientColors}
-          style={styles.gradient}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-        >
-          <Text style={styles.floatingButtonText}>Customize Order</Text>
-        </LinearGradient>
-      </TouchableOpacity>
+      <View style={styles.floatingButtonContainer}>
+  <ButtonPrimary
+    buttonText="Customize Order"
+    onPress={openBottomSheet}
+    buttonWidth={Dimensions.get('window').width * 0.5} // 80% of screen width
+    buttonHeight={40} // Consistent button height
+    fontSize={16} // Slightly larger font size
+    gradientColors={['#DE8542', '#FE5993']} // Custom gradient
+  />
+</View>
+
 
       {/* Bottom Sheet */}
     <Modal
@@ -277,6 +278,12 @@ const styles = StyleSheet.create({
     height: 16,
     marginRight: 5,
   },
+  floatingButtonContainer: {
+    position: 'absolute',
+    bottom: 20,
+    alignSelf: 'center',
+  },
+
   storeInfoContainer: {
     backgroundColor: '#fff',
     paddingTop: 30,
