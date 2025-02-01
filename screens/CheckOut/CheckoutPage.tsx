@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Dimensions, TextInput } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+  Dimensions,
+  TextInput,
+} from 'react-native';
 import HeaderInner from '../../screens/components/Headerinner';
 import ButtonPrimary from '../components/ButtonPrimary';
 import DatePicker from 'react-native-date-picker';
@@ -10,9 +19,17 @@ const CheckoutPage = ({ navigation }) => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
   const [deliveryType, setDeliveryType] = useState('delivery'); // Default to 'delivery'
   const [selectedDate, setSelectedDate] = useState(new Date());
+  // State to control the separate modals:
   const [showPicker, setShowPicker] = useState(false);
   const [showBottomSheet, setShowBottomSheet] = useState(false);
   const [deliveryNote, setDeliveryNote] = useState('');
+  const [promoCode, setPromoCode] = useState('');
+
+  // This state tracks the date option chosen by the user.
+  // It can be "today", "tomorrow", or "pick" (custom date).
+  const [selectedDateOption, setSelectedDateOption] = useState('today');
+  // Time-slot selection (always available regardless of date option)
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState('11 am - 1 pm');
 
   const paymentMethods = [
     { id: 'applepay', name: 'Apple Pay', icon: require('../../assets/images/applepay.png') },
@@ -21,13 +38,7 @@ const CheckoutPage = ({ navigation }) => {
     { id: 'creditcard', name: 'Credit Card', icon: require('../../assets/images/creditcard.png') },
     { id: 'paypal', name: 'PayPal', icon: require('../../assets/images/paypal.png') },
   ];
-    const [promoCode, setPromoCode] = useState('');
-    const handleDateSelection = (option) => {
-      if (option === 'pick') {
-        setShowPicker(true);
-      }
-      setShowBottomSheet(false);
-    };
+
   return (
     <View style={styles.container}>
       {/* Header Section */}
@@ -42,14 +53,15 @@ const CheckoutPage = ({ navigation }) => {
       />
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Name and Delivery Type Section */}
         {/* Delivery Type Section */}
         <View style={styles.deliveryTypeContainer}>
           <Text style={styles.sectionTitle}>Select Pickup Method</Text>
-
           <View style={styles.deliveryTypeOptions}>
             <TouchableOpacity
-              style={[styles.deliveryTypeBox, deliveryType === 'delivery' && styles.deliveryTypeSelected]}
+              style={[
+                styles.deliveryTypeBox,
+                deliveryType === 'delivery' && styles.deliveryTypeSelected,
+              ]}
               onPress={() => setDeliveryType('delivery')}
             >
               <Image source={require('../../assets/images/delivery.png')} style={styles.deliveryIcon} />
@@ -59,7 +71,10 @@ const CheckoutPage = ({ navigation }) => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.deliveryTypeBox, deliveryType === 'pickup' && styles.deliveryTypeSelected]}
+              style={[
+                styles.deliveryTypeBox,
+                deliveryType === 'pickup' && styles.deliveryTypeSelected,
+              ]}
               onPress={() => setDeliveryType('pickup')}
             >
               <Image source={require('../../assets/images/store.png')} style={styles.deliveryIcon} />
@@ -72,36 +87,40 @@ const CheckoutPage = ({ navigation }) => {
           {/* ETA or Delivery Time Section */}
           {deliveryType === 'pickup' ? (
             <View style={styles.etaContainer}>
-              <TouchableOpacity style={styles.etaBox}><Text style={styles.etaText}>10 Min <Text style={styles.etaLabel}>ETA</Text></Text></TouchableOpacity>
-              <TouchableOpacity style={styles.etaBox}><Text style={styles.etaText}>30 Min <Text style={styles.etaLabel}>ETA</Text></Text></TouchableOpacity>
-              <TouchableOpacity style={styles.etaBox}><Text style={styles.etaText}>45 Min <Text style={styles.etaLabel}>ETA</Text></Text></TouchableOpacity>
+              <TouchableOpacity style={styles.etaBox}>
+                <Text style={styles.etaText}>10 Min <Text style={styles.etaLabel}>ETA</Text></Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.etaBox}>
+                <Text style={styles.etaText}>30 Min <Text style={styles.etaLabel}>ETA</Text></Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.etaBox}>
+                <Text style={styles.etaText}>45 Min <Text style={styles.etaLabel}>ETA</Text></Text>
+              </TouchableOpacity>
             </View>
           ) : (
             <View style={styles.deliveryTimeContainer}>
-            <Text style={styles.sectionTitle}>Delivery Time</Text>
-            <TouchableOpacity onPress={() => setShowBottomSheet(true)}>
-              <Text style={styles.dateTimeText}>
-                {selectedDate.toLocaleString('en-US', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-              </Text>
-              <Text style={styles.changeText}>Change</Text>
-            </TouchableOpacity>
-          </View>
+              <Text style={styles.sectionTitle}>Delivery Time</Text>
+              <TouchableOpacity onPress={() => setShowBottomSheet(true)}>
+                <Text style={styles.dateTimeText}>
+                  {selectedDate.toLocaleDateString()}{' '}
+                  {selectedDateOption && selectedTimeSlot ? `(${selectedTimeSlot})` : ''}
+                </Text>
+                <Text style={styles.changeText}>Change</Text>
+              </TouchableOpacity>
+            </View>
           )}
         </View>
 
+        {/* DatePicker Modal (Calendar View) */}
         <DatePicker
           modal
           open={showPicker}
           date={selectedDate}
+          mode="date"
           onConfirm={(date) => {
             setShowPicker(false);
             setSelectedDate(date);
+            setSelectedDateOption('pick');
           }}
           onCancel={() => {
             setShowPicker(false);
@@ -158,30 +177,29 @@ const CheckoutPage = ({ navigation }) => {
             value={deliveryNote}
             onChangeText={setDeliveryNote}
           />
-          
         </View>
-  {/* Floating Section */}
 
-  <View style={styles.PromoContainer}>
         {/* Promo Code Section */}
-        <View style={styles.promoSection}>
-          <TextInput
-            placeholder="Promo Code"
-            value={promoCode}
-            onChangeText={setPromoCode}
-            style={styles.promoInput}
-            placeholderTextColor="#000"
-          />
-           <ButtonPrimary
-                  buttonText="Apply"
-                  onPress={() => navigation.navigate('CheckoutPage')}
-                  buttonWidth={Dimensions.get('window').width *0.2} // Set width to 80% of the screen width
-                  buttonHeight={30}
-                  fontSize={12}
-                  gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
-                />
+        <View style={styles.PromoContainer}>
+          <View style={styles.promoSection}>
+            <TextInput
+              placeholder="Promo Code"
+              value={promoCode}
+              onChangeText={setPromoCode}
+              style={styles.promoInput}
+              placeholderTextColor="#000"
+            />
+            <ButtonPrimary
+              buttonText="Apply"
+              onPress={() => navigation.navigate('CheckoutPage')}
+              buttonWidth={Dimensions.get('window').width * 0.2}
+              buttonHeight={30}
+              fontSize={12}
+              gradientColors={['#DE8542', '#FE5993']}
+            />
+          </View>
         </View>
-        </View>
+
         {/* Payment Method Section */}
         <Text style={styles.sectionTitleLeft}>Payment Method</Text>
         {paymentMethods.map((method) => (
@@ -225,24 +243,113 @@ const CheckoutPage = ({ navigation }) => {
         <ButtonPrimary
           buttonText="Pay Now"
           onPress={() => navigation.navigate('OrderDetailpage')}
-          buttonWidth={Dimensions.get('window').width * 0.9} // Set width to 80% of the screen width
+          buttonWidth={Dimensions.get('window').width * 0.9}
           buttonHeight={50}
           fontSize={20}
-          gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
+          gradientColors={['#DE8542', '#FE5993']}
         />
       </View>
+
+      {/* *************** BOTTOM SHEET MODAL *************** */}
+      <Modal
+        isVisible={showBottomSheet}
+        onBackdropPress={() => setShowBottomSheet(false)}
+        style={styles.bottomModal}
+      >
+        <View style={styles.bottomSheet}>
+          <Text style={styles.bottomSheetTitle}>Select Delivery Date</Text>
+          <View style={styles.dateOptionsContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedDate(new Date());
+                setSelectedDateOption('today');
+              }}
+              style={[
+                styles.dateOption,
+                selectedDateOption === 'today' && styles.selectedOption,
+              ]}
+            >
+              <Text style={styles.optionText}>Today</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                setSelectedDate(tomorrow);
+                setSelectedDateOption('tomorrow');
+              }}
+              style={[
+                styles.dateOption,
+                selectedDateOption === 'tomorrow' && styles.selectedOption,
+              ]}
+            >
+              <Text style={styles.optionText}>Tomorrow</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                // Open the calendar modal but keep the bottom sheet open so that the time-slot section remains visible.
+                setShowPicker(true);
+                setSelectedDateOption('pick');
+              }}
+              style={[
+                styles.dateOption,
+                selectedDateOption === 'pick' && styles.selectedOption,
+              ]}
+            >
+              <Text style={styles.optionText}>Pick Date</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Always show the time-slot selection regardless of date option */}
+          <Text style={styles.bottomSheetTitle}>Select Time Slot</Text>
+          <View style={styles.timeSlotsContainer}>
+            <TouchableOpacity
+              onPress={() => setSelectedTimeSlot('11 am - 1 pm')}
+              style={[
+                styles.timeSlot,
+                selectedTimeSlot === '11 am - 1 pm' && styles.selectedTimeSlot,
+              ]}
+            >
+              <Text style={styles.optionText}>11 am - 1 pm</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setSelectedTimeSlot('1 pm - 3 pm')}
+              style={[
+                styles.timeSlot,
+                selectedTimeSlot === '1 pm - 3 pm' && styles.selectedTimeSlot,
+              ]}
+            >
+              <Text style={styles.optionText}>1 pm - 3 pm</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setSelectedTimeSlot('3 pm - 5 pm')}
+              style={[
+                styles.timeSlot,
+                selectedTimeSlot === '3 pm - 5 pm' && styles.selectedTimeSlot,
+              ]}
+            >
+              <Text style={styles.optionText}>3 pm - 5 pm</Text>
+            </TouchableOpacity>
+          </View>
+
+          <ButtonPrimary
+            buttonText="Confirm"
+            onPress={() => setShowBottomSheet(false)}
+            buttonWidth={Dimensions.get('window').width * 0.8}
+            buttonHeight={50}
+            fontSize={18}
+            gradientColors={['#DE8542', '#FE5993']}
+          />
+        </View>
+      </Modal>
+      {/* *************** END BOTTOM SHEET MODAL *************** */}
     </View>
   );
 };
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-  scrollContainer: {
-    padding: 16,
-    paddingBottom: 230, // Add extra space for floating footer
-  },
+  container: { flex: 1, backgroundColor: Colors.background },
+  scrollContainer: { padding: 16, paddingBottom: 230 },
   summaryContainer: {
     marginBottom: 16,
     backgroundColor: '#F6CFAC',
@@ -256,12 +363,25 @@ const styles = StyleSheet.create({
   deliveryTimeContainer: {
     marginTop: 12,
     padding: 12,
-    backgroundColor:Colors.background,
+    backgroundColor: Colors.background,
     borderRadius: 8,
   },
-  deliveryTypeContainer: { backgroundColor: Colors.secondary, padding: 16, borderRadius: 8, marginBottom: 16 },
+  deliveryTypeContainer: {
+    backgroundColor: Colors.secondary,
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 16,
+  },
   deliveryTypeOptions: { flexDirection: 'row', justifyContent: 'space-between' },
-  deliveryTypeBox: { flex: 1, padding: 12, marginHorizontal: 4, borderRadius: 8, borderWidth: 1, borderColor: '#DDD', alignItems: 'center' },
+  deliveryTypeBox: {
+    flex: 1,
+    padding: 12,
+    marginHorizontal: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#DDD',
+    alignItems: 'center',
+  },
   deliveryTypeSelected: { borderColor: '#FF7E5F', backgroundColor: '#FFF5F0' },
   deliveryTypeText: { fontSize: 12, color: '#666' },
   deliveryTypeTextSelected: { fontSize: 12, color: '#FF7E5F' },
@@ -271,12 +391,7 @@ const styles = StyleSheet.create({
   etaText: { fontSize: 14, fontFamily: 'DMSans-Bold' },
   etaLabel: { color: '#FF7E5F' },
   sectionTitle: { fontSize: 16, fontFamily: 'DMSans-Bold', marginBottom: 8 },
-
-  sectionTitleLeft: {
-    fontSize: 16,
-    fontFamily: 'DMSans-Bold',
-    textAlign: 'left',
-  },
+  sectionTitleLeft: { fontSize: 16, fontFamily: 'DMSans-Bold', textAlign: 'left' },
   promoSection: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -298,12 +413,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 10,
   },
-  pickupText: {
-    fontSize: 14,
-    fontFamily: 'DMSans-Regular',
-    color: '#666',
-    textAlign: 'center',
-  },
+  pickupText: { fontSize: 14, fontFamily: 'DMSans-Regular', color: '#666', textAlign: 'center' },
   noteContainer: {
     marginBottom: 16,
     backgroundColor: Colors.secondary,
@@ -314,7 +424,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
   },
-  PromoContainer:{
+  PromoContainer: {
     marginBottom: 16,
     backgroundColor: Colors.background,
     borderRadius: 8,
@@ -333,52 +443,12 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     minHeight: 60,
   },
-
-  divider: {
-    height: 1,
-    backgroundColor: '#D2AE8FFF',
-    marginVertical: 8,
-  },
-  iconImage: {
-    width: 24,
-    height: 24,
-    borderRadius: 10,
-  },
+  divider: { height: 1, backgroundColor: '#D2AE8FFF', marginVertical: 8 },
+  iconImage: { width: 24, height: 24, borderRadius: 10 },
   content: { padding: 16 },
-
-
-
-
-  deliveryAddressRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  dateTimeContainer: {
-    marginBottom: 16,
-    backgroundColor: Colors.secondary,
-    borderRadius: 8,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-  },
-  deliveryTimeRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  dateTimeText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  changeText: {
-    color: Colors.primary,
-    fontSize: 14,
-    textAlign: 'right',
-  },
+  deliveryAddressRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
+  dateTimeText: { fontSize: 14, fontWeight: 'bold' },
+  changeText: { color: Colors.primary, fontSize: 14, textAlign: 'right' },
   addButton: {
     backgroundColor: Colors.secondary,
     borderRadius: 10,
@@ -399,44 +469,14 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
   },
-  editButtonTopRight: {
-    position: 'absolute',
-    top: 16,
-    right: 16,
-  },
-  addressContainer: {
-    paddingBottom: 16,
-  },
-  addressLabel: {
-    fontSize: 14,
-    fontFamily: 'DMSans-Regular',
-    color: '#999',
-    marginBottom: 4,
-  },
-  addressName: {
-    fontSize: 16,
-    fontFamily: 'DMSans-Bold',
-  },
-  iconRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  icon: {
-    width: 20,
-    height: 20,
-    marginRight: 8,
-  },
-  addressDetails: {
-    fontSize: 14,
-    color: '#666',
-    fontFamily: 'DMSans-Regular',
-  },
-  addressCity: {
-    fontSize: 14,
-    color: '#999',
-    fontFamily: 'DMSans-Regular',
-  },
+  editButtonTopRight: { position: 'absolute', top: 16, right: 16 },
+  addressContainer: { paddingBottom: 16 },
+  addressLabel: { fontSize: 14, fontFamily: 'DMSans-Regular', color: '#999', marginBottom: 4 },
+  addressName: { fontSize: 16, fontFamily: 'DMSans-Bold' },
+  iconRow: { flexDirection: 'row', alignItems: 'center', marginTop: 8 },
+  icon: { width: 20, height: 20, marginRight: 8 },
+  addressDetails: { fontSize: 14, color: '#666', fontFamily: 'DMSans-Regular' },
+  addressCity: { fontSize: 14, color: '#999', fontFamily: 'DMSans-Regular' },
   paymentOption: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -448,39 +488,19 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderColor: '#DDD',
   },
-  paymentOptionSelected: {
-    borderColor: '#FF7E5F',
-    backgroundColor: '#FFF',
-  },
-  paymentIcon: {
-    width: 40,
-    height: 40,
-    marginRight: 12,
-    resizeMode: 'contain',
-  },
-  paymentText: {
-    fontSize: 16,
-    flex: 1,
-    fontFamily: 'DMSans-Regular',
-  },
+  paymentOptionSelected: { borderColor: '#FF7E5F', backgroundColor: '#FFF' },
+  paymentIcon: { width: 40, height: 40, marginRight: 12, resizeMode: 'contain' },
+  paymentText: { fontSize: 16, flex: 1, fontFamily: 'DMSans-Regular' },
   radioButton: {
     width: 24,
     height: 24,
-    borderRadius: 12, // Outer circle
+    borderRadius: 12,
     borderWidth: 2,
     borderColor: '#DDD',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  radioButtonSelected: {
-    borderColor: '#FF7E5F',
-  },
-  radioInnerCircle: {
-    width: 12,
-    height: 12,
-    borderRadius: 6, // Inner circle
-    backgroundColor: '#FF7E5F',
-  },
+  radioInnerCircle: { width: 12, height: 12, borderRadius: 6, backgroundColor: '#FF7E5F' },
   floatingContainer: {
     position: 'absolute',
     bottom: 0,
@@ -496,23 +516,41 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  summaryRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 8,
+  summaryRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
+  summaryText: { fontSize: 14, color: '#555', fontFamily: 'DMSans-Regular' },
+  totalText: { fontSize: 16, color: '#000', fontFamily: 'DMSans-Bold' },
+  // ------- Bottom Sheet Styles -------
+  bottomModal: { justifyContent: 'flex-end', margin: 0 },
+  bottomSheet: {
+    backgroundColor: '#FFF',
+    padding: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
-  summaryText: {
-    fontSize: 14,
-    color: '#555',
-    fontFamily: 'DMSans-Regular',
+  bottomSheetTitle: { fontSize: 18, fontFamily: 'DMSans-Bold', marginBottom: 10 },
+  dateOptionsContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 },
+  dateOption: {
+    flex: 1,
+    padding: 10,
+    marginHorizontal: 5,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#DDD',
+    alignItems: 'center',
   },
-  totalText: {
-    fontSize: 16,
-    color: '#000',
-    fontFamily: 'DMSans-Bold',
+  selectedOption: { borderColor: '#FF7E5F', backgroundColor: '#FFF5F0' },
+  optionText: { fontSize: 16, fontFamily: 'DMSans-Regular' },
+  timeSlotsContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 },
+  timeSlot: {
+    flex: 1,
+    padding: 10,
+    marginHorizontal: 5,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#DDD',
+    alignItems: 'center',
   },
-
-
+  selectedTimeSlot: { borderColor: '#FF7E5F', backgroundColor: '#FFF5F0' },
 });
 
 export default CheckoutPage;
