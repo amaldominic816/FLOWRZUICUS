@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Dimensions,
   StatusBar,
+  SafeAreaView,
 } from 'react-native';
 import Header from '../../screens/components/Header';
 import Colors from '../components/Colors';
@@ -37,6 +38,8 @@ const streakCardsData = [
 
 const RewardsScreen = ({ navigation }) => {
   return (
+    <SafeAreaView style={styles.container}>
+          <ScrollView>
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.background} barStyle="dark-content" />
 
@@ -128,6 +131,8 @@ const RewardsScreen = ({ navigation }) => {
         </ScrollView>
       </ScrollView>
     </View>
+    </ScrollView>
+    </SafeAreaView>
   );
 };
 

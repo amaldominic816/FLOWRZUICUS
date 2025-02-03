@@ -20,7 +20,6 @@ import Colors from '../components/Colors';
 import { launchImageLibrary } from 'react-native-image-picker';
 import ButtonPrimary from '../components/ButtonPrimary';
 
-
 const { height } = Dimensions.get('window'); // Get screen height
 
 const StoreOverviewPage = ({ navigation }) => {
@@ -28,9 +27,13 @@ const StoreOverviewPage = ({ navigation }) => {
   const location = '123 west 45th Street, Saudi Arab, Madinah';
   const rating = 4.9;
   const totalReviews = 73;
-  const [activeTab, setActiveTab] = useState('Products');
+
+  // Define the categories as provided
+  const categories = ['All', 'Flowers', 'Cakes', 'Gift Card', 'Envelop', 'Others'];
+  const [activeCategory, setActiveCategory] = useState('All');
   const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
   const panY = useRef(new Animated.Value(height)).current; // Start off-screen
+
   const selectImage = () => {
     launchImageLibrary({ mediaType: 'photo' }, (response) => {
       if (response.assets && response.assets.length > 0) {
@@ -40,22 +43,102 @@ const StoreOverviewPage = ({ navigation }) => {
       }
     });
   };
+
   const [isTyping, setIsTyping] = useState(false); // Track if typing in TextInput
 
+  // Updated products array with a 'category' property and sample names
   const products = [
-    { id: '1', name: 'Pink Tulips', price: '$130', image: require('../../assets/images/j1.png'), isNew: true },
-    { id: '2', name: 'Yellow Tulips', price: '$150', image: require('../../assets/images/j1.png'), isNew: true },
-    { id: '3', name: 'Pink Tulips', price: '$130', image: require('../../assets/images/in4.png'), isNew: false },
-    { id: '4', name: 'Yellow Tulips', price: '$150', image: require('../../assets/images/j3.png'), isNew: true },
-    { id: '5', name: 'Pink Tulips', price: '$130', image: require('../../assets/images/in2.png'), isNew: false },
-    { id: '6', name: 'Yellow Tulips', price: '$150', image: require('../../assets/images/j1.png'), isNew: true },
-    { id: '7', name: 'Pink Tulips', price: '$130', image: require('../../assets/images/j2.png'), isNew: false },
-    { id: '8', name: 'Yellow Tulips', price: '$150', image: require('../../assets/images/j3.png'), isNew: true },
-    { id: '9', name: 'Pink Tulips', price: '$130', image: require('../../assets/images/in3.png'), isNew: false },
-    { id: '10', name: 'Yellow Tulips', price: '$150', image: require('../../assets/images/j1.png'), isNew: true },
-    { id: '11', name: 'Yellow Tulips', price: '$150', image: require('../../assets/images/j3.png'), isNew: true },
-    { id: '12', name: 'Pink Tulips', price: '$130', image: require('../../assets/images/j2.png'), isNew: false },
+    {
+      id: '1',
+      name: 'Pink Tulips',
+      price: '$130',
+      image: require('../../assets/images/j1.png'),
+      category: 'Flowers',
+    },
+    {
+      id: '2',
+      name: 'Yellow Tulips',
+      price: '$150',
+      image: require('../../assets/images/j1.png'),
+      category: 'Flowers',
+    },
+    {
+      id: '3',
+      name: 'Chocolate Cake',
+      price: '$200',
+      image: require('../../assets/images/in4.png'),
+      category: 'Cakes',
+    },
+    {
+      id: '4',
+      name: 'Vanilla Cake',
+      price: '$220',
+      image: require('../../assets/images/j3.png'),
+      category: 'Cakes',
+    },
+    {
+      id: '5',
+      name: 'Birthday Gift Card',
+      price: '$50',
+      image: require('../../assets/images/in2.png'),
+      category: 'Gift Card',
+    },
+    {
+      id: '6',
+      name: 'Anniversary Gift Card',
+      price: '$60',
+      image: require('../../assets/images/j1.png'),
+      category: 'Gift Card',
+    },
+    {
+      id: '7',
+      name: 'Fancy Envelope',
+      price: '$10',
+      image: require('../../assets/images/j2.png'),
+      category: 'Envelop',
+    },
+    {
+      id: '8',
+      name: 'Classic Envelope',
+      price: '$12',
+      image: require('../../assets/images/j3.png'),
+      category: 'Envelop',
+    },
+    {
+      id: '9',
+      name: 'Exotic Bouquet',
+      price: '$140',
+      image: require('../../assets/images/in3.png'),
+      category: 'Flowers',
+    },
+    {
+      id: '10',
+      name: 'Special Flowers',
+      price: '$160',
+      image: require('../../assets/images/j1.png'),
+      category: 'Flowers',
+    },
+    {
+      id: '11',
+      name: 'Custom Order',
+      price: '$180',
+      image: require('../../assets/images/j3.png'),
+      category: 'Others',
+    },
+    {
+      id: '12',
+      name: 'Unique Design',
+      price: '$190',
+      image: require('../../assets/images/j2.png'),
+      category: 'Others',
+    },
   ];
+
+  // Filter products based on the active category. "All" shows every product.
+  const filteredProducts =
+    activeCategory === 'All'
+      ? products
+      : products.filter((product) => product.category === activeCategory);
 
   const gradientColors = ['#DE8542', '#FE5993']; // Gradient colors for the button
   const [note, setNote] = useState('');
@@ -74,19 +157,19 @@ const StoreOverviewPage = ({ navigation }) => {
       } else {
         Animated.spring(panY, {
           toValue: 0,
-          useNativeDriver: false, // Changed to false
+          useNativeDriver: false,
         }).start();
       }
     },
   });
-  
+
   // Open Bottom Sheet
   const openBottomSheet = () => {
     setBottomSheetVisible(true);
     Animated.timing(panY, {
       toValue: 0,
       duration: 300,
-      useNativeDriver: false, // Changed to false
+      useNativeDriver: false,
     }).start();
   };
 
@@ -96,9 +179,10 @@ const StoreOverviewPage = ({ navigation }) => {
     Animated.timing(panY, {
       toValue: height,
       duration: 300,
-      useNativeDriver: false, // Changed to false
+      useNativeDriver: false,
     }).start(() => setBottomSheetVisible(false));
   };
+
   return (
     <View style={styles.container}>
       <HeaderInner
@@ -120,121 +204,138 @@ const StoreOverviewPage = ({ navigation }) => {
           </View>
           <View style={styles.ratingContainer}>
             <Image source={require('../../assets/images/star.png')} style={styles.icon} />
-            <Text style={styles.ratingText}>{rating} ({totalReviews})</Text>
+            <Text style={styles.ratingText}>
+              {rating} ({totalReviews})
+            </Text>
           </View>
         </View>
 
-        <View style={styles.tabContainer}>
-          {['Products', 'Contact'].map((tab) => (
-            <TouchableOpacity key={tab} onPress={() => setActiveTab(tab)} style={styles.tabButton}>
-              <Text style={[styles.tabText, activeTab === tab && styles.activeTabText]}>{tab}</Text>
-              {activeTab === tab && <View style={styles.activeIndicator} />}
+        {/* Horizontally Scrollable Categories Tabs */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.tabContainer}
+        >
+          {categories.map((category) => (
+            <TouchableOpacity
+              key={category}
+              onPress={() => setActiveCategory(category)}
+              style={styles.tabButton}
+            >
+              <Text
+                style={[
+                  styles.tabText,
+                  activeCategory === category && styles.activeTabText,
+                ]}
+              >
+                {category}
+              </Text>
+              {activeCategory === category && <View style={styles.activeIndicator} />}
             </TouchableOpacity>
           ))}
-        </View>
+        </ScrollView>
 
-        {activeTab === 'Products' && (
-          <FlatList
-            data={products}
-            numColumns={2}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.productCard}
-                onPress={() => navigation.navigate('ProductOverview')}
-              >
-                <View style={styles.imageContainer}>
-                  {item.isNew && <View style={styles.newTag}><Text style={styles.newText}>New</Text></View>}
-                  <TouchableOpacity style={styles.wishlistButton}>
-                    <Image source={require('../../assets/images/favourite.png')} style={styles.wishlistIcon} />
-                  </TouchableOpacity>
-                  <Image source={item.image} style={styles.productImage} />
-                </View>
-                <View style={styles.productInfo}>
-                  <Text style={styles.productName}>{item.name}</Text>
-                  <Text style={styles.productPrice}>{item.price}</Text>
-                </View>
-              </TouchableOpacity>
-            )}
-            contentContainerStyle={styles.flatListContent}
-          />
-        )}
+        {/* Products Grid (filtered based on category) */}
+        <FlatList
+          data={filteredProducts}
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.productCard}
+              onPress={() => navigation.navigate('ProductOverview')}
+            >
+              <View style={styles.imageContainer}>
+                <TouchableOpacity style={styles.wishlistButton}>
+                  <Image
+                    source={require('../../assets/images/favourite.png')}
+                    style={styles.wishlistIcon}
+                  />
+                </TouchableOpacity>
+                <Image source={item.image} style={styles.productImage} />
+              </View>
+              <View style={styles.productInfo}>
+                <Text style={styles.productName}>{item.name}</Text>
+                <Text style={styles.productPrice}>{item.price}</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+          contentContainerStyle={styles.flatListContent}
+        />
       </ScrollView>
 
       {/* Floating Button with Gradient */}
       <View style={styles.floatingButtonContainer}>
-  <ButtonPrimary
-    buttonText="Customize Order"
-    onPress={openBottomSheet}
-    buttonWidth={Dimensions.get('window').width * 0.5} // 80% of screen width
-    buttonHeight={40} // Consistent button height
-    fontSize={16} // Slightly larger font size
-    gradientColors={['#DE8542', '#FE5993']} // Custom gradient
-  />
-</View>
-
-
-      {/* Bottom Sheet */}
-    <Modal
-  transparent
-  visible={isBottomSheetVisible}
-  onRequestClose={closeBottomSheet}
-  animationType="none"
->
-  <View style={styles.bottomSheetOverlay} pointerEvents="box-none">
-    <Animated.View
-      style={[
-        styles.bottomSheet,
-        {
-          transform: [{ translateY: panY }],
-        },
-      ]}
-      {...panResponder.panHandlers}
-    >
-      <View style={styles.bottomSheetHeader}>
-        <Text style={styles.bottomSheetTitle}>Customize Order</Text>
-        <TouchableOpacity onPress={closeBottomSheet}>
-          <Text style={styles.closeButton}>Close</Text>
-        </TouchableOpacity>
+        <ButtonPrimary
+          buttonText="Customize Order"
+          onPress={openBottomSheet}
+          buttonWidth={Dimensions.get('window').width * 0.5}
+          buttonHeight={40}
+          fontSize={16}
+          gradientColors={gradientColors}
+        />
       </View>
 
-      <ScrollView
-        contentContainerStyle={styles.bottomSheetContent}
-        keyboardShouldPersistTaps="handled"
+      {/* Bottom Sheet */}
+      <Modal
+        transparent
+        visible={isBottomSheetVisible}
+        onRequestClose={closeBottomSheet}
+        animationType="none"
       >
-       <TextInput
-  style={styles.noteInput}
-  placeholder="Add a few notes to help you later"
-  placeholderTextColor="#999"
-  multiline
-  value={note}
-  onFocus={() => setIsTyping(true)}  // Disable gesture while typing
-  onBlur={() => setIsTyping(false)}   // Re-enable gesture when done typing
-  onChangeText={(text) => setNote(text)}
-/>
+        <View style={styles.bottomSheetOverlay} pointerEvents="box-none">
+          <Animated.View
+            style={[
+              styles.bottomSheet,
+              {
+                transform: [{ translateY: panY }],
+              },
+            ]}
+            {...panResponder.panHandlers}
+          >
+            <View style={styles.bottomSheetHeader}>
+              <Text style={styles.bottomSheetTitle}>Customize Order</Text>
+              <TouchableOpacity onPress={closeBottomSheet}>
+                <Text style={styles.closeButton}>Close</Text>
+              </TouchableOpacity>
+            </View>
 
-        <TouchableOpacity style={styles.uploadContainer} onPress={selectImage}>
-          <LinearGradient colors={['#ffe5e7', '#ffe5e7']} style={styles.gradientBackground}>
-            <Image source={require('../../assets/images/upload-img.png')} style={styles.uploadIcon} />
-            <Text style={styles.uploadText}>Click To Upload Or Drag And Drop</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+            <ScrollView
+              contentContainerStyle={styles.bottomSheetContent}
+              keyboardShouldPersistTaps="handled"
+            >
+              <TextInput
+                style={styles.noteInput}
+                placeholder="Add a few notes to help you later"
+                placeholderTextColor="#999"
+                multiline
+                value={note}
+                onFocus={() => setIsTyping(true)} // Disable gesture while typing
+                onBlur={() => setIsTyping(false)} // Re-enable gesture when done typing
+                onChangeText={(text) => setNote(text)}
+              />
 
-        <View style={styles.buttonWrapper}>
-  <ButtonPrimary
-    buttonText="Send my Order"
-    onPress={() => navigation.navigate('CartPage')}
-    buttonWidth={Dimensions.get('window').width * 0.7}
-    buttonHeight={40}
-    fontSize={18}
-    gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
-  />
-</View>
-      </ScrollView>
-    </Animated.View>
-  </View>
-</Modal>
+              <TouchableOpacity style={styles.uploadContainer} onPress={selectImage}>
+                <LinearGradient colors={['#ffe5e7', '#ffe5e7']} style={styles.gradientBackground}>
+                  <Image source={require('../../assets/images/upload-img.png')} style={styles.uploadIcon} />
+                  <Text style={styles.uploadText}>Click To Upload     </Text>
+                </LinearGradient>
+              </TouchableOpacity>
 
+              <View style={styles.buttonWrapper}>
+                <ButtonPrimary
+                  buttonText="Send my Order"
+                  onPress={() => navigation.navigate('CartPage')}
+                  buttonWidth={Dimensions.get('window').width * 0.7}
+                  buttonHeight={40}
+                  fontSize={18}
+                  gradientColors={gradientColors}
+                />
+              </View>
+            </ScrollView>
+          </Animated.View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -283,28 +384,23 @@ const styles = StyleSheet.create({
     bottom: 20,
     alignSelf: 'center',
   },
-
   storeInfoContainer: {
     backgroundColor: '#fff',
     paddingTop: 30,
     paddingBottom: 10,
-    paddingLeft: 30,
-    paddingRight: 30,
+    paddingHorizontal: 30,
     borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
     shadowRadius: 4,
     marginTop: 10,
   },
+  // Updated container style for the tabs
   tabContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 20,
-    backgroundColor: '#fff',
+    paddingHorizontal: 10,
     paddingVertical: 10,
   },
   tabButton: {
+    marginRight: 15,
     alignItems: 'center',
   },
   tabText: {
@@ -345,21 +441,6 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
   },
-  newTag: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    backgroundColor: Colors.Gradient2,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 5,
-    zIndex: 1,
-  },
-  newText: {
-    fontSize: 12,
-    fontFamily: 'DMSans-Bold',
-    color: '#fff',
-  },
   wishlistButton: {
     position: 'absolute',
     top: 5,
@@ -390,24 +471,6 @@ const styles = StyleSheet.create({
   },
   flatListContent: {
     paddingBottom: 20,
-  },
-  floatingButton: {
-    position: 'absolute',
-    bottom: 20,
-    alignSelf: 'center',
-    borderRadius: 10, // Reduced size
-    overflow: 'hidden', // Ensure gradient doesn't overflow
-  },
-  gradient: {
-    paddingVertical: 12, // Reduced size
-    paddingHorizontal: 24, // Reduced size
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  floatingButtonText: {
-    color: '#fff',
-    fontSize: 14, // Reduced font size
-    fontFamily: 'DMSans-Bold',
   },
   bottomSheetOverlay: {
     flex: 1,
@@ -487,10 +550,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     left: '58%',
-    transform: [{ translateX: -Dimensions.get('window').width * 0.4 }], // Center the button horizontally
+    transform: [{ translateX: -Dimensions.get('window').width * 0.4 }],
     alignItems: 'center',
   },
-
 });
 
 export default StoreOverviewPage;
