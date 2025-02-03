@@ -3,11 +3,13 @@ import {
   View,
   Text,
   Image,
+  ImageBackground,
   ScrollView,
   StyleSheet,
   Dimensions,
   StatusBar,
   SafeAreaView,
+  TouchableOpacity,
 } from 'react-native';
 import Header from '../../screens/components/Header';
 import Colors from '../components/Colors';
@@ -36,102 +38,168 @@ const streakCardsData = [
   },
 ];
 
+// Sample data for redeemed offer transactions
+const redeemedTransactionsData = [
+  {
+    id: 1,
+    storeName: 'Awesome Store 1',
+    offer: '20% off',
+    date: 'Feb 2, 2025',
+  },
+  {
+    id: 2,
+    storeName: 'Super Store 2',
+    offer: '15% off',
+    date: 'Feb 1, 2025',
+  },
+  {
+    id: 3,
+    storeName: 'Mega Store 3',
+    offer: '10% off',
+    date: 'Jan 30, 2025',
+  },
+];
+
 const RewardsScreen = ({ navigation }) => {
+  // Sort the streak cards to put any card with 5 completed streaks first.
+  const sortedStreakCardsData = [
+    ...streakCardsData.filter(card => card.completedStreaks === 5),
+    ...streakCardsData.filter(card => card.completedStreaks !== 5),
+  ];
+
   return (
     <SafeAreaView style={styles.container}>
-          <ScrollView>
-    <View style={styles.container}>
-      <StatusBar backgroundColor={Colors.background} barStyle="dark-content" />
+      <ScrollView>
+        <View style={styles.container}>
+          <StatusBar backgroundColor={Colors.background} barStyle="dark-content" />
 
-      {/* Header */}
-      <Header
-        title="Rewards"
-        showCartIcon={true}
-        showNotificationIcon={true}
-        showProfileIcon={true}
-        onCartPress={() => navigation.navigate('CartPage')}
-        onNotificationPress={() =>
-          navigation.navigate('PushNotificationsScreen')
-        }
-        onProfilePress={() => navigation.navigate('ProfileScreen')}
-      />
+          {/* Header */}
+          <Header
+            title="Rewards"
+            showCartIcon={true}
+            showNotificationIcon={true}
+            showProfileIcon={true}
+            onCartPress={() => navigation.navigate('CartPage')}
+            onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
+            onProfilePress={() => navigation.navigate('ProfileScreen')}
+          />
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* WALLET BALANCE CARD */}
-        <View style={styles.walletCard}>
-          <Text style={styles.walletTitle}>WALLET BALANCE</Text>
-          <View style={styles.walletRow}>
-            <Text style={styles.walletValue}>20,000</Text>
-            <Text style={styles.walletCurrency}>AED</Text>
-          </View>
-
-          <View style={styles.limitBox}>
-            <Text style={styles.limitText}>0/2000</Text>
-          </View>
-          <Text style={styles.limitSubText}>Transfer limits</Text>
-
-          <View style={styles.progressBarBackground}>
-            <View style={styles.progressBarFill} />
-          </View>
-        </View>
-
-        {/* STREAK CARDS */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.streaksCardsContainer}
-        >
-          {streakCardsData.map((card) => (
-            <View key={card.id} style={styles.streaksCard}>
-              <Text style={styles.streaksTitle}>Your Streaks</Text>
-
-              <Image
-                source={require('../../assets/images/fire.png')}
-                style={styles.fireIcon}
-              />
-
-              <Text style={styles.streaksSubtitle}>Make an order to kick off the streak</Text>
-
-              <View style={styles.flowersRow}>
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <View key={index} style={styles.iconWrapper}>
-                    <Image
-                      source={
-                        index < card.completedStreaks
-                          ? require('../../assets/images/flower_active.png')
-                          : require('../../assets/images/flower_non.png')
-                      }
-                      style={styles.streakIcon}
-                    />
-
-                    {/* Progress Line */}
-                    {index < 4 && (
-                      <View
-                        style={[
-                          styles.progressLine,
-                          {
-                            backgroundColor:
-                              index < card.completedStreaks - 1
-                                ? '#FD3A84'
-                                : '#FBCBC3',
-                          },
-                        ]}
-                      />
-                    )}
-                  </View>
-                ))}
+          <ScrollView contentContainerStyle={styles.scrollContent}>
+            {/* WALLET BALANCE CARD */}
+            <View style={styles.walletCard}>
+              <Text style={styles.walletTitle}>WALLET BALANCE</Text>
+              <View style={styles.walletRow}>
+                <Text style={styles.walletValue}>20,000</Text>
+                <Text style={styles.walletCurrency}>AED</Text>
               </View>
 
-              <View style={styles.storeInfoContainer}>
-                <Image source={card.storeLogo} style={styles.storeLogo} />
-                <Text style={styles.storeName}>{card.storeName}</Text>
+              <View style={styles.limitBox}>
+                <Text style={styles.limitText}>0/2000</Text>
+              </View>
+              <Text style={styles.limitSubText}>Transfer limits</Text>
+
+              <View style={styles.progressBarBackground}>
+                <View style={styles.progressBarFill} />
               </View>
             </View>
-          ))}
-        </ScrollView>
+
+            {/* STREAK CARDS */}
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.streaksCardsContainer}
+            >
+              {sortedStreakCardsData.map((card) => {
+                if (card.completedStreaks === 5) {
+                  // Render the completed streak card with a background image
+                  return (
+                    <ImageBackground
+                      key={card.id}
+                      source={require('../../assets/images/pop.png')}
+                      style={[styles.streaksCard, styles.completedStreakCard]}
+                      imageStyle={{ resizeMode: 'cover' }}
+                    >
+                      <Text style={styles.congratsText}>Congratulations!</Text>
+                      <Text style={styles.discountText}>
+                        You got 20% Discount From "{card.storeName}"
+                      </Text>
+                      <TouchableOpacity
+                        style={styles.redeemButton}
+                        onPress={() => navigation.navigate('StoreDiscountScreen')}
+                      >
+                        <Text style={styles.redeemButtonText}>Redeem</Text>
+                      </TouchableOpacity>
+                    </ImageBackground>
+                  );
+                } else {
+                  // Normal streak card view
+                  return (
+                    <View key={card.id} style={styles.streaksCard}>
+                      <Text style={styles.streaksTitle}>Your Streaks</Text>
+                      <Image
+                        source={require('../../assets/images/fire.png')}
+                        style={styles.fireIcon}
+                      />
+                      <Text style={styles.streaksSubtitle}>
+                        Make an order to kick off the streak
+                      </Text>
+                      <View style={styles.flowersRow}>
+                        {Array.from({ length: 5 }).map((_, index) => (
+                          <View key={index} style={styles.iconWrapper}>
+                            <Image
+                              source={
+                                index < card.completedStreaks
+                                  ? require('../../assets/images/flower_active.png')
+                                  : require('../../assets/images/flower_non.png')
+                              }
+                              style={styles.streakIcon}
+                            />
+                            {index < 4 && (
+                              <View
+                                style={[
+                                  styles.progressLine,
+                                  {
+                                    backgroundColor:
+                                      index < card.completedStreaks - 1
+                                        ? '#FD3A84'
+                                        : '#FBCBC3',
+                                  },
+                                ]}
+                              />
+                            )}
+                          </View>
+                        ))}
+                      </View>
+                      <View style={styles.storeInfoContainer}>
+                        <Image source={card.storeLogo} style={styles.storeLogo} />
+                        <Text style={styles.storeName}>{card.storeName}</Text>
+                      </View>
+                    </View>
+                  );
+                }
+              })}
+            </ScrollView>
+
+            {/* OFFER REDEEMED TRANSACTIONS */}
+            <View style={styles.transactionsContainer}>
+              <Text style={styles.transactionsHeader}>Redeemed Offers</Text>
+              {redeemedTransactionsData.map((transaction) => (
+                <View key={transaction.id} style={styles.transactionCard}>
+                  <View style={styles.transactionInfo}>
+                    <Text style={styles.transactionStoreName}>
+                      {transaction.storeName}
+                    </Text>
+                    <Text style={styles.transactionOffer}>
+                      claimed {transaction.offer}
+                    </Text>
+                  </View>
+                  <Text style={styles.transactionDate}>{transaction.date}</Text>
+                </View>
+              ))}
+            </View>
+          </ScrollView>
+        </View>
       </ScrollView>
-    </View>
-    </ScrollView>
     </SafeAreaView>
   );
 };
@@ -157,7 +225,7 @@ const styles = StyleSheet.create({
   },
   walletTitle: {
     fontSize: 14,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
     color: '#333',
     marginBottom: 8,
     textTransform: 'uppercase',
@@ -168,12 +236,12 @@ const styles = StyleSheet.create({
   },
   walletValue: {
     fontSize: 26,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
     color: '#333',
   },
   walletCurrency: {
     fontSize: 16,
-    fontFamily:'DMSans-SemiBold',
+    fontFamily: 'DMSans-SemiBold',
     color: '#333',
     marginLeft: 5,
   },
@@ -186,14 +254,14 @@ const styles = StyleSheet.create({
   },
   limitText: {
     fontSize: 14,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
     color: '#333',
   },
   limitSubText: {
     fontSize: 12,
     color: '#666',
     marginTop: 8,
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   progressBarBackground: {
     width: '100%',
@@ -226,7 +294,7 @@ const styles = StyleSheet.create({
   },
   streaksTitle: {
     fontSize: 14,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
     color: '#333',
     position: 'absolute',
     top: 10,
@@ -237,36 +305,15 @@ const styles = StyleSheet.create({
     color: '#666',
     marginTop: 8,
     textAlign: 'center',
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
-  storeInfoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
-  },
-  storeLogo: {
-    width: 40,
-    height: 40,
-    resizeMode: 'contain',
-    marginRight: 8,
-  },
-  storeName: {
-    fontSize: 12,
-    fontFamily:'DMSans-Bold',
-    color: '#333',
-  },
-
-  /* FIRE ICON */
   fireIcon: {
-    marginTop:20,
+    marginTop: 20,
     width: 40,
     height: 40,
     resizeMode: 'contain',
     alignSelf: 'center',
   },
-
-  /* FLOWER ICONS ROW */
   flowersRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -288,10 +335,95 @@ const styles = StyleSheet.create({
     marginHorizontal: 3,
     borderRadius: 2,
   },
-  checkIcon: {
-    width: 30,
-    height: 30,
+  storeInfoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+  storeLogo: {
+    width: 40,
+    height: 40,
     resizeMode: 'contain',
-    marginLeft: 6,
+    marginRight: 8,
+  },
+  storeName: {
+    fontSize: 12,
+    fontFamily: 'DMSans-Bold',
+    color: '#333',
+  },
+
+  /* COMPLETED STREAK CARD STYLES */
+  completedStreakCard: {
+    // Background image will be provided by ImageBackground
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
+  congratsText: {
+    fontSize: 18,
+    fontFamily: 'DMSans-Bold',
+    color: '#333',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  discountText: {
+    fontSize: 16,
+    fontFamily: 'DMSans-Regular',
+    color: '#333',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  redeemButton: {
+    backgroundColor: '#FE5993',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  redeemButtonText: {
+    fontSize: 14,
+    fontFamily: 'DMSans-Bold',
+    color: '#fff',
+  },
+
+  /* TRANSACTIONS STYLES */
+  transactionsContainer: {
+    marginTop: 24,
+  },
+  transactionsHeader: {
+    fontSize: 16,
+    fontFamily: 'DMSans-Bold',
+    color: '#333',
+    marginBottom: 12,
+    paddingHorizontal: 16,
+  },
+  transactionCard: {
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 12,
+    marginHorizontal: 16,
+    shadowColor: '#000',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  transactionInfo: {
+    flexDirection: 'column',
+  },
+  transactionStoreName: {
+    fontSize: 14,
+    fontFamily: 'DMSans-Bold',
+    color: '#333',
+  },
+  transactionOffer: {
+    fontSize: 12,
+    fontFamily: 'DMSans-Regular',
+    color: '#666',
+  },
+  transactionDate: {
+    fontSize: 12,
+    fontFamily: 'DMSans-Regular',
+    color: '#999',
   },
 });

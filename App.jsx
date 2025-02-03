@@ -91,7 +91,7 @@ const SplashScreen = ({ navigation }) => {
 // Bottom Tab Navigator
 const TabNavigator = () => (
   <Tab.Navigator
-    screenOptions={({ route }) => ({
+    screenOptions={({  route }) => ({
       tabBarIcon: ({ focused }) => {
         let iconSource;
         if (route.name === 'Home') {
