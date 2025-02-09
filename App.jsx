@@ -94,6 +94,7 @@ const TabNavigator = () => (
     screenOptions={({  route }) => ({
       tabBarIcon: ({ focused }) => {
         let iconSource;
+        
         if (route.name === 'Home') {
           iconSource = require('./assets/images/HOME.png');
         } else if (route.name === 'Rewards') {

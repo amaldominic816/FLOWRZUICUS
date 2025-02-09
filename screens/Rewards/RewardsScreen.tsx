@@ -113,23 +113,34 @@ const RewardsScreen = ({ navigation }) => {
                 if (card.completedStreaks === 5) {
                   // Render the completed streak card with a background image
                   return (
-                    <ImageBackground
-                      key={card.id}
-                      source={require('../../assets/images/pop.png')}
-                      style={[styles.streaksCard, styles.completedStreakCard]}
-                      imageStyle={{ resizeMode: 'cover' }}
-                    >
-                      <Text style={styles.congratsText}>Congratulations!</Text>
-                      <Text style={styles.discountText}>
-                        You got 20% Discount From "{card.storeName}"
-                      </Text>
-                      <TouchableOpacity
-                        style={styles.redeemButton}
-                        onPress={() => navigation.navigate('StoreDiscountScreen')}
-                      >
-                        <Text style={styles.redeemButtonText}>Redeem</Text>
-                      </TouchableOpacity>
-                    </ImageBackground>
+                    <View style={styles.cardContainer}>
+      {/* Top Section with Green Background */}
+      <ImageBackground
+        source={require('../../assets/images/green_bg.png')}
+        style={styles.topSection}
+        imageStyle={styles.backgroundImage}
+      >
+        {/* Ribbon Badge Centered */}
+        <Image
+          source={require('../../assets/images/star_ribbon.png')}
+          style={styles.ribbonImage}
+        />
+      </ImageBackground>
+
+      {/* Bottom Section */}
+      <View style={styles.bottomSection}>
+        <Text style={styles.congratsText}>Congratulations!</Text>
+        <Text style={styles.discountText}>
+          100% Discount From "{card.storeName}"
+        </Text>
+        <TouchableOpacity
+          style={styles.redeemButton}
+          onPress={() => navigation.navigate('StoreDiscountScreen')}
+        >
+          <Text style={styles.redeemButtonText}>Redeem</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
                   );
                 } else {
                   // Normal streak card view
@@ -354,30 +365,52 @@ const styles = StyleSheet.create({
   },
 
   /* COMPLETED STREAK CARD STYLES */
-  completedStreakCard: {
-    // Background image will be provided by ImageBackground
+  cardContainer: {
+    backgroundColor: '#FCE9E8',
+    borderRadius: 16,
+    marginRight: 16,
+    width: width * 0.85,
+    overflow: 'hidden',
+  },
+  topSection: {
+    height: 60,  // Reduced height for the green section
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  backgroundImage: {
+    resizeMode: 'cover',
+  },
+  ribbonImage: {
+    width: 60,
+    height: 60,
+    position: 'absolute',
+    top: 30,  // Positioned to span the green and beige sections
+  },
+  bottomSection: {
     paddingVertical: 20,
+    paddingHorizontal: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   congratsText: {
     fontSize: 18,
     fontFamily: 'DMSans-Bold',
     color: '#333',
-    marginBottom: 10,
+    marginTop:18,
+    marginBottom: 8,
     textAlign: 'center',
   },
   discountText: {
     fontSize: 16,
     fontFamily: 'DMSans-Regular',
     color: '#333',
-    marginBottom: 10,
+    marginBottom: 5,
     textAlign: 'center',
   },
   redeemButton: {
     backgroundColor: '#FE5993',
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 5,
     borderRadius: 8,
   },
   redeemButtonText: {
@@ -385,7 +418,6 @@ const styles = StyleSheet.create({
     fontFamily: 'DMSans-Bold',
     color: '#fff',
   },
-
   /* TRANSACTIONS STYLES */
   transactionsContainer: {
     marginTop: 24,

@@ -427,7 +427,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     position: 'relative',
-    shadowColor: '#000',
+    shadowColor: '#E3D0CCFF',
+    elevation:2,
   },
   imageContainer: {
     width: '100%',
