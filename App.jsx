@@ -39,6 +39,7 @@ import RewardsScreen from './screens/Rewards/RewardsScreen';
 import EditProfileScreen from './screens/Profile/EditProfileScreen';
 import HelpScreen  from './screens/Profile/HelpScreen';
 import SearchProducts from './screens/Home/SearchProducts';
+import EventScreen from './screens/Events/EventPage';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -101,8 +102,8 @@ const TabNavigator = () => (
           iconSource = require('./assets/images/rewards.png');
         } else if (route.name === 'Gift') {
           iconSource = require('./assets/images/gift.png');
-        } else if (route.name === 'Profile') {
-          iconSource = require('./assets/images/profile.png');
+        } else if (route.name === 'Events') {
+          iconSource = require('./assets/images/event.png');
         }
 
         return focused ? (
@@ -139,7 +140,7 @@ const TabNavigator = () => (
     <Tab.Screen name="Home" component={HomePage} />
     <Tab.Screen name="Rewards" component={RewardsScreen} />
     <Tab.Screen name="Gift" component={GiftScreen} />
-    <Tab.Screen name="Profile" component={ProfileScreen} />
+    <Tab.Screen name="Events" component={EventScreen} />
   </Tab.Navigator>
 );
 
