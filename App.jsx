@@ -92,24 +92,24 @@ const SplashScreen = ({ navigation }) => {
 // Bottom Tab Navigator
 const TabNavigator = () => (
   <Tab.Navigator
-    screenOptions={({  route }) => ({
+    screenOptions={({ route }) => ({
       tabBarIcon: ({ focused }) => {
         let iconSource;
-        
+
         if (route.name === 'Home') {
           iconSource = require('./assets/images/HOME.png');
         } else if (route.name === 'Rewards') {
           iconSource = require('./assets/images/rewards.png');
         } else if (route.name === 'Gift') {
           iconSource = require('./assets/images/gift.png');
-        } else if (route.name === 'Events') {
+        } else if (route.name === 'Events') { // Make sure the route name matches exactly
           iconSource = require('./assets/images/event.png');
         }
 
         return focused ? (
           // Linear gradient for selected item
           <LinearGradient
-            colors={['#DE8542', '#FE5993']} // Adjust colors for the gradient
+            colors={['#DE8542', '#FE5993']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.tabItemSelected}
@@ -129,20 +129,46 @@ const TabNavigator = () => (
           </View>
         );
       },
-      tabBarStyle: {
-        height: 60, // Adjust the height of the tab bar
-        paddingBottom: 0, // Remove padding at the bottom
+      // Style for the label text
+      tabBarLabelStyle: {
+        marginTop:10,
+        fontSize: 12,           // Adjust font size
+        fontFamily: 'DMSans-SemiBold', // Use your desired font family      // Adjust the weight if needed
+        marginBottom: 0,        // Provide spacing from the bottom edge
       },
-      tabBarShowLabel: false, // Disable labels in the bottom navigation
-      headerShown: false, // Removes the header for all screens in TabNavigator
+      tabBarActiveTintColor: '#000000FF',  // Color for the active label
+      tabBarInactiveTintColor: '#000000',// Color for the inactive label
+      tabBarStyle: {
+        height: 60,           // Adjust the height of the tab bar if necessary
+        paddingBottom: 0,
+      },
+      tabBarShowLabel: true,   // Enable label display
+      headerShown: false,      // Hide the header in the tab navigator
     })}
   >
-    <Tab.Screen name="Home" component={HomePage} />
-    <Tab.Screen name="Rewards" component={RewardsScreen} />
-    <Tab.Screen name="Gift" component={GiftScreen} />
-    <Tab.Screen name="Events" component={EventScreen} />
+    <Tab.Screen
+      name="Home"
+      component={HomePage}
+      options={{ tabBarLabel: 'Home' }}
+    />
+    <Tab.Screen
+      name="Rewards"
+      component={RewardsScreen}
+      options={{ tabBarLabel: 'Rewards' }}
+    />
+    <Tab.Screen
+      name="Gift"
+      component={GiftScreen}
+      options={{ tabBarLabel: 'Gift' }}
+    />
+    <Tab.Screen
+      name="Events"
+      component={EventScreen}
+      options={{ tabBarLabel: 'Events' }}
+    />
   </Tab.Navigator>
 );
+
 
 
 
