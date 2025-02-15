@@ -27,6 +27,11 @@ const HomePage = ({ navigation }) => {
     { id: '2', image: require('../../assets/images/banner.png') },
     { id: '3', image: require('../../assets/images/banner.png') },
   ];
+  const occasionbanners = [
+      { id: '2', image: require('../../assets/images/ocbg1.jpg'), title: 'Valentines Day' },
+      { id: '3', image: require('../../assets/images/ocbirbg.jpeg'), title: 'Happy Birth Day' },
+
+  ];
 
   const categories = [
     { id: '1', name: 'Dahlia', image: require('../../assets/images/j1.png') },
@@ -223,6 +228,32 @@ const HomePage = ({ navigation }) => {
           </View>
 
 
+           {/* Categories Section */}
+<View style={styles.categoriesContainer}>
+  <View style={styles.categoriesHeader}>
+    <Text style={styles.categoriesTitle}>Shop by Occasions</Text>
+    <TouchableOpacity>
+      <Text style={styles.categoriesSeeAll}>See all</Text>
+    </TouchableOpacity>
+  </View>
+
+  <ScrollView
+    horizontal
+    pagingEnabled
+    showsHorizontalScrollIndicator={false}
+  >
+    {occasionbanners.map((occasionbanner) => (
+      <View key={occasionbanner.id} style={styles.bannerCard}>
+        <Image source={occasionbanner.image} style={styles.Occasionbanner} />
+        <View style={styles.occasionoverlay}>
+          <Text style={styles.bannerText}>{occasionbanner.title}</Text>
+        </View>
+      </View>
+    ))}
+  </ScrollView>
+</View>
+
+
 
 
           {/* Popular Stores Section */}
@@ -323,10 +354,27 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
     elevation: 2,
   },
-  banner: {
+  bannerText: {
+    color: 'white',
+    fontSize: 30,
+    fontFamily:'DMSans-Bold',
+  },
+  bannerCard: {
+    marginRight: 10,
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  Occasionbanner: {
     width: width - 32,
     height: 150,
     resizeMode: 'cover',
+  },
+  occasionoverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
   },
 
   overlay: {
@@ -342,6 +390,11 @@ const styles = StyleSheet.create({
     borderRadius: 12, // Match the gradient border radius if necessary
     overflow: 'hidden', // Ensures the image doesn't overflow the container
 
+  },
+  banner: {
+    width: width - 32,
+    height: 150,
+    resizeMode: 'cover',
   },
 
   listContainer: {
