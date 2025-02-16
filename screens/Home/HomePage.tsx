@@ -28,8 +28,8 @@ const HomePage = ({ navigation }) => {
     { id: '3', image: require('../../assets/images/banner.png') },
   ];
   const occasionbanners = [
-      { id: '2', image: require('../../assets/images/ocbg1.jpg'), title: 'Valentines Day' },
-      { id: '3', image: require('../../assets/images/ocbirbg.jpeg'), title: 'Happy Birth Day' },
+    { id: '2', image: require('../../assets/images/ocbg1.jpg'), title: 'Valentines Day' },
+    { id: '3', image: require('../../assets/images/ocbirbg.jpeg'), title: 'Happy Birth Day' },
 
   ];
 
@@ -173,17 +173,17 @@ const HomePage = ({ navigation }) => {
                 source={require('../../assets/images/search.png')}
                 style={styles.searchIcon}
               />
-             <TextInput
-  style={styles.searchInput}
-  placeholder="Search your flower"
-  placeholderTextColor={Colors.placeholder}
-  onSubmitEditing={(event) => {
-    const searchQuery = event.nativeEvent.text; // Get the search input value
-    if (searchQuery.trim().length > 0) {
-      navigation.navigate('SearchProducts', { query: searchQuery }); // Navigate to SearchProducts
-    }
-  }}
-/>
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Search your flower"
+                placeholderTextColor={Colors.placeholder}
+                onSubmitEditing={(event) => {
+                  const searchQuery = event.nativeEvent.text; // Get the search input value
+                  if (searchQuery.trim().length > 0) {
+                    navigation.navigate('SearchProducts', { query: searchQuery }); // Navigate to SearchProducts
+                  }
+                }}
+              />
 
             </View>
             <View style={styles.iconButtonfilter}>
@@ -207,7 +207,7 @@ const HomePage = ({ navigation }) => {
             </ScrollView>
           </View>
 
-          {/* Categories Section */}
+          {/* Categories Section
           <View style={styles.categoriesContainer}>
             <View style={styles.categoriesHeader}>
               <Text style={styles.categoriesTitle}>Occasions</Text>
@@ -221,37 +221,37 @@ const HomePage = ({ navigation }) => {
                   <View style={styles.categoryImageContainer}>
                     <Image source={item.image} style={styles.categoryImage} />
                     <Text style={styles.categoryInnerText}>{item.name}</Text> {/* Inner text inside the circle */}
+          {/* </View>
+                </View>
+              ))}
+            </ScrollView>
+          </View> */}
+
+
+          {/* Categories Section */}
+          <View style={styles.categoriesContainer}>
+            <View style={styles.categoriesHeader}>
+              <Text style={styles.categoriesTitle}>Shop by Occasions</Text>
+              <TouchableOpacity>
+                <Text style={styles.categoriesSeeAll}>See all</Text>
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+            >
+              {occasionbanners.map((occasionbanner) => (
+                <View key={occasionbanner.id} style={styles.bannerCard}>
+                  <Image source={occasionbanner.image} style={styles.Occasionbanner} />
+                  <View style={styles.occasionoverlay}>
+                    <Text style={styles.bannerText}>{occasionbanner.title}</Text>
                   </View>
                 </View>
               ))}
             </ScrollView>
           </View>
-
-
-           {/* Categories Section */}
-<View style={styles.categoriesContainer}>
-  <View style={styles.categoriesHeader}>
-    <Text style={styles.categoriesTitle}>Shop by Occasions</Text>
-    <TouchableOpacity>
-      <Text style={styles.categoriesSeeAll}>See all</Text>
-    </TouchableOpacity>
-  </View>
-
-  <ScrollView
-    horizontal
-    pagingEnabled
-    showsHorizontalScrollIndicator={false}
-  >
-    {occasionbanners.map((occasionbanner) => (
-      <View key={occasionbanner.id} style={styles.bannerCard}>
-        <Image source={occasionbanner.image} style={styles.Occasionbanner} />
-        <View style={styles.occasionoverlay}>
-          <Text style={styles.bannerText}>{occasionbanner.title}</Text>
-        </View>
-      </View>
-    ))}
-  </ScrollView>
-</View>
 
 
 
@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 12,
     color: '#000',
-    fontFamily:'DMSans-Light',
+    fontFamily: 'DMSans-Light',
   },
   bannerContainer: {
     width: width - 32,
@@ -357,7 +357,7 @@ const styles = StyleSheet.create({
   bannerText: {
     color: 'white',
     fontSize: 30,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
   },
   bannerCard: {
     marginRight: 10,
@@ -423,7 +423,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginBottom: 6,
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   ratingContainer: {
     flexDirection: 'row',
@@ -504,12 +504,12 @@ const styles = StyleSheet.create({
   },
   popularStoresTitle: {
     fontSize: 18,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
   },
   popularStoresSeeAll: {
     fontSize: 14,
     color: '#000',
-    fontFamily:'DMSans-Light',
+    fontFamily: 'DMSans-Light',
   },
   popularStoreCardSingle: {
     flexDirection: 'row',
@@ -528,19 +528,19 @@ const styles = StyleSheet.create({
   },
   popularStoreInfoSingle: {
     flex: 1,
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   popularStoreNameSingle: {
     fontSize: 16,
     color: '#000',
     marginBottom: 4,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
   },
   popularStoreLocationSingle: {
     fontSize: 14,
     color: '#666',
     marginBottom: 6,
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   popularStoreRatingRow: {
     flexDirection: 'row',
@@ -554,7 +554,7 @@ const styles = StyleSheet.create({
   popularStoreRatingSingle: {
     fontSize: 14,
     color: '#444',
-    fontFamily:'DMSans-Medium',
+    fontFamily: 'DMSans-Medium',
   },
 
 
@@ -571,12 +571,12 @@ const styles = StyleSheet.create({
   },
   categoriesTitle: {
     fontSize: 18,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
   },
   categoriesSeeAll: {
     fontSize: 14,
     color: '#000',
-    fontFamily:'DMSans-Light',
+    fontFamily: 'DMSans-Light',
   },
 
 
@@ -618,7 +618,7 @@ const styles = StyleSheet.create({
     position: 'absolute', // Places text at the bottom
     bottom: 5, // Adjust this to place text near the bottom edge
     fontSize: 12,
-    fontFamily:'DMSans-Light',
+    fontFamily: 'DMSans-Light',
     color: '#FFF', // Contrast color for visibility
     textAlign: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background for better visibility
