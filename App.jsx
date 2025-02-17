@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   Image,
-  TouchableOpacity,
   StatusBar,
   Dimensions,
 } from 'react-native';
@@ -13,10 +12,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Video from 'react-native-video';
-import ButtonPrimary from './screens/components/ButtonPrimary'; // Adjust the path based on your file structure
-
-
-// Import screens
+import ButtonPrimary from './screens/components/ButtonPrimary';
 import RegistrationPage from './screens/Authentication/RegisterPage';
 import OtpScreen from './screens/Authentication/OTPScreen';
 import ProductOverview from './screens/Store/ProductScreen';
@@ -51,33 +47,33 @@ const SplashScreen = ({ navigation }) => {
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
 
-      {/* Video Background */}
+      {}
       <Video
-        source={require('./assets/videos/bg.mp4')} // Ensure the video file exists in the correct path
-        style={StyleSheet.absoluteFillObject} // Makes the video cover the entire screen
-        resizeMode="cover" // Adjust the video to fill the screen while maintaining aspect ratio
-        repeat // Loops the video
-        muted // Mutes the video
-        playInBackground={false} // Stops playing when the app is in the background
-        playWhenInactive={false} // Stops playing when the app is inactive
+        source={require('./assets/videos/bg.mp4')}
+        style={StyleSheet.absoluteFillObject}
+        resizeMode="cover"
+        repeat
+        muted
+        playInBackground={false}
+        playWhenInactive={false}
       />
 
-      {/* Overlay Content */}
+      {}
       <View style={styles.overlay}>
         {/* Logo Image */}
         <Image
-          source={require('./assets/images/logo.png')} // Replace with the correct path to your logo image
-          style={styles.logo} // Apply styles to adjust size and positioning
+          source={require('./assets/images/logo.png')}
+          style={styles.logo}
         />
 
         <View style={styles.bottomContainer}>
           <ButtonPrimary
             buttonText="Register Now"
             onPress={() => navigation.navigate('RegistrationPage')}
-            buttonWidth={Dimensions.get('window').width * 0.8} // Set width to 80% of the screen width
+            buttonWidth={Dimensions.get('window').width * 0.8}
             buttonHeight={50}
             fontSize={20}
-            gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
+            gradientColors={['#DE8542', '#FE5993']}
           />
           <Text style={styles.subtext}>
             Welcome to FLOWRZ! Dive into a world of beautiful flowers. Explore, shop, and share the joy!
@@ -137,7 +133,7 @@ const TabNavigator = () => (
         marginBottom: 0,        // Provide spacing from the bottom edge
       },
       tabBarActiveTintColor: '#000000FF',  // Color for the active label
-      tabBarInactiveTintColor: '#000000',// Color for the inactive label
+      tabBarInactiveTintColor: '#BABABAFF',// Color for the inactive label
       tabBarStyle: {
         height: 60,           // Adjust the height of the tab bar if necessary
         paddingBottom: 0,
