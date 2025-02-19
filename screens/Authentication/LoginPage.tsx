@@ -42,7 +42,7 @@ const LoginPage = ({ navigation }) => {
         });
 
         setTimeout(() => {
-          navigation.replace('HomePage'); // Navigate to Home after login
+          navigation.replace('Main'); // Navigate to Home after login
         }, 2000);
       }
     } catch (error) {

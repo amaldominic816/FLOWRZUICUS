@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import HeaderInner from '../components/Headerinner';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { showMessage } from 'react-native-flash-message';
 
 const EditProfileScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -8,13 +10,33 @@ const EditProfileScreen = ({ navigation }) => {
   const [profilePicture, setProfilePicture] = useState(null);
 
   const handleEditProfilePicture = () => {
-    // Logic to handle editing the profile picture
     console.log('Edit Profile Picture');
   };
 
   const handleDeleteAccount = () => {
-    // Logic to handle account deletion
     console.log('Delete Account');
+  };
+
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('token'); // Clear the stored token
+
+      showMessage({
+        message: 'Logged out successfully!',
+        type: 'success',
+        duration: 3000,
+      });
+
+      setTimeout(() => {
+        navigation.replace('LoginPage'); // Redirect to Login Page
+      }, 2000);
+    } catch (error) {
+      showMessage({
+        message: 'Logout failed. Please try again.',
+        type: 'danger',
+        duration: 3000,
+      });
+    }
   };
 
   return (
@@ -32,7 +54,7 @@ const EditProfileScreen = ({ navigation }) => {
       <View style={styles.content}>
         <TouchableOpacity style={styles.profilePictureContainer} onPress={handleEditProfilePicture}>
           <Image
-           source={profilePicture ? { uri: profilePicture } : require('../../assets/images/profile-picture.png')}
+            source={profilePicture ? { uri: profilePicture } : require('../../assets/images/profile-picture.png')}
             style={styles.profilePicture}
           />
           <Text style={styles.editPictureText}>Edit Profile Picture</Text>
@@ -62,6 +84,11 @@ const EditProfileScreen = ({ navigation }) => {
         <TouchableOpacity onPress={handleDeleteAccount}>
           <Text style={styles.deleteText}>Delete Account</Text>
         </TouchableOpacity>
+
+        {/* Logout Button */}
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Text style={styles.logoutButtonText}>Logout (Test)</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -88,7 +115,7 @@ const styles = StyleSheet.create({
   editPictureText: {
     color: '#007BFF',
     fontSize: 16,
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   inputContainer: {
     marginBottom: 16,
@@ -97,7 +124,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     marginBottom: 8,
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   input: {
     borderWidth: 1,
@@ -112,7 +139,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
-    fontFamily:'DMSans-light',
+    fontFamily: 'DMSans-Light',
+  },
+  logoutButton: {
+    marginTop: 24,
+    backgroundColor: '#FF3B30',
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  logoutButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
