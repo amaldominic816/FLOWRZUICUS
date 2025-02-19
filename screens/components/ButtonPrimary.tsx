@@ -35,7 +35,7 @@ ButtonPrimary.propTypes = {
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 10,
+    borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#ccc',

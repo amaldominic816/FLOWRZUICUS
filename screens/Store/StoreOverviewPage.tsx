@@ -237,31 +237,40 @@ const StoreOverviewPage = ({ navigation }) => {
 
         {/* Products Grid (filtered based on category) */}
         <FlatList
-          data={filteredProducts}
-          numColumns={2}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.productCard}
-              onPress={() => navigation.navigate('ProductOverview')}
-            >
-              <View style={styles.imageContainer}>
-                <TouchableOpacity style={styles.wishlistButton}>
-                  <Image
-                    source={require('../../assets/images/favourite.png')}
-                    style={styles.wishlistIcon}
-                  />
-                </TouchableOpacity>
-                <Image source={item.image} style={styles.productImage} />
-              </View>
-              <View style={styles.productInfo}>
-                <Text style={styles.productName}>{item.name}</Text>
-                <Text style={styles.productPrice}>{item.price}</Text>
-              </View>
-            </TouchableOpacity>
-          )}
-          contentContainerStyle={styles.flatListContent}
-        />
+  data={filteredProducts}
+  numColumns={2}
+  keyExtractor={(item) => item.id}
+  renderItem={({ item }) => (
+    <TouchableOpacity
+      style={styles.productCard}
+      onPress={() => navigation.navigate('ProductOverview')}
+    >
+      {/* Image & Wishlist Button */}
+      <View style={styles.imageContainer}>
+        <TouchableOpacity style={styles.wishlistButton}>
+          <Image
+            source={require('../../assets/images/favourite.png')}
+            style={styles.wishlistIcon}
+          />
+        </TouchableOpacity>
+        <Image source={item.image} style={styles.productImage} />
+      </View>
+
+      {/* Product Name & Price */}
+      <View style={styles.productInfo}>
+        <Text style={styles.productName}>{item.name}</Text>
+        <Text style={styles.productPrice}>{item.price}</Text>
+      </View>
+
+      {/* Plus Button */}
+      <TouchableOpacity style={styles.plusButton} onPress={() => {/* handle plus press */}}>
+        <Text style={styles.plusIcon}>+</Text>
+      </TouchableOpacity>
+    </TouchableOpacity>
+  )}
+  contentContainerStyle={styles.flatListContent}
+/>
+
       </ScrollView>
 
       {/* Floating Button with Gradient */}
@@ -426,9 +435,9 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',
-    position: 'relative',
+    position: 'relative', // important for absolutely-positioned children
     shadowColor: '#E3D0CCFF',
-    elevation:2,
+    elevation: 2,
   },
   imageContainer: {
     width: '100%',
@@ -458,12 +467,14 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   productInfo: {
-    alignItems: 'center',
+    width: '100%',
     marginTop: 10,
+    alignItems: 'flex-start', // Align content to the left
   },
   productName: {
-    fontSize: 16,
+    fontSize: 10,
     fontFamily: 'DMSans-Bold',
+    alignContent:'space-between',
   },
   productPrice: {
     fontSize: 14,
@@ -472,6 +483,23 @@ const styles = StyleSheet.create({
   },
   flatListContent: {
     paddingBottom: 20,
+  },
+  plusButton: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    width: 30,
+    height: 30,
+    borderRadius: 15,    // half of 40 -> perfectly round
+    backgroundColor: '#FE5993',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  plusIcon: {
+    color: '#fff',
+    fontSize:20
+    ,        // reduce if you want more padding
+    textAlign: 'center', // ensure horizontal centering
   },
   bottomSheetOverlay: {
     flex: 1,

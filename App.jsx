@@ -127,7 +127,7 @@ const TabNavigator = () => (
       },
       // Style for the label text
       tabBarLabelStyle: {
-        marginTop:10,
+        marginTop:5,
         fontSize: 12,           // Adjust font size
         fontFamily: 'DMSans-SemiBold', // Use your desired font family      // Adjust the weight if needed
         marginBottom: 0,        // Provide spacing from the bottom edge

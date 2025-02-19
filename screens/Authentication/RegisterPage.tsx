@@ -11,6 +11,8 @@ import {
   ScrollView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { registerUser } from '../api/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RegistrationPage = ({ navigation }) => {
   const [countryCode, setCountryCode] = useState('🇦🇪');
@@ -20,14 +22,41 @@ const RegistrationPage = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleRegister = () => {
-    const fullPhoneNumber = countryCode + phoneNumber;
-    console.log('Full phone number:', fullPhoneNumber);
-    console.log('Full Name:', fullName);
-    console.log('Email:', email);
-    console.log('Password:', password);
-    navigation.navigate('OtpScreen');
+  const handleRegister = async () => {
+    if (!fullName || !email || !phoneNumber || !password || !confirmPassword) {
+      alert('All fields are required!');
+      return;
+    }
+  
+    if (password !== confirmPassword) {
+      alert('Passwords do not match!');
+      return;
+    }
+  
+    try {
+      const userData = {
+        username: fullName, // API expects "username", mapping it from fullName
+        email,
+        phone: phoneNumber,
+        password,
+        address: '', // Add if needed
+      };
+  
+      const response = await registerUser(userData);
+  
+      // Store the token (if API provides one)
+      if (response.token) {
+        await AsyncStorage.setItem('token', response.token);
+      }
+  
+      alert('Registration successful! Proceed to OTP verification.');
+      navigation.navigate('OtpScreen');
+  
+    } catch (error) {
+      alert(error.error || 'Registration failed. Please try again.');
+    }
   };
+  
 
   const safeAreaStyle = {
     paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) + 20 : 0,
@@ -208,3 +237,7 @@ const styles = StyleSheet.create({
 });
 
 export default RegistrationPage;
+function alert(arg0: string) {
+  throw new Error('Function not implemented.');
+}
+

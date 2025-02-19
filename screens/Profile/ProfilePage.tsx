@@ -62,6 +62,11 @@ const ProfileScreen = () => {
                 navigateTo: 'MyOrdersScreen', // Page to navigate
               },
               {
+                title: 'My Favorites',
+                icon: require('../../assets/images/myfav.png'),
+                navigateTo: 'MyOrdersScreen', // Page to navigate
+              },
+              {
                 title: 'Invoices',
                 icon: require('../../assets/images/invoice.png'),
                 navigateTo: 'InvoicesScreen',
