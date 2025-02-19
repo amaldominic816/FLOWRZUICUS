@@ -13,6 +13,9 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import { registerUser } from '../api/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { showMessage } from 'react-native-flash-message';
+
+
 
 const RegistrationPage = ({ navigation }) => {
   const [countryCode, setCountryCode] = useState('🇦🇪');
@@ -24,39 +27,56 @@ const RegistrationPage = ({ navigation }) => {
 
   const handleRegister = async () => {
     if (!fullName || !email || !phoneNumber || !password || !confirmPassword) {
-      alert('All fields are required!');
+      showMessage({
+        message: 'All fields are required!',
+        type: 'danger',
+        duration: 3000, // 3 seconds
+      });
       return;
     }
   
     if (password !== confirmPassword) {
-      alert('Passwords do not match!');
+      showMessage({
+        message: 'Passwords do not match!',
+        type: 'danger',
+        duration: 3000,
+      });
       return;
     }
   
     try {
       const userData = {
-        username: fullName, // API expects "username", mapping it from fullName
+        username: fullName,
         email,
         phone: phoneNumber,
         password,
-        address: '', // Add if needed
+        address: 'default',
       };
   
       const response = await registerUser(userData);
   
-      // Store the token (if API provides one)
       if (response.token) {
         await AsyncStorage.setItem('token', response.token);
       }
   
-      alert('Registration successful! Proceed to OTP verification.');
-      navigation.navigate('OtpScreen');
+      showMessage({
+        message: 'Registration successful! Proceed to OTP verification.',
+        type: 'success',
+        duration: 3000,
+      });
+  
+      setTimeout(() => {
+        navigation.navigate('OtpScreen');
+      }, 2000);
   
     } catch (error) {
-      alert(error.error || 'Registration failed. Please try again.');
+      showMessage({
+        message: error.error || 'Registration failed. Please try again.',
+        type: 'danger',
+        duration: 3000,
+      });
     }
   };
-  
 
   const safeAreaStyle = {
     paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) + 20 : 0,
@@ -237,7 +257,5 @@ const styles = StyleSheet.create({
 });
 
 export default RegistrationPage;
-function alert(arg0: string) {
-  throw new Error('Function not implemented.');
-}
+
 

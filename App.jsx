@@ -36,6 +36,7 @@ import EditProfileScreen from './screens/Profile/EditProfileScreen';
 import HelpScreen  from './screens/Profile/HelpScreen';
 import SearchProducts from './screens/Home/SearchProducts';
 import EventScreen from './screens/Events/EventPage';
+import FlashMessage from 'react-native-flash-message';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -284,6 +285,7 @@ const AppNavigator = () => (
 const App = () => {
   return (
     <NavigationContainer>
+    <FlashMessage position="top" />
       <AppNavigator />
     </NavigationContainer>
   );
