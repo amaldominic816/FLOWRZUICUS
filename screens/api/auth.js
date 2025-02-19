@@ -9,3 +9,12 @@ export const registerUser = async (userData) => {
     throw error.response?.data || { error: 'Something went wrong!' };
   }
 };
+export const loginUser = async (userData) => {
+  try {
+    const response = await api.post('/login/', userData);
+    return response.data;  // Return token and user info
+  } catch (error) {
+    console.error('Login Error:', error.response?.data || error.message);
+    throw error.response?.data || { error: 'Invalid credentials' };
+  }
+};

@@ -37,6 +37,7 @@ import HelpScreen  from './screens/Profile/HelpScreen';
 import SearchProducts from './screens/Home/SearchProducts';
 import EventScreen from './screens/Events/EventPage';
 import FlashMessage from 'react-native-flash-message';
+import LoginPage from './screens/Authentication/LoginPage';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -67,15 +68,24 @@ const SplashScreen = ({ navigation }) => {
           style={styles.logo}
         />
 
-        <View style={styles.bottomContainer}>
-          <ButtonPrimary
-            buttonText="Register Now"
-            onPress={() => navigation.navigate('RegistrationPage')}
-            buttonWidth={Dimensions.get('window').width * 0.8}
-            buttonHeight={50}
-            fontSize={20}
-            gradientColors={['#DE8542', '#FE5993']}
-          />
+<View style={styles.bottomContainer}>
+  <ButtonPrimary
+    buttonText="Register Now"
+    onPress={() => navigation.navigate('RegistrationPage')}
+    buttonWidth={Dimensions.get('window').width * 0.8}
+    buttonHeight={50}
+    fontSize={20}
+    gradientColors={['#DE8542', '#FE5993']}
+    style={styles.buttonSpacing} // Apply spacing here
+  />
+  <ButtonPrimary
+    buttonText="Login Now"
+    onPress={() => navigation.navigate('LoginPage')}
+    buttonWidth={Dimensions.get('window').width * 0.8}
+    buttonHeight={50}
+    fontSize={20}
+    gradientColors={['#DE8542', '#FE5993']}
+  />
           <Text style={styles.subtext}>
             Welcome to FLOWRZ! Dive into a world of beautiful flowers. Explore, shop, and share the joy!
           </Text>
@@ -182,6 +192,11 @@ const AppNavigator = () => (
     <Stack.Screen
       name="RegistrationPage"
       component={RegistrationPage}
+      options={{ headerShown: false }}
+    />
+     <Stack.Screen
+      name="LoginPage"
+      component={LoginPage}
       options={{ headerShown: false }}
     />
     <Stack.Screen
@@ -305,11 +320,14 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
   },
 
+  
+
   bottomContainer: {
     position: 'absolute', // Aligns the container to the bottom of the screen
     bottom: 40, // Adds spacing from the bottom
     width: '100%',
     alignItems: 'center',
+    marginBottom: 15,
   },
   subtext: {
     fontSize: 16,
