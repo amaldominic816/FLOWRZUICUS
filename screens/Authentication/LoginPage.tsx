@@ -28,19 +28,22 @@ const LoginPage = ({ navigation }) => {
       });
       return;
     }
-
+  
     try {
       const userData = { username, password };
       const response = await loginUser(userData);
-
+  
       if (response.token) {
         await AsyncStorage.setItem('token', response.token);
+        await AsyncStorage.setItem('username', username); // Store username
+        await AsyncStorage.setItem('password', password); // Store password
+  
         showMessage({
           message: 'Login successful!',
           type: 'success',
           duration: 3000,
         });
-
+  
         setTimeout(() => {
           navigation.replace('Main'); // Navigate to Home after login
         }, 2000);
@@ -53,7 +56,6 @@ const LoginPage = ({ navigation }) => {
       });
     }
   };
-
   const safeAreaStyle = {
     paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) + 20 : 0,
   };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -11,8 +11,49 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import Header from '../../screens/components/Header';
 import Colors from '../components/Colors';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Buffer } from 'buffer'; // Import buffer for Base64 encoding
+
 
 const ProfileScreen = () => {
+  const [user, setUser] = useState({ username: '', email: '' });
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        // Retrieve stored username & password
+        const storedUsername = await AsyncStorage.getItem('username');
+        const storedPassword = await AsyncStorage.getItem('password');
+
+        if (!storedUsername || !storedPassword) {
+          console.error('Missing username or password');
+          return;
+        }
+
+        // Encode username:password in Base64
+        const credentials = Buffer.from(`${storedUsername}:${storedPassword}`).toString('base64');
+
+        // Make API request with Basic Auth
+        const response = await axios.get('http://127.0.0.1:8000/auth/users/', {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Basic ${credentials}`,
+          },
+        });
+
+        if (response.data.results.length > 0) {
+          const userData = response.data.results[0]; // Extract user details
+          setUser({ username: userData.username, email: userData.email });
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error.response?.data || error.message);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+
   const navigation = useNavigation();
 
   return (
@@ -35,9 +76,9 @@ const ProfileScreen = () => {
             style={styles.profileImage}
           />
           <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>Salim Al Tajir</Text>
-            <Text style={styles.profileEmail}>smn7552@gmail.com</Text>
-          </View>
+      <Text style={styles.profileName}>{user.username || 'Unknown User'}</Text>
+      <Text style={styles.profileEmail}>{user.email || 'No Email'}</Text>
+    </View>
           <TouchableOpacity
             style={styles.editButton}
             onPress={() => navigation.navigate('EditProfileScreen')} // Navigate to the profile edit screen
