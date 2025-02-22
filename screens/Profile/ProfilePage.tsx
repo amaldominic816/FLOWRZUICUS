@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,54 +7,40 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
+  Button,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from '../../screens/components/Header';
+import { useDispatch, useSelector } from 'react-redux';
 import Colors from '../components/Colors';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Buffer } from 'buffer'; // Import buffer for Base64 encoding
+import { logout } from '../redux/slices/authSlice';
 
 
 const ProfileScreen = () => {
-  const [user, setUser] = useState({ username: '', email: '' });
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        // Retrieve stored username & password
-        const storedUsername = await AsyncStorage.getItem('username');
-        const storedPassword = await AsyncStorage.getItem('password');
-
-        if (!storedUsername || !storedPassword) {
-          console.error('Missing username or password');
-          return;
-        }
-
-        // Encode username:password in Base64
-        const credentials = Buffer.from(`${storedUsername}:${storedPassword}`).toString('base64');
-
-        // Make API request with Basic Auth
-        const response = await axios.get('http://127.0.0.1:8000/auth/users/', {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Basic ${credentials}`,
-          },
-        });
-
-        if (response.data.results.length > 0) {
-          const userData = response.data.results[0]; // Extract user details
-          setUser({ username: userData.username, email: userData.email });
-        }
-      } catch (error) {
-        console.error('Error fetching profile:', error.response?.data || error.message);
-      }
-    };
-
-    fetchUserProfile();
-  }, []);
-
-
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+
+
+
+  // Select your state values
+  const user = useSelector((state) => state.user.user);
+  const status = useSelector((state) => state.user.status);
+  const error = useSelector((state) => state.user.error);
+
+  if (status === 'loading') {
+    return <Text>Loading...</Text>; // Show loading state
+  }
+
+  if (status === 'failed') {
+    return <Text>Error: {error}</Text>; // Handle error state
+  }
+  const userData = user && user.results ? user.results[0] : null;
+
+  // Debugging log
+  console.log("User Details:", user);
+
+
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -69,16 +55,22 @@ const ProfileScreen = () => {
           onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
           onProfilePress={() => navigation.navigate('ProfileScreen')}
         />
-        {/* Profile Section */}
         <View style={styles.profileSection}>
           <Image
             source={require('../../assets/images/profile-picture.png')} // Replace with dynamic image source
             style={styles.profileImage}
           />
+
+          {/* Fixed the lowercase 'view' to uppercase 'View' */}
           <View style={styles.profileInfo}>
-      <Text style={styles.profileName}>{user.username || 'Unknown User'}</Text>
-      <Text style={styles.profileEmail}>{user.email || 'No Email'}</Text>
-    </View>
+
+            <>
+              <Text style={styles.profileName}>{userData?.username}</Text>
+              <Text style={styles.profileEmail}>{userData?.email}</Text>
+            </>
+
+          </View>
+
           <TouchableOpacity
             style={styles.editButton}
             onPress={() => navigation.navigate('EditProfileScreen')} // Navigate to the profile edit screen
@@ -89,7 +81,6 @@ const ProfileScreen = () => {
             />
           </TouchableOpacity>
         </View>
-
         {/* Account Settings */}
         <View style={styles.accountSettings}>
           <Text style={styles.accountSettingsTitle}>Account Setting</Text>
@@ -164,6 +155,13 @@ const ProfileScreen = () => {
               </TouchableOpacity>
             ))}
           </View>
+          <Button
+            title="Logout"
+            onPress={() => {
+              dispatch(logout()); // Dispatch the logout action
+              navigation.navigate('LoginPage'); // Navigate back to the login screen after logout
+            }}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -196,13 +194,13 @@ const styles = StyleSheet.create({
   },
   profileName: {
     fontSize: 18,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
     color: '#333',
   },
   profileEmail: {
     fontSize: 14,
     color: '#666',
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   editButton: {
     padding: 8,
@@ -221,7 +219,7 @@ const styles = StyleSheet.create({
   },
   accountSettingsTitle: {
     fontSize: 16,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
     marginBottom: 15,
     color: '#333',
   },
@@ -253,7 +251,7 @@ const styles = StyleSheet.create({
   settingText: {
     fontSize: 16,
     color: '#333',
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   settingRight: {
     flexDirection: 'row',
@@ -261,7 +259,7 @@ const styles = StyleSheet.create({
   },
   currency: {
     fontSize: 16,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
     color: Colors.Gradient2,
     marginRight: 5,
   },
@@ -274,3 +272,4 @@ const styles = StyleSheet.create({
 });
 
 export default ProfileScreen;
+``

@@ -11,51 +11,60 @@ import {
   ScrollView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { loginUser } from '../api/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { showMessage } from 'react-native-flash-message';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from '../redux/slices/authSlice';
+import { Snackbar } from 'react-native-paper';
+import { fetchUserDetails } from '../redux/slices/userSlice';
 
 const LoginPage = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const dispatch = useDispatch();
+  const { loading, token } = useSelector((state) => state.auth);
 
   const handleLogin = async () => {
     if (!username || !password) {
-      showMessage({
-        message: 'Username and password are required!',
-        type: 'danger',
-        duration: 3000,
-      });
-      return;
+        showSnackbar('Username and password are required!', 'error');
+        return;
     }
-  
+
     try {
-      const userData = { username, password };
-      const response = await loginUser(userData);
-  
-      if (response.token) {
-        await AsyncStorage.setItem('token', response.token);
-        await AsyncStorage.setItem('username', username); // Store username
-        await AsyncStorage.setItem('password', password); // Store password
-  
-        showMessage({
-          message: 'Login successful!',
-          type: 'success',
-          duration: 3000,
-        });
-  
-        setTimeout(() => {
-          navigation.replace('Main'); // Navigate to Home after login
-        }, 2000);
-      }
+        const resultAction = await dispatch(loginUser({ username, password }));
+
+        if (loginUser.fulfilled.match(resultAction)) { // Check if login was successful
+            showSnackbar('Login successful!', 'success');
+
+            // Fetch user details after login
+            const userDetailsAction = await dispatch(fetchUserDetails(resultAction.payload.token)); // assuming your fetchUserDetails takes a token
+
+            if (fetchUserDetails.fulfilled.match(userDetailsAction)) {
+                console.log('User details fetched successfully:', userDetailsAction.payload);
+                // Navigate to Main after login and fetching user details
+                navigation.replace('Main');
+            } else {
+                showSnackbar(userDetailsAction.error.message || 'Failed to fetch user details.', 'error');
+            }
+
+        } else {
+            showSnackbar(resultAction.error.message || 'Login failed. Please check your credentials.', 'error');
+        }
     } catch (error) {
-      showMessage({
-        message: error.error || 'Login failed. Please check your credentials.',
-        type: 'danger',
-        duration: 3000,
-      });
+        console.error('An unexpected error occurred:', error); // Log unexpected errors
+        showSnackbar(error.message || 'Login failed. Please check your credentials.', 'error');
     }
+};
+
+  const showSnackbar = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarVisible(true);
   };
+
+  const hideSnackbar = () => {
+    setSnackbarVisible(false);
+  };
+
   const safeAreaStyle = {
     paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) + 20 : 0,
   };
@@ -94,7 +103,7 @@ const LoginPage = ({ navigation }) => {
               end={{ x: 1, y: 0 }}
               style={styles.button}
             >
-              <Text style={styles.buttonText}>Login</Text>
+              <Text style={styles.buttonText}>{loading ? 'Logging in...' : 'Login'}</Text>
             </LinearGradient>
           </TouchableOpacity>
 
@@ -103,6 +112,15 @@ const LoginPage = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      <Snackbar
+        visible={snackbarVisible}
+        onDismiss={hideSnackbar}
+        duration={3000}
+        style={styles.snackbar}
+      >
+        {snackbarMessage}
+      </Snackbar>
     </SafeAreaView>
   );
 };
@@ -173,6 +191,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     color: '#DE8542',
+  },
+  snackbar: {
+    backgroundColor: '#333', // You can customize the background color
   },
 });
 

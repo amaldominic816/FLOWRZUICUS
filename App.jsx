@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -38,29 +38,58 @@ import SearchProducts from './screens/Home/SearchProducts';
 import EventScreen from './screens/Events/EventPage';
 import FlashMessage from 'react-native-flash-message';
 import LoginPage from './screens/Authentication/LoginPage';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import { store } from './screens/redux/store';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { fetchUserDetails } from './screens/redux/slices/userSlice';
+
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const screenWidth = Dimensions.get('window').width;
 
 
-const SplashScreen = ({ navigation }) => {
+const SplashScreen = () => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch(); // Import useDispatch
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const username = await AsyncStorage.getItem('username');
+      const password = await AsyncStorage.getItem('password');
+
+      if (username && password) {
+        setIsLoggedIn(true);
+        // Fetch user details and then navigate to Main screen
+        await dispatch(fetchUserDetails()); // Fetch user details
+        navigation.replace('Main');
+      } else {
+        setTimeout(() => {
+          navigation.replace('LoginPage');
+        }, 5000); // Wait for 3 seconds before navigating 
+      }
+    };
+
+    checkLoginStatus();
+  }, [navigation, dispatch]); // Add dispatch to the dependencies array
+
+
+
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
 
-      {}
       <Video
         source={require('./assets/videos/bg.mp4')}
         style={StyleSheet.absoluteFillObject}
         resizeMode="cover"
         repeat
         muted
-        playInBackground={false}
-        playWhenInactive={false}
       />
 
-      {}
       <View style={styles.overlay}>
         {/* Logo Image */}
         <Image
@@ -68,28 +97,14 @@ const SplashScreen = ({ navigation }) => {
           style={styles.logo}
         />
 
-<View style={styles.bottomContainer}>
-  <ButtonPrimary
-    buttonText="Register Now"
-    onPress={() => navigation.navigate('RegistrationPage')}
-    buttonWidth={Dimensions.get('window').width * 0.8}
-    buttonHeight={50}
-    fontSize={20}
-    gradientColors={['#DE8542', '#FE5993']}
-    style={styles.buttonSpacing} // Apply spacing here
-  />
-  <ButtonPrimary
-    buttonText="Login Now"
-    onPress={() => navigation.navigate('LoginPage')}
-    buttonWidth={Dimensions.get('window').width * 0.8}
-    buttonHeight={50}
-    fontSize={20}
-    gradientColors={['#DE8542', '#FE5993']}
-  />
-          <Text style={styles.subtext}>
-            Welcome to FLOWRZ! Dive into a world of beautiful flowers. Explore, shop, and share the joy!
-          </Text>
-        </View>
+        {!isLoggedIn && ( // Only show buttons if user is NOT logged in
+          <View style={styles.bottomContainer}>
+            
+            <Text style={styles.subtext}>
+              Welcome to FLOWRZ! Dive into a world of beautiful flowers. Explore, shop, and share the joy!
+            </Text>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -299,12 +314,14 @@ const AppNavigator = () => (
 
 const App = () => {
   return (
-    <NavigationContainer>
-    <FlashMessage position="top" />
-      <AppNavigator />
-    </NavigationContainer>
+    <Provider store={store}> {/* Wrap with Provider */}
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+    </Provider>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
