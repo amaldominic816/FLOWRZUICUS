@@ -82,6 +82,7 @@ const RewardsScreen = ({ navigation }) => {
             onCartPress={() => navigation.navigate('CartPage')}
             onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
             onProfilePress={() => navigation.navigate('ProfileScreen')}
+            onOcPress={()=>navigation.navigate('MyOccasionsScreen')}
           />
 
           <ScrollView contentContainerStyle={styles.scrollContent}>

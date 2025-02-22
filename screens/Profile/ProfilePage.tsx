@@ -8,12 +8,15 @@ import {
   SafeAreaView,
   ScrollView,
   Button,
+  Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from '../../screens/components/Header';
 import { useDispatch, useSelector } from 'react-redux';
 import Colors from '../components/Colors';
 import { logout } from '../redux/slices/authSlice';
+import ButtonOutlined from '../components/ButtonOutlined';
+const { width } = Dimensions.get('window');
 
 
 const ProfileScreen = () => {
@@ -155,13 +158,18 @@ const ProfileScreen = () => {
               </TouchableOpacity>
             ))}
           </View>
-          <Button
-            title="Logout"
-            onPress={() => {
-              dispatch(logout()); // Dispatch the logout action
-              navigation.navigate('LoginPage'); // Navigate back to the login screen after logout
-            }}
-          />
+          <View style={styles.logcontainer}>
+      <ButtonOutlined
+        textColor='#000'
+        borderColor='#CACACAFF'
+        buttonWidth={Dimensions.get('window').width * 0.8}
+        buttonText='Logout'
+        onPress={() => {
+          dispatch(logout()); // Dispatch the logout action
+          navigation.navigate('LoginPage'); // Navigate back to the login screen after logout
+        }}
+      />
+    </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -172,6 +180,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
+  },
+  logcontainer: {
+    padding: 20, // Adjust the padding as needed
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   scrollViewContent: {
     paddingBottom: 20,

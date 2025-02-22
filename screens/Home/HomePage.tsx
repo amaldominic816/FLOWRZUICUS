@@ -1,28 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Image, TextInput, StyleSheet, FlatList, TouchableOpacity, StatusBar, Dimensions, ScrollView, ImageBackground } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView, Platform } from 'react-native';
 import Header from '../../screens/components/Header';
-import ButtonPrimary from '../components/ButtonPrimary';
 import Colors from '../components/Colors';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchStores } from '../redux/slices/storesSlice';
 
 
 
 
 
 const HomePage = ({ navigation }) => {
-  const data = [
-    {
-      id: '1',
-      title: 'Yellow Roses',
-      address: '123 west 45th Street, Saudi Arab, Madinah',
-      rating: 4.9,
-      reviews: 73,
-      image: require('../../assets/images/flower.png'),
-    },
-    // Additional data items...
-  ];
+  const dispatch = useDispatch();
+  const { stores, loading, error } = useSelector((state) => state.stores); // Get stores from Redux
 
+  useEffect(() => {
+    dispatch(fetchStores());
+  }, [dispatch]);
   const banners = [
     { id: '2', image: require('../../assets/images/banner.png') },
     { id: '3', image: require('../../assets/images/banner.png') },
@@ -33,16 +27,6 @@ const HomePage = ({ navigation }) => {
 
   ];
 
-  const categories = [
-    { id: '1', name: 'Dahlia', image: require('../../assets/images/j1.png') },
-    { id: '2', name: 'Tulips', image: require('../../assets/images/j1.png') },
-    { id: '3', name: 'Rose', image: require('../../assets/images/j1.png') },
-    { id: '4', name: 'Teleflor', image: require('../../assets/images/j1.png') },
-    { id: '1', name: 'Dahlia', image: require('../../assets/images/j1.png') },
-    { id: '2', name: 'Tulips', image: require('../../assets/images/j1.png') },
-    { id: '3', name: 'Rose', image: require('../../assets/images/j1.png') },
-    { id: '4', name: 'Teleflor', image: require('../../assets/images/j1.png') },
-  ];
   const popularStoresData = [
     {
       id: '1',
@@ -51,104 +35,33 @@ const HomePage = ({ navigation }) => {
       rating: 4.8,
       image: require('../../assets/images/j1.png'),
     },
-    {
-      id: '2',
-      name: 'Bloom Haven',
-      location: 'Jeddah, Saudi Arab',
-      rating: 4.7,
-      image: require('../../assets/images/j2.png'),
-    },
-    {
-      id: '3',
-      name: 'Petal Paradise',
-      location: 'Riyadh, Saudi Arab',
-      rating: 4.9,
-      image: require('../../assets/images/j3.png'),
-    },
-    {
-      id: '4',
-      name: 'Petal Paradise',
-      location: 'Riyadh, Saudi Arab',
-      rating: 4.9,
-      image: require('../../assets/images/j4.png'),
-    },
-    {
-      id: '2',
-      name: 'Bloom Haven',
-      location: 'Jeddah, Saudi Arab',
-      rating: 4.7,
-      image: require('../../assets/images/flower.png'),
-    },
-    {
-      id: '2',
-      name: 'Bloom Haven',
-      location: 'Jeddah, Saudi Arab',
-      rating: 4.7,
-      image: require('../../assets/images/j2.png'),
-    },
 
-    {
-      id: '2',
-      name: 'Bloom Haven',
-      location: 'Jeddah, Saudi Arab',
-      rating: 4.7,
-      image: require('../../assets/images/j1.png'),
-    },
-    {
-      id: '2',
-      name: 'Bloom Haven',
-      location: 'Jeddah, Saudi Arab',
-      rating: 4.7,
-      image: require('../../assets/images/j4.png'),
-    },
-    {
-      id: '2',
-      name: 'Bloom Haven',
-      location: 'Jeddah, Saudi Arab',
-      rating: 4.7,
-      image: require('../../assets/images/j2.png'),
-    },
-    {
-      id: '2',
-      name: 'Bloom Haven',
-      location: 'Jeddah, Saudi Arab',
-      rating: 4.7,
-      image: require('../../assets/images/j1.png'),
-    },
-    {
-      id: '2',
-      name: 'Bloom Haven',
-      location: 'Jeddah, Saudi Arab',
-      rating: 4.7,
-      image: require('../../assets/images/j3.png'),
-    },
-
-    // Add more stores
   ];
   const renderPopularStoreItem = ({ item }) => (
     <TouchableOpacity
-      style={styles.popularStoreCardSingle}
-      onPress={() =>
-        navigation.navigate('StoreOverviewPage', {
-          name: item.name,
-          image: item.image,
-          location: item.location,
-          rating: item.rating,
-        })
-      }>
-      <Image source={item.image} style={styles.popularStoreImageSingle} />
-      <View style={styles.popularStoreInfoSingle}>
-        <Text style={styles.popularStoreNameSingle}>{item.name}</Text>
-        <Text style={styles.popularStoreLocationSingle}>{item.location}</Text>
-        <View style={styles.popularStoreRatingRow}>
-          <Image
-            source={require('../../assets/images/star.png')}
-            style={styles.ratingIconSingle}
-          />
-          <Text style={styles.popularStoreRatingSingle}>{item.rating}</Text>
-        </View>
+    style={styles.popularStoreCardSingle}
+    onPress={() =>
+      navigation.navigate('StoreOverviewPage', {
+        id: item.id,
+        name: item.business_name,
+        logo: item.logo,
+        location: item.address,
+        rating: item.rating,
+      })
+    }>
+    <Image source={{ uri: item.logo }} style={styles.popularStoreImageSingle} />
+    <View style={styles.popularStoreInfoSingle}>
+      <Text style={styles.popularStoreNameSingle}>{item.business_name}</Text>
+      <Text style={styles.popularStoreLocationSingle}>{item.address}</Text>
+      <View style={styles.popularStoreRatingRow}>
+        <Image
+          source={require('../../assets/images/star.png')}
+          style={styles.ratingIconSingle}
+        />
+        <Text style={styles.popularStoreRatingSingle}>{item.rating}</Text>
       </View>
-    </TouchableOpacity>
+    </View>
+  </TouchableOpacity>
   );
   return (
     <SafeAreaView style={styles.container}>
@@ -165,6 +78,8 @@ const HomePage = ({ navigation }) => {
             onCartPress={() => navigation.navigate('CartPage')}
             onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
             onProfilePress={() => navigation.navigate('ProfileScreen')}
+            onOcPress={()=>navigation.navigate('MyOccasionsScreen')}
+
           />
           {/* Search Bar and Filter */}
           <View style={styles.searchSection}>
@@ -207,27 +122,6 @@ const HomePage = ({ navigation }) => {
             </ScrollView>
           </View>
 
-          {/* Categories Section
-          <View style={styles.categoriesContainer}>
-            <View style={styles.categoriesHeader}>
-              <Text style={styles.categoriesTitle}>Occasions</Text>
-              <TouchableOpacity>
-                <Text style={styles.categoriesSeeAll}>See all</Text>
-              </TouchableOpacity>
-            </View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScrollView}>
-              {categories.map((item) => (
-                <View key={item.id} style={styles.categoryCard}>
-                  <View style={styles.categoryImageContainer}>
-                    <Image source={item.image} style={styles.categoryImage} />
-                    <Text style={styles.categoryInnerText}>{item.name}</Text> {/* Inner text inside the circle */}
-          {/* </View>
-                </View>
-              ))}
-            </ScrollView>
-          </View> */}
-
-
           {/* Categories Section */}
           <View style={styles.categoriesContainer}>
             <View style={styles.categoriesHeader}>
@@ -264,12 +158,18 @@ const HomePage = ({ navigation }) => {
                 <Text style={styles.popularStoresSeeAll}>See all</Text>
               </TouchableOpacity>
             </View>
-            <FlatList
-              data={popularStoresData}
-              renderItem={renderPopularStoreItem}
-              keyExtractor={(item) => item.id}
-              showsVerticalScrollIndicator={false}
-            />
+            {loading ? (
+              <Text>Loading stores...</Text>
+            ) : error ? (
+              <Text>Error fetching stores: {error}</Text>
+            ) : (
+              <FlatList
+                data={stores}
+                renderItem={renderPopularStoreItem}
+                keyExtractor={(item) => item.id.toString()}
+                showsVerticalScrollIndicator={false}
+              />
+            )}
           </View>
 
 

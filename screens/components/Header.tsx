@@ -7,7 +7,8 @@ const Header = ({
   showCartIcon = true, // Visibility for cart icon
   showNotificationIcon = true, // Visibility for notification icon
   showProfileIcon = true, // Visibility for profile icon
-  onCartPress, // Function to handle cart icon press
+  onCartPress,
+  onOcPress, // Function to handle cart icon press
   onNotificationPress, // Function to handle notification icon press
   onProfilePress, // Function to handle profile icon press
 }) => {
@@ -26,6 +27,14 @@ const Header = ({
 
       {/* Icons */}
       <View style={styles.iconsContainer}>
+      {showNotificationIcon && (
+          <TouchableOpacity style={styles.iconButton} onPress={onOcPress}>
+            <Image
+              source={require('../../assets/images/occ.png')}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+        )}
         {showCartIcon && (
           <TouchableOpacity style={styles.iconButton} onPress={onCartPress}>
             <Image

@@ -140,10 +140,11 @@ return (
             title="Events" // Dynamic title
             showCartIcon={true} // Show cart icon
             showNotificationIcon={true} // Show notification icon
-            showProfileIcon={false} // Show profile icon
+            showProfileIcon={true} // Show profile icon
             onCartPress={() => navigation.navigate('CartPage')}
             onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
             onProfilePress={() => navigation.navigate('ProfileScreen')}
+            onOcPress={()=>navigation.navigate('MyOccasionsScreen')}
           />
           <View style={styles.searchSection}>
             <View style={styles.searchBar}>
