@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -14,156 +14,37 @@ import {
   TextInput,
   Keyboard,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient'; // For gradient button
+import LinearGradient from 'react-native-linear-gradient';
 import HeaderInner from '../components/Headerinner';
 import Colors from '../components/Colors';
 import { launchImageLibrary } from 'react-native-image-picker';
 import ButtonPrimary from '../components/ButtonPrimary';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProductsByStoreId } from '../redux/slices/productsSlice';
+import { fetchCategories } from '../redux/slices/categoriesSlice';
 
-const { height } = Dimensions.get('window'); // Get screen height
+const { height } = Dimensions.get('window');
 
-const StoreOverviewPage = ({ navigation }) => {
-  const storeName = 'Yellow Roses';
-  const location = '123 west 45th Street, Saudi Arab, Madinah';
-  const rating = 4.9;
-  const totalReviews = 73;
+const StoreOverviewPage = ({ route, navigation }) => {
+  const { storeId, storeName, storeLocation, storeImage, storeRating } = route.params;
 
-  // Define the categories as provided
-  const categories = ['All', 'Flowers', 'Cakes', 'Gift Card', 'Envelop', 'Others'];
+  const dispatch = useDispatch();
+  const { products, loading: loadingProducts, error: errorProducts } = useSelector((state) => state.products);
+  const { categories, loading: loadingCategories, error: errorCategories } = useSelector((state) => state.categories);
+
   const [activeCategory, setActiveCategory] = useState('All');
   const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
-  const panY = useRef(new Animated.Value(height)).current; // Start off-screen
-
-  const selectImage = () => {
-    launchImageLibrary({ mediaType: 'photo' }, (response) => {
-      if (response.assets && response.assets.length > 0) {
-        const selectedImage = response.assets[0];
-        console.log('Image selected:', selectedImage);
-        // Handle the selected image (e.g., display it or upload it)
-      }
-    });
-  };
-
-  const [isTyping, setIsTyping] = useState(false); // Track if typing in TextInput
-
-  // Updated products array with a 'category' property and sample names
-  const products = [
-    {
-      id: '1',
-      name: 'Pink Tulips',
-      price: '$130',
-      image: require('../../assets/images/j1.png'),
-      category: 'Flowers',
-    },
-    {
-      id: '2',
-      name: 'Yellow Tulips',
-      price: '$150',
-      image: require('../../assets/images/j1.png'),
-      category: 'Flowers',
-    },
-    {
-      id: '3',
-      name: 'Chocolate Cake',
-      price: '$200',
-      image: require('../../assets/images/in4.png'),
-      category: 'Cakes',
-    },
-    {
-      id: '4',
-      name: 'Vanilla Cake',
-      price: '$220',
-      image: require('../../assets/images/j3.png'),
-      category: 'Cakes',
-    },
-    {
-      id: '5',
-      name: 'Birthday Gift Card',
-      price: '$50',
-      image: require('../../assets/images/in2.png'),
-      category: 'Gift Card',
-    },
-    {
-      id: '6',
-      name: 'Anniversary Gift Card',
-      price: '$60',
-      image: require('../../assets/images/j1.png'),
-      category: 'Gift Card',
-    },
-    {
-      id: '7',
-      name: 'Fancy Envelope',
-      price: '$10',
-      image: require('../../assets/images/j2.png'),
-      category: 'Envelop',
-    },
-    {
-      id: '8',
-      name: 'Classic Envelope',
-      price: '$12',
-      image: require('../../assets/images/j3.png'),
-      category: 'Envelop',
-    },
-    {
-      id: '9',
-      name: 'Exotic Bouquet',
-      price: '$140',
-      image: require('../../assets/images/in3.png'),
-      category: 'Flowers',
-    },
-    {
-      id: '10',
-      name: 'Special Flowers',
-      price: '$160',
-      image: require('../../assets/images/j1.png'),
-      category: 'Flowers',
-    },
-    {
-      id: '11',
-      name: 'Custom Order',
-      price: '$180',
-      image: require('../../assets/images/j3.png'),
-      category: 'Others',
-    },
-    {
-      id: '12',
-      name: 'Unique Design',
-      price: '$190',
-      image: require('../../assets/images/j2.png'),
-      category: 'Others',
-    },
-  ];
-
-  // Filter products based on the active category. "All" shows every product.
-  const filteredProducts =
-    activeCategory === 'All'
-      ? products
-      : products.filter((product) => product.category === activeCategory);
-
-  const gradientColors = ['#DE8542', '#FE5993']; // Gradient colors for the button
+  const panY = useRef(new Animated.Value(height)).current;
   const [note, setNote] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
 
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: () => !isTyping, // Disable gesture if typing
-    onMoveShouldSetPanResponder: () => !isTyping,
-    onPanResponderMove: (_, gestureState) => {
-      if (gestureState.dy > 0) {
-        panY.setValue(gestureState.dy);
-      }
-    },
-    onPanResponderRelease: (_, gestureState) => {
-      if (gestureState.dy > 100) {
-        closeBottomSheet();
-      } else {
-        Animated.spring(panY, {
-          toValue: 0,
-          useNativeDriver: false,
-        }).start();
-      }
-    },
-  });
+  useEffect(() => {
+    dispatch(fetchProductsByStoreId(storeId));
+    dispatch(fetchCategories());
+  }, [dispatch, storeId]);
 
-  // Open Bottom Sheet
+  const filteredProducts = activeCategory === 'All' ? products : products.filter((product) => product.category_name === activeCategory);
+
   const openBottomSheet = () => {
     setBottomSheetVisible(true);
     Animated.timing(panY, {
@@ -173,15 +54,56 @@ const StoreOverviewPage = ({ navigation }) => {
     }).start();
   };
 
-  // Close Bottom Sheet and dismiss keyboard
   const closeBottomSheet = () => {
-    Keyboard.dismiss(); // Dismiss keyboard
+    Keyboard.dismiss();
     Animated.timing(panY, {
       toValue: height,
       duration: 300,
       useNativeDriver: false,
     }).start(() => setBottomSheetVisible(false));
   };
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: () => !isTyping,
+      onPanResponderMove: (_, gestureState) => {
+        if (gestureState.dy > 0) {
+          panY.setValue(gestureState.dy);
+        }
+      },
+      onPanResponderRelease: (_, gestureState) => {
+        if (gestureState.dy > 100) {
+          closeBottomSheet();
+        } else {
+          Animated.spring(panY, {
+            toValue: 0,
+            useNativeDriver: false,
+          }).start();
+        }
+      },
+    })
+  ).current;
+
+  const selectImage = () => {
+    launchImageLibrary({ mediaType: 'photo' }, (response) => {
+      if (response.assets && response.assets.length > 0) {
+        const selectedImage = response.assets[0];
+        console.log('Image selected:', selectedImage);
+      }
+    });
+  };
+
+  if (loadingProducts || loadingCategories) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (errorProducts) {
+    return <Text>Error fetching products: {errorProducts}</Text>;
+  }
+
+  if (errorCategories) {
+    return <Text>Error fetching categories: {errorCategories}</Text>;
+  }
 
   return (
     <View style={styles.container}>
@@ -200,80 +122,67 @@ const StoreOverviewPage = ({ navigation }) => {
           <Text style={styles.storeName}>{storeName}</Text>
           <View style={styles.locationContainer}>
             <Image source={require('../../assets/images/location.png')} style={styles.icon} />
-            <Text style={styles.locationText}>{location}</Text>
+            <Text style={styles.locationText}>{storeLocation}</Text>
           </View>
           <View style={styles.ratingContainer}>
             <Image source={require('../../assets/images/star.png')} style={styles.icon} />
-            <Text style={styles.ratingText}>
-              {rating} ({totalReviews})
-            </Text>
+            <Text style={styles.ratingText}>{storeRating} ({storeRating})</Text>
           </View>
         </View>
 
-        {/* Horizontally Scrollable Categories Tabs */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.tabContainer}
-        >
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabContainer}>
+          <TouchableOpacity onPress={() => setActiveCategory('All')} style={styles.tabButton}>
+            <Text style={[styles.tabText, activeCategory === 'All' && styles.activeTabText]}>All</Text>
+          </TouchableOpacity>
           {categories.map((category) => (
             <TouchableOpacity
-              key={category}
-              onPress={() => setActiveCategory(category)}
+              key={category.id}
+              onPress={() => setActiveCategory(category.title)}
               style={styles.tabButton}
             >
               <Text
                 style={[
                   styles.tabText,
-                  activeCategory === category && styles.activeTabText,
+                  activeCategory === category.title && styles.activeTabText,
                 ]}
               >
-                {category}
+                {category.title}
               </Text>
-              {activeCategory === category && <View style={styles.activeIndicator} />}
+              {activeCategory === category.title && <View style={styles.activeIndicator} />}
             </TouchableOpacity>
           ))}
         </ScrollView>
 
-        {/* Products Grid (filtered based on category) */}
         <FlatList
-  data={filteredProducts}
-  numColumns={2}
-  keyExtractor={(item) => item.id}
-  renderItem={({ item }) => (
-    <TouchableOpacity
-      style={styles.productCard}
-      onPress={() => navigation.navigate('ProductOverview')}
-    >
-      {/* Image & Wishlist Button */}
-      <View style={styles.imageContainer}>
-        <TouchableOpacity style={styles.wishlistButton}>
-          <Image
-            source={require('../../assets/images/favourite.png')}
-            style={styles.wishlistIcon}
-          />
-        </TouchableOpacity>
-        <Image source={item.image} style={styles.productImage} />
-      </View>
+          data={filteredProducts}
+          numColumns={2}
+          keyExtractor={(item) => item.id.toString()} // Ensure id is a string
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.productCard}
+              onPress={() => navigation.navigate('ProductOverview')}
+            >
+              <View style={styles.imageContainer}>
+                <TouchableOpacity style={styles.wishlistButton}>
+                  <Image source={require('../../assets/images/favourite.png')} style={styles.wishlistIcon} />
+                </TouchableOpacity>
+                <Image source={{ uri: item.image }} style={styles.productImage} />
+              </View>
 
-      {/* Product Name & Price */}
-      <View style={styles.productInfo}>
-        <Text style={styles.productName}>{item.name}</Text>
-        <Text style={styles.productPrice}>{item.price}</Text>
-      </View>
+              <View style={styles.productInfo}>
+                <Text style={styles.productName}>{item.name}</Text>
+                <Text style={styles.productPrice}>{item.price}</Text>
+              </View>
 
-      {/* Plus Button */}
-      <TouchableOpacity style={styles.plusButton} onPress={() => {/* handle plus press */}}>
-        <Text style={styles.plusIcon}>+</Text>
-      </TouchableOpacity>
-    </TouchableOpacity>
-  )}
-  contentContainerStyle={styles.flatListContent}
-/>
-
+              <TouchableOpacity style={styles.plusButton} onPress={() => {/* handle plus press logic */ }}>
+                <Text style={styles.plusIcon}>+</Text>
+              </TouchableOpacity>
+            </TouchableOpacity>
+          )}
+          contentContainerStyle={styles.flatListContent}
+        />
       </ScrollView>
 
-      {/* Floating Button with Gradient */}
       <View style={styles.floatingButtonContainer}>
         <ButtonPrimary
           buttonText="Customize Order"
@@ -281,11 +190,10 @@ const StoreOverviewPage = ({ navigation }) => {
           buttonWidth={Dimensions.get('window').width * 0.5}
           buttonHeight={40}
           fontSize={16}
-          gradientColors={gradientColors}
+          gradientColors={['#DE8542', '#FE5993']}
         />
       </View>
 
-      {/* Bottom Sheet */}
       <Modal
         transparent
         visible={isBottomSheetVisible}
@@ -309,25 +217,22 @@ const StoreOverviewPage = ({ navigation }) => {
               </TouchableOpacity>
             </View>
 
-            <ScrollView
-              contentContainerStyle={styles.bottomSheetContent}
-              keyboardShouldPersistTaps="handled"
-            >
+            <ScrollView contentContainerStyle={styles.bottomSheetContent} keyboardShouldPersistTaps="handled">
               <TextInput
                 style={styles.noteInput}
                 placeholder="Add a few notes to help you later"
                 placeholderTextColor="#999"
                 multiline
                 value={note}
-                onFocus={() => setIsTyping(true)} // Disable gesture while typing
-                onBlur={() => setIsTyping(false)} // Re-enable gesture when done typing
-                onChangeText={(text) => setNote(text)}
+                onFocus={() => setIsTyping(true)}
+                onBlur={() => setIsTyping(false)}
+                onChangeText={setNote}
               />
 
               <TouchableOpacity style={styles.uploadContainer} onPress={selectImage}>
                 <LinearGradient colors={['#ffe5e7', '#ffe5e7']} style={styles.gradientBackground}>
                   <Image source={require('../../assets/images/upload-img.png')} style={styles.uploadIcon} />
-                  <Text style={styles.uploadText}>Click To Upload     </Text>
+                  <Text style={styles.uploadText}>Click To Upload</Text>
                 </LinearGradient>
               </TouchableOpacity>
 
@@ -338,7 +243,7 @@ const StoreOverviewPage = ({ navigation }) => {
                   buttonWidth={Dimensions.get('window').width * 0.7}
                   buttonHeight={40}
                   fontSize={18}
-                  gradientColors={gradientColors}
+                  gradientColors={['#DE8542', '#FE5993']}
                 />
               </View>
             </ScrollView>
@@ -348,7 +253,6 @@ const StoreOverviewPage = ({ navigation }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -474,7 +378,7 @@ const styles = StyleSheet.create({
   productName: {
     fontSize: 10,
     fontFamily: 'DMSans-Bold',
-    alignContent:'space-between',
+    alignContent: 'space-between',
   },
   productPrice: {
     fontSize: 14,
@@ -497,7 +401,7 @@ const styles = StyleSheet.create({
   },
   plusIcon: {
     color: '#fff',
-    fontSize:20
+    fontSize: 20
     ,        // reduce if you want more padding
     textAlign: 'center', // ensure horizontal centering
   },

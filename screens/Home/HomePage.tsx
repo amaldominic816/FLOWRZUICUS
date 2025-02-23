@@ -5,6 +5,7 @@ import Header from '../../screens/components/Header';
 import Colors from '../components/Colors';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchStores } from '../redux/slices/storesSlice';
+import { fetchOccasionBanners } from '../redux/slices/occasionsSlice';
 
 
 
@@ -12,56 +13,60 @@ import { fetchStores } from '../redux/slices/storesSlice';
 
 const HomePage = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { stores, loading, error } = useSelector((state) => state.stores); // Get stores from Redux
+    // Selecting states from the stores slice
+    const { stores, loading: loadingStores, error: errorStores } = useSelector((state) => state.stores);
+  
+    // Selecting states from the occasion slice
+    const { banners, loading: loadingBanners, error: errorBanners } = useSelector((state) => state.occasion);
+
+    const ocbanners = [
+      { id: '2', image: require('../../assets/images/banner.png') },
+      { id: '3', image: require('../../assets/images/banner.png') },
+    ];
+
 
   useEffect(() => {
     dispatch(fetchStores());
+    dispatch(fetchOccasionBanners());
   }, [dispatch]);
-  const banners = [
-    { id: '2', image: require('../../assets/images/banner.png') },
-    { id: '3', image: require('../../assets/images/banner.png') },
-  ];
-  const occasionbanners = [
-    { id: '2', image: require('../../assets/images/ocbg1.jpg'), title: 'Valentines Day' },
-    { id: '3', image: require('../../assets/images/ocbirbg.jpeg'), title: 'Happy Birth Day' },
 
-  ];
+  // Combine loading states for better user experience
+  const loading = loadingStores || loadingBanners;
+  const error = errorStores || errorBanners;
 
-  const popularStoresData = [
-    {
-      id: '1',
-      name: 'Flower Bliss',
-      location: 'Madinah, Saudi Arab',
-      rating: 4.8,
-      image: require('../../assets/images/j1.png'),
-    },
+  if (loading) {
+    return <Text>Loading...</Text>; // Show loading state
+  }
 
-  ];
+  if (error) {
+    return <Text>Error fetching data: {error}</Text>; // Show error state
+  }
+
   const renderPopularStoreItem = ({ item }) => (
     <TouchableOpacity
-    style={styles.popularStoreCardSingle}
-    onPress={() =>
-      navigation.navigate('StoreOverviewPage', {
-        id: item.id,
-        name: item.business_name,
-        logo: item.logo,
-        location: item.address,
-        rating: item.rating,
-      })
-    }>
-    <Image source={{ uri: item.logo }} style={styles.popularStoreImageSingle} />
-    <View style={styles.popularStoreInfoSingle}>
-      <Text style={styles.popularStoreNameSingle}>{item.business_name}</Text>
-      <Text style={styles.popularStoreLocationSingle}>{item.address}</Text>
-      <View style={styles.popularStoreRatingRow}>
-        <Image
-          source={require('../../assets/images/star.png')}
-          style={styles.ratingIconSingle}
-        />
-        <Text style={styles.popularStoreRatingSingle}>{item.rating}</Text>
+      style={styles.popularStoreCardSingle}
+      onPress={() =>
+        navigation.navigate('StoreOverviewPage', {
+          storeId: item.id, // Pass store ID
+          storeName: item.business_name,
+          storeLocation: item.address,
+          storeImage: item.logo,
+          storeRating: item.rating,
+        })
+      }>
+      <Image source={{ uri: item.logo }} style={styles.popularStoreImageSingle} />
+      <View style={styles.popularStoreInfoSingle}>
+        <Text style={styles.popularStoreNameSingle}>{item.business_name}</Text>
+        <Text style={styles.popularStoreLocationSingle}>{item.address}</Text>
+        <View style={styles.popularStoreRatingRow}>
+          <Image
+            source={require('../../assets/images/star.png')}
+            style={styles.ratingIconSingle}
+          />
+          <Text style={styles.popularStoreRatingSingle}>{item.rating}</Text>
+        </View>
       </View>
-    </View>
-  </TouchableOpacity>
+    </TouchableOpacity>
   );
   return (
     <SafeAreaView style={styles.container}>
@@ -78,7 +83,7 @@ const HomePage = ({ navigation }) => {
             onCartPress={() => navigation.navigate('CartPage')}
             onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
             onProfilePress={() => navigation.navigate('ProfileScreen')}
-            onOcPress={()=>navigation.navigate('MyOccasionsScreen')}
+            onOcPress={() => navigation.navigate('MyOccasionsScreen')}
 
           />
           {/* Search Bar and Filter */}
@@ -116,7 +121,7 @@ const HomePage = ({ navigation }) => {
               pagingEnabled
               showsHorizontalScrollIndicator={false}
             >
-              {banners.map((banner) => (
+              {ocbanners.map((banner) => (
                 <Image key={banner.id} source={banner.image} style={styles.banner} />
               ))}
             </ScrollView>
@@ -136,13 +141,13 @@ const HomePage = ({ navigation }) => {
               pagingEnabled
               showsHorizontalScrollIndicator={false}
             >
-              {occasionbanners.map((occasionbanner) => (
-                <View key={occasionbanner.id} style={styles.bannerCard}>
-                  <Image source={occasionbanner.image} style={styles.Occasionbanner} />
-                  <View style={styles.occasionoverlay}>
-                    <Text style={styles.bannerText}>{occasionbanner.title}</Text>
-                  </View>
+              {banners.map((occasion) => (
+              <View key={occasion.id} style={styles.bannerCard}>
+                <Image source={{ uri: occasion.imageUrl }} style={styles.Occasionbanner} />
+                <View style={styles.occasionoverlay}>
+                  <Text style={styles.bannerText}>{occasion.title}</Text>
                 </View>
+              </View>
               ))}
             </ScrollView>
           </View>

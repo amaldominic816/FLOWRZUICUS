@@ -3,13 +3,18 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './slices/authSlice'; // Import your actual reducers
 import  userReducer  from './slices/userSlice';
 import storesReducer from './slices/storesSlice';
+import productsReducer from './slices/productsSlice';
+import categoriesReducer from './slices/categoriesSlice';
+import occasionReducer from './slices/occasionsSlice';
 
 
 export const store = configureStore({
   reducer: {
-    auth: authReducer, 
-    // Add other reducers here
+    auth: authReducer,
     user: userReducer,
     stores: storesReducer,
+    products: productsReducer,
+    categories: categoriesReducer,
+    occasion: occasionReducer,
   },
 });
