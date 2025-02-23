@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import apiService from '../../api/apiService';
 
 const initialState = {
   banners: [],
@@ -11,8 +11,8 @@ const initialState = {
 export const fetchOccasionBanners = createAsyncThunk(
   'occasion/fetchOccasionBanners',
   async () => {
-    const response = await axios.get('http://192.168.0.102:8000/api/product/occasion/');
-    return response.data.results; // Returning only the results array
+    const response = await apiService.occasion.fetchBanners();
+    return response.data.results;
   }
 );
 

@@ -1,13 +1,13 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import apiService from '../../api/apiService';
 
-const API_URL = 'http://192.168.0.102:8000/api/login/';
 
 // Thunk for logging in a user
 export const loginUser = createAsyncThunk('auth/loginUser', async ({ username, password }, { rejectWithValue }) => {
     try {
-        const response = await axios.post(API_URL, { username, password });
+        const response = await apiService.login.loginurl();
         console.log('Response from API:', response.data); // Debugging line
 
         // Directly access the token

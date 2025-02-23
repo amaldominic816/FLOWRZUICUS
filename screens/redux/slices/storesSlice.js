@@ -1,13 +1,12 @@
 // storesSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import apiService from '../../api/apiService';
 
-const API_URL = 'http://192.168.0.102:8000/api/vendor/vendors/';
 
 // Thunk to fetch all stores
 export const fetchStores = createAsyncThunk('stores/fetchStores', async (_, { rejectWithValue }) => {
   try {
-    const response = await axios.get(API_URL);
+    const response = await apiService.stores.fetchAll();
     return response.data.results; // Return the stores
   } catch (error) {
     return rejectWithValue(error.response?.data || 'Failed to fetch stores.');

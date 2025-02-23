@@ -1,13 +1,13 @@
 // categoriesSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import apiService from '../../api/apiService';
 
-const API_CATEGORIES_URL = 'http://192.168.0.102:8000/api/product/categories/';
+
 
 // Thunk to fetch categories
 export const fetchCategories = createAsyncThunk('categories/fetchCategories', async (_, { rejectWithValue }) => {
   try {
-    const response = await axios.get(API_CATEGORIES_URL);
+    const response = await apiService.categories.fetchcategoriesurl();
     return response.data.results;
   } catch (error) {
     return rejectWithValue(error.response?.data || 'Failed to fetch categories.');
