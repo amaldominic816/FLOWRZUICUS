@@ -26,35 +26,35 @@ const LoginPage = ({ navigation }) => {
 
   const handleLogin = async () => {
     if (!username || !password) {
-        showSnackbar('Username and password are required!', 'error');
-        return;
+      showSnackbar('Username and password are required!', 'error');
+      return;
     }
 
     try {
-        const resultAction = await dispatch(loginUser({ username, password }));
+      const resultAction = await dispatch(loginUser({ username, password }));
 
-        if (loginUser.fulfilled.match(resultAction)) { // Check if login was successful
-            showSnackbar('Login successful!', 'success');
+      if (loginUser.fulfilled.match(resultAction)) { // Check if login was successful
+        showSnackbar('Login successful!', 'success');
 
-            // Fetch user details after login
-            const userDetailsAction = await dispatch(fetchUserDetails(resultAction.payload.token)); // assuming your fetchUserDetails takes a token
+        // Fetch user details after login
+        const userDetailsAction = await dispatch(fetchUserDetails(resultAction.payload.token)); // assuming your fetchUserDetails takes a token
 
-            if (fetchUserDetails.fulfilled.match(userDetailsAction)) {
-                console.log('User details fetched successfully:', userDetailsAction.payload);
-                // Navigate to Main after login and fetching user details
-                navigation.replace('Main');
-            } else {
-                showSnackbar(userDetailsAction.error.message || 'Failed to fetch user details.', 'error');
-            }
-
+        if (fetchUserDetails.fulfilled.match(userDetailsAction)) {
+          console.log('User details fetched successfully:', userDetailsAction.payload);
+          // Navigate to Main after login and fetching user details
+          navigation.replace('Main');
         } else {
-            showSnackbar(resultAction.error.message || 'Login failed. Please check your credentials.', 'error');
+          showSnackbar(userDetailsAction.error.message || 'Failed to fetch user details.', 'error');
         }
+
+      } else {
+        showSnackbar(resultAction.error.message || 'Login failed. Please check your credentials.', 'error');
+      }
     } catch (error) {
-        console.error('An unexpected error occurred:', error); // Log unexpected errors
-        showSnackbar(error.message || 'Login failed. Please check your credentials.', 'error');
+      console.error('An unexpected error occurred:', error); // Log unexpected errors
+      showSnackbar(error.message || 'Login failed. Please check your credentials.', 'error');
     }
-};
+  };
 
   const showSnackbar = (message) => {
     setSnackbarMessage(message);

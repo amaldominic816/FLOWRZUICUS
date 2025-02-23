@@ -123,13 +123,13 @@ const CartPage = () => {
 
         {/* Footer Button */}
         <ButtonPrimary
-                  buttonText="Continue"
-                  onPress={() => navigation.navigate('CheckoutPage')}
-                  buttonWidth={Dimensions.get('window').width *0.9} // Set width to 80% of the screen width
-                  buttonHeight={50}
-                  fontSize={20}
-                  gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
-                />
+          buttonText="Continue"
+          onPress={() => navigation.navigate('CheckoutPage')}
+          buttonWidth={Dimensions.get('window').width * 0.9} // Set width to 80% of the screen width
+          buttonHeight={50}
+          fontSize={20}
+          gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
+        />
       </View>
     </View>
   );
@@ -165,8 +165,8 @@ const styles = StyleSheet.create({
   },
   cartItemImage: { width: 60, height: 60, borderRadius: 10 },
   cartItemDetails: { flex: 1, marginLeft: 10 },
-  itemName: { fontSize: 16,  fontFamily:'DMSans-Bold' },
-  itemPrice: { fontSize: 14, color: '#777', fontFamily:'DMSans-SemiBold' },
+  itemName: { fontSize: 16, fontFamily: 'DMSans-Bold' },
+  itemPrice: { fontSize: 14, color: '#777', fontFamily: 'DMSans-SemiBold' },
   quantityControls: { flexDirection: 'row', alignItems: 'center' },
   quantityButton: {
     width: 30,
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  quantityText: { fontSize: 16, color: '#000' , fontFamily:'DMSans-Bold',},
+  quantityText: { fontSize: 16, color: '#000', fontFamily: 'DMSans-Bold', },
   quantity: { fontSize: 16, marginHorizontal: 10 },
   promoSection: {
     flexDirection: 'row',
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     fontSize: 14,
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
     backgroundColor: '#fff',
     borderRadius: 10,
   },
@@ -211,12 +211,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 8,
   },
-  summaryLabel: { fontSize: 14, color: '#555', fontFamily:'DMSans-Regular' },
-  summaryValue: { fontSize: 14, color: '#555', fontFamily:'DMSans-SemiBold', },
-  summaryValueBold: { fontSize: 16,  fontFamily:'DMSans-Bold', color: '#000' },
+  summaryLabel: { fontSize: 14, color: '#555', fontFamily: 'DMSans-Regular' },
+  summaryValue: { fontSize: 14, color: '#555', fontFamily: 'DMSans-SemiBold', },
+  summaryValueBold: { fontSize: 16, fontFamily: 'DMSans-Bold', color: '#000' },
   divider: { height: 1, backgroundColor: '#D2AE8FFF', marginVertical: 8 },
 
-  continueButtonText: { fontSize: 16,  fontFamily:'DMSans-Bold', color: '#FFF' },
+  continueButtonText: { fontSize: 16, fontFamily: 'DMSans-Bold', color: '#FFF' },
 
 });
 

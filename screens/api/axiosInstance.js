@@ -10,12 +10,15 @@ const api = axios.create({
 });
 
 // Automatically add Authorization token
-api.interceptors.request.use(async (config) => {
-  const token = await AsyncStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-}, (error) => Promise.reject(error));
+api.interceptors.request.use(
+  async config => {
+    const token = await AsyncStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => Promise.reject(error),
+);
 
 export default api;

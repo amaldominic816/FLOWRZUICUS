@@ -34,7 +34,7 @@ const RegistrationPage = ({ navigation }) => {
       });
       return;
     }
-  
+
     if (password !== confirmPassword) {
       showMessage({
         message: 'Passwords do not match!',
@@ -43,7 +43,7 @@ const RegistrationPage = ({ navigation }) => {
       });
       return;
     }
-  
+
     try {
       const userData = {
         username: fullName,
@@ -52,23 +52,23 @@ const RegistrationPage = ({ navigation }) => {
         password,
         address: 'default',
       };
-  
+
       const response = await registerUser(userData);
-  
+
       if (response.token) {
         await AsyncStorage.setItem('token', response.token);
       }
-  
+
       showMessage({
         message: 'Registration successful! Proceed to OTP verification.',
         type: 'success',
         duration: 3000,
       });
-  
+
       setTimeout(() => {
         navigation.navigate('OtpScreen');
       }, 2000);
-  
+
     } catch (error) {
       showMessage({
         message: error.error || 'Registration failed. Please try again.',

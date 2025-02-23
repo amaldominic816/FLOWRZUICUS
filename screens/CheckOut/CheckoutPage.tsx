@@ -409,7 +409,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     fontSize: 14,
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
     backgroundColor: '#fff',
     borderRadius: 10,
   },

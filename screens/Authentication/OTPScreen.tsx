@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     },
     logo: {
         fontSize: 36,
-        fontFamily:'DMSans-Bold',        marginBottom: 20,
+        fontFamily: 'DMSans-Bold', marginBottom: 20,
         color: '#FF7A78',
     },
     subtitle: {
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
         color: '#666',
         marginBottom: 20,
         textAlign: 'center',
-        fontFamily:'DMSans-Regular',
+        fontFamily: 'DMSans-Regular',
     },
     otpContainer: {
         flexDirection: 'row',
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         textAlign: 'center',
         fontSize: 20,
-        fontFamily:'DMSans-Regular',
+        fontFamily: 'DMSans-Regular',
         color: '#000',
         backgroundColor: '#fff',
     },
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#fff',
         fontSize: 18,
-        fontFamily:'DMSans-Bold',
+        fontFamily: 'DMSans-Bold',
         textTransform: 'uppercase',
         textAlign: 'center',
     },
@@ -176,11 +176,11 @@ const styles = StyleSheet.create({
         marginTop: 20,
         fontSize: 14,
         color: '#666',
-        fontFamily:'DMSans-Regular',
+        fontFamily: 'DMSans-Regular',
     },
     tryAgain: {
         color: '#FF7A78',
-        fontFamily:'DMSans-Bold',
+        fontFamily: 'DMSans-Bold',
     },
 });
 

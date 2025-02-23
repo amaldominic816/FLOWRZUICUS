@@ -22,7 +22,7 @@ export const fetchUserDetails = createAsyncThunk('user/fetchUserDetails', async 
   const response = await axios.get('http://192.168.0.102:8000/auth/users/', {
     headers: {
       Authorization: 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64'),
-    }
+    },
   });
 
   return response.data; // Return the fetched user data
