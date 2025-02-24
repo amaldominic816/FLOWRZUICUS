@@ -22,16 +22,17 @@ import ButtonPrimary from '../components/ButtonPrimary';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProductsByStoreId } from '../redux/slices/productsSlice';
 import { fetchCategories } from '../redux/slices/categoriesSlice';
+import { addItemToCart } from '../redux/slices/cartSlice'; // import cart action
 
 const { height } = Dimensions.get('window');
 
 const StoreOverviewPage = ({ route, navigation }) => {
   const { storeId, storeName, storeLocation, storeImage, storeRating } = route.params;
-
   const dispatch = useDispatch();
   const { products, loading: loadingProducts, error: errorProducts } = useSelector((state) => state.products);
   const { categories, loading: loadingCategories, error: errorCategories } = useSelector((state) => state.categories);
-
+  // Added for cart handling
+  const [cartItems, setCartItems] = useState({}); // Store quantities for items added to cart
   const [activeCategory, setActiveCategory] = useState('All');
   const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
   const panY = useRef(new Animated.Value(height)).current;
@@ -91,6 +92,27 @@ const StoreOverviewPage = ({ route, navigation }) => {
         console.log('Image selected:', selectedImage);
       }
     });
+  };
+
+  const handleAddToCart = (item) => {
+    const newItem = {
+      product_id: item.id,
+      quantity: cartItems[item.id] ? cartItems[item.id].quantity + 1 : 1,
+    };
+    setCartItems((prev) => ({ ...prev, [item.id]: newItem })); // Update local state
+    dispatch(addItemToCart(newItem)); // Dispatch action to add item to cart
+  };
+
+  const handleIncrease = (id) => {
+    const newQuantity = cartItems[id].quantity + 1;
+    setCartItems((prev) => ({ ...prev, [id]: { ...prev[id], quantity: newQuantity }}));
+  };
+
+  const handleDecrease = (id) => {
+    if (cartItems[id]?.quantity > 1) {
+      const newQuantity = cartItems[id].quantity - 1;
+      setCartItems((prev) => ({ ...prev, [id]: { ...prev[id], quantity: newQuantity }}));
+    }
   };
 
   if (loadingProducts || loadingCategories) {
@@ -158,10 +180,7 @@ const StoreOverviewPage = ({ route, navigation }) => {
           numColumns={2}
           keyExtractor={(item) => item.id.toString()} // Ensure id is a string
           renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.productCard}
-              onPress={() => navigation.navigate('ProductOverview')}
-            >
+            <View style={styles.productCard}>
               <View style={styles.imageContainer}>
                 <TouchableOpacity style={styles.wishlistButton}>
                   <Image source={require('../../assets/images/favourite.png')} style={styles.wishlistIcon} />
@@ -174,10 +193,22 @@ const StoreOverviewPage = ({ route, navigation }) => {
                 <Text style={styles.productPrice}>{item.price}</Text>
               </View>
 
-              <TouchableOpacity style={styles.plusButton} onPress={() => {/* handle plus press logic */ }}>
-                <Text style={styles.plusIcon}>+</Text>
-              </TouchableOpacity>
-            </TouchableOpacity>
+              {cartItems[item.id] ? (
+                <View style={styles.quantityControls}>
+                  <TouchableOpacity onPress={() => handleDecrease(item.id)} style={styles.quantityButton}>
+                    <Text style={styles.quantityText}>-</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.quantity}>{cartItems[item.id].quantity}</Text>
+                  <TouchableOpacity onPress={() => handleIncrease(item.id)} style={styles.quantityButton}>
+                    <Text style={styles.quantityText}>+</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <TouchableOpacity style={styles.plusButton} onPress={() => handleAddToCart(item)}>
+                  <Text style={styles.plusIcon}>+</Text>
+                </TouchableOpacity>
+              )}
+            </View>
           )}
           contentContainerStyle={styles.flatListContent}
         />
@@ -485,6 +516,25 @@ const styles = StyleSheet.create({
     left: '58%',
     transform: [{ translateX: -Dimensions.get('window').width * 0.4 }],
     alignItems: 'center',
+  },
+  quantityControls: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  quantityButton: {
+    backgroundColor: '#FE5993',
+    borderRadius: 5,
+    padding: 5,
+    marginHorizontal: 10,
+  },
+  quantityText: {
+    color: '#fff',
+    fontSize: 18,
+  },
+  quantity: {
+    fontSize: 16,
+    marginHorizontal: 10,
   },
 });
 

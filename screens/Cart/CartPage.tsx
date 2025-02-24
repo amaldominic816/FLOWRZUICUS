@@ -1,74 +1,59 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  TextInput,
-  StatusBar,
-  Dimensions,
-} from 'react-native';
-import Svg, { Path } from 'react-native-svg';
-import LinearGradient from 'react-native-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCartItems, increaseQuantity, decreaseQuantity } from '../redux/slices/showCartSlice'; // Import from the new slice
 import HeaderInner from '../../screens/components/Headerinner';
 import ButtonPrimary from '../../screens/components/ButtonPrimary';
 import Colors from '../components/Colors';
 
-
-
 const CartPage = () => {
-  const navigation = useNavigation();
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: 'Tulips', price: 40, quantity: 1, image: require('../../assets/images/flower.png') },
-    { id: 2, name: 'Yellow Roses', price: 350, quantity: 1, image: require('../../assets/images/in1.png') },
-    { id: 3, name: 'Lavender', price: 55, quantity: 1, image: require('../../assets/images/in2.png') },
-    { id: 4, name: 'White Orchid', price: 40, quantity: 1, image: require('../../assets/images/in3.png') },
-    { id: 5, name: 'White drchid', price: 40, quantity: 1, image: require('../../assets/images/in4.png') },
-  ]);
-  const [promoCode, setPromoCode] = useState('');
+  const dispatch = useDispatch();
+  const cartItems = useSelector(state => state.showCart.items); // Update to use 'showCart'
+  const loading = useSelector(state => state.showCart.loading); // Update to use 'showCart'
+
+  useEffect(() => {
+    dispatch(fetchCartItems());
+  }, [dispatch]);
 
   const handleIncrease = (id) => {
-    setCartItems(cartItems.map(item => item.id === id ? { ...item, quantity: item.quantity + 1 } : item));
+    dispatch(increaseQuantity(id));
   };
 
   const handleDecrease = (id) => {
-    setCartItems(cartItems.map(item => item.id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item));
+    dispatch(decreaseQuantity(id));
   };
 
   const calculateTotal = () => {
-    const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    const deliveryFee = 5.0;
+    const subtotal = cartItems.reduce((acc, item) => acc + item.total_price, 0);
+    const deliveryFee = 5.0; // Update this as needed
     return { subtotal, deliveryFee, total: subtotal + deliveryFee };
   };
 
   const { subtotal, deliveryFee, total } = calculateTotal();
 
+  if (loading) {
+    return <Text>Loading...</Text>; // You can replace with a spinner or placeholder
+  }
+
   return (
     <View style={styles.container}>
-
       <HeaderInner
         title="Cart"
         showBackButton={true}
         showNotificationIcon={true}
         showCartIcon={false}
-        onBackPress={() => navigation.goBack()}
-        onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
-        onCartPress={() => navigation.navigate('CartPage')}
+        onBackPress={() => { /* Handle back */ }}
       />
       <ScrollView style={styles.content} contentContainerStyle={{ paddingBottom: 100 }}>
-        {/* Cart Items */}
         {cartItems.map(item => (
           <TouchableOpacity
             key={item.id}
             style={styles.cartItem}
-            onPress={() => navigation.navigate('ProductOverview')}>
-            <Image source={item.image} style={styles.cartItemImage} />
+            onPress={() => { /* Handle product navigation */ }}>
+            <Image source={{ uri: item.product_detail.image }} style={styles.cartItemImage} />
             <View style={styles.cartItemDetails}>
-              <Text style={styles.itemName}>{item.name}</Text>
-              <Text style={styles.itemPrice}>${item.price}</Text>
+              <Text style={styles.itemName}>{item.product_detail.title}</Text>
+              <Text style={styles.itemPrice}>${item.product_detail.price}</Text>
             </View>
             <View style={styles.quantityControls}>
               <TouchableOpacity onPress={() => handleDecrease(item.id)} style={styles.quantityButton}>
@@ -83,28 +68,7 @@ const CartPage = () => {
         ))}
       </ScrollView>
 
-      {/* Floating Section */}
       <View style={styles.floatingContainer}>
-        {/* Promo Code Section */}
-        {/* <View style={styles.promoSection}>
-          <TextInput
-            placeholder="Promo Code"
-            value={promoCode}
-            onChangeText={setPromoCode}
-            style={styles.promoInput}
-            placeholderTextColor="#000"
-          />
-           <ButtonPrimary
-                  buttonText="Apply"
-                  onPress={() => navigation.navigate('CheckoutPage')}
-                  buttonWidth={Dimensions.get('window').width *0.2} // Set width to 80% of the screen width
-                  buttonHeight={30}
-                  fontSize={12}
-                  gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
-                />
-        </View> */}
-
-        {/* Summary Section */}
         <View style={styles.summarySection}>
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>Subtotal:</Text>
@@ -121,14 +85,13 @@ const CartPage = () => {
           </View>
         </View>
 
-        {/* Footer Button */}
         <ButtonPrimary
           buttonText="Continue"
-          onPress={() => navigation.navigate('CheckoutPage')}
-          buttonWidth={Dimensions.get('window').width * 0.9} // Set width to 80% of the screen width
+          onPress={() => { /* Handle checkout navigation */ }}
+          buttonWidth={Dimensions.get('window').width * 0.9}
           buttonHeight={50}
           fontSize={20}
-          gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
+          gradientColors={['#DE8542', '#FE5993']}
         />
       </View>
     </View>

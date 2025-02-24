@@ -6,6 +6,10 @@ import storesReducer from './slices/storesSlice';
 import productsReducer from './slices/productsSlice';
 import categoriesReducer from './slices/categoriesSlice';
 import occasionReducer from './slices/occasionsSlice';
+import cartReducer from './slices/cartSlice';
+import showCartReducer from './slices/showCartSlice'; // Import the renamed reducer
+
+
 
 
 export const store = configureStore({
@@ -16,5 +20,7 @@ export const store = configureStore({
     products: productsReducer,
     categories: categoriesReducer,
     occasion: occasionReducer,
+    cart: cartReducer,
+    showCart: showCartReducer,
   },
 });
