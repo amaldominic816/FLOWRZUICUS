@@ -24,27 +24,6 @@ export const loginUser = createAsyncThunk('auth/loginUser', async ({ username, p
     }
 });
 
-// Thunk for fetching user details (if you want to implement it)
-// export const fetchUserDetails = createAsyncThunk(
-//   'auth/fetchUserDetails',
-//   async (token, {rejectWithValue}) => {
-//     try {
-//       const response = await axios.get(
-//         'http://192.168.0.102:8000/api/user/details/',
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token}`, // Include token in the header if needed
-//           },
-//         },
-//       );
-//       return response.data; // Return user details
-//     } catch (error) {
-//       return rejectWithValue(
-//         error.response?.data || 'Failed to fetch user details.',
-//       );
-//     }
-//   },
-// );
 
 // Create the auth slice
 const authSlice = createSlice({

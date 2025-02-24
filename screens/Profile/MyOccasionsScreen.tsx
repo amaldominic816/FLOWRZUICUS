@@ -13,8 +13,11 @@ import {
 import DatePicker from 'react-native-date-picker';
 import HeaderInner from '../../screens/components/Headerinner';
 import Colors from '../components/Colors';
+import ReminderSvg from '../../assets/images/Reminder.svg';
+
 // Import ButtonPrimary component
 import ButtonPrimary from '../components/ButtonPrimary';
+
 
 const initialQuickAddOptions = [
   {
@@ -144,19 +147,42 @@ const MyOccasionsScreen = ({ navigation }) => {
   );
 
   // Render an occasion card for the vertical list of added occasions
-  const renderOccasionListCard = ({ item }) => (
-    <TouchableOpacity style={styles.occasionListCard} onPress={() => handleEditOccasion(item)}>
-      <Text style={styles.occasionListCardText}>Name: {item.personName}</Text>
-      <Text style={styles.occasionListCardText}>Date: {formatDate(new Date(item.date))}</Text>
-      <Text style={styles.occasionListCardText}>Occasion: {item.occasionType}</Text>
-    </TouchableOpacity>
-  );
+  const renderOccasionListCard = ({ item }) => {
+    return (
+      <TouchableOpacity style={styles.card} onPress={() => handleEditOccasion(item)}>
+        {/* Header: Date, Name, Menu */}
+        <View style={styles.header}>
+          <View style={styles.dateContainer}>
+            <Text style={styles.date}>{new Date(item.date).getDate()}</Text>
+            <Text style={styles.month}>{new Date(item.date).toLocaleString("en-US", { month: "short" })}</Text>
+          </View>
+          <Text style={styles.name}>{item.personName}</Text>
+        </View>
 
+        {/* Occasion & Relationship in same row */}
+        <View style={styles.infoRow}>
+          <View style={styles.infoItem}>
+            <Text style={styles.label}>Occasion:</Text>
+            <View style={styles.occasionContainer}>
+              {/* <Image source={getOccasionIcon(item.occasionType)} style={styles.icon} /> */}
+              <Text style={styles.occasion}>{item.occasionType}</Text>
+            </View>
+          </View>
+          {item.relationship && (
+            <View style={styles.infoItem}>
+              <Text style={styles.label}>Relationship:</Text>
+              <Text style={styles.relationship}>{item.relationship}</Text>
+            </View>
+          )}
+        </View>
+      </TouchableOpacity>
+    );
+  };
   return (
     <View style={styles.container}>
       {/* Top Bar */}
       <HeaderInner
-        title="Occasions"
+        title="Reminders"
         showBackButton={true}
         showNotificationIcon={true}
         showCartIcon={true}
@@ -167,9 +193,28 @@ const MyOccasionsScreen = ({ navigation }) => {
 
       {/* Quick Add Section is displayed only when no filter is active */}
       {!filter && (
-        <View style={styles.quickAddSection}>
-          <Text style={styles.quickAddTitle}>Quick add</Text>
-          <Text style={styles.quickAddSubtitle}>Select an occasion to create reminder</Text>
+        <View style={styles.reminderSection}>
+          {/* GIF aligned to the left above text */}
+          <ReminderSvg width={240} height={50} style={styles.reminderSvg} />
+
+          <View style={styles.reminderContent}>
+            {/* Left-side image */}
+            <Image
+              source={require('../../assets/images/flower_active.png')}
+              style={styles.leftImage}
+              resizeMode="contain"
+            />
+
+            {/* Text Content */}
+            <Text style={styles.reminderSubtitle}>
+              Never miss loved ones' special days with our reminders, tailor-made offers & personalised gifts
+            </Text>
+          </View>
+
+
+
+
+          {/* FlatList for occasions */}
           <FlatList
             data={quickAddOptions}
             renderItem={renderQuickAddCard}
@@ -201,18 +246,18 @@ const MyOccasionsScreen = ({ navigation }) => {
           }
           renderItem={renderOccasionListCard}
           keyExtractor={(item) => item.id}
-          ListEmptyComponent={<Text style={styles.emptyText}>No occasions added.</Text>}
+          ListEmptyComponent={<Text style={styles.emptyText}>No reminders added.</Text>}
         />
       </View>
 
       {/* Floating "Add Occasion" Button using ButtonPrimary */}
       <View style={styles.addButtonWrapper}>
         <ButtonPrimary
-          buttonText="Add Occasion"
+          buttonText="Add a Reminder"
           onPress={handleAddPress}
           // Adjust these values as needed for your design
-          buttonWidth={120}
-          buttonHeight={40}
+          buttonWidth={Dimensions.get('window').width * 0.9}
+          buttonHeight={50}
           fontSize={16}
           gradientColors={[Colors.Gradient1, Colors.Gradient2]}
         />
@@ -405,6 +450,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 25,
     right: 20,
+    left: 20,
   },
   // These styles were used by the old button implementations.
   addButton: {
@@ -486,6 +532,118 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
   },
+
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 15,
+    marginVertical: 8,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  dateContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  date: {
+    fontSize: 22,
+    fontFamily: 'DMSans-Bold',
+  },
+  month: {
+    fontSize: 14,
+    color: "gray",
+    fontFamily: 'DMSans-Regular',
+  },
+  name: {
+    flex: 1,
+    fontSize: 16,
+    fontFamily: 'DMSans-Bold',
+    marginLeft: 10,
+  },
+  menuButton: {
+    padding: 5,
+  },
+  menuText: {
+    fontSize: 20,
+    fontFamily: 'DMSans-Regular',
+  },
+  infoRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 10,
+  },
+  infoItem: {
+    flex: 1,
+  },
+  label: {
+    fontSize: 14,
+    color: "gray",
+  },
+  occasionContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 5,
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    marginRight: 5,
+  },
+  occasion: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  relationship: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginTop: 5,
+  },
+
+
+
+  reminderSection: {
+    padding: 10,
+  },
+
+  reminderGif: {
+    width: 120,
+    height: 50,
+    marginBottom: 5, // Adds spacing between GIF and content below
+    alignSelf: 'flex-start', // Aligns the GIF to the left
+  },
+
+  reminderContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  leftImage: {
+    width: 40,
+    height: 40,
+    marginRight: 10, // Space between image and text
+  },
+
+  reminderSubtitle: {
+    fontSize: 14,
+    color: '#555',
+    flex: 1, // Allows text to take available space
+  },
+  reminderSvg: {
+    marginBottom: 0,
+    marginLeft:0,// Aligns SVG to the left
+  },
+
+
 });
+
+
 
 export default MyOccasionsScreen;

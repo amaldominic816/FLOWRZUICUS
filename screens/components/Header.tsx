@@ -85,11 +85,10 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.secondary,
+    backgroundColor: '#ffff',
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 8,
-    elevation:2,
   },
   icon: {
     width: 24,
