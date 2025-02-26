@@ -195,15 +195,11 @@ const MyOccasionsScreen = ({ navigation }) => {
       {!filter && (
         <View style={styles.reminderSection}>
           {/* GIF aligned to the left above text */}
-          <ReminderSvg width={240} height={50} style={styles.reminderSvg} />
+          <ReminderSvg width={100} height={50} style={styles.reminderSvg} />
 
           <View style={styles.reminderContent}>
             {/* Left-side image */}
-            <Image
-              source={require('../../assets/images/flower_active.png')}
-              style={styles.leftImage}
-              resizeMode="contain"
-            />
+
 
             {/* Text Content */}
             <Text style={styles.reminderSubtitle}>
@@ -638,7 +634,7 @@ const styles = StyleSheet.create({
   },
   reminderSvg: {
     marginBottom: 0,
-    marginLeft:0,// Aligns SVG to the left
+    marginLeft: 0,// Aligns SVG to the left
   },
 
 

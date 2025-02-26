@@ -5,23 +5,28 @@ import apiService from '../../api/apiService';
 
 
 // Thunk for logging in a user
-export const loginUser = createAsyncThunk('auth/loginUser', async ({ username, password }, { rejectWithValue }) => {
-    try {
-        const response = await apiService.login.loginurl();
-        console.log('Response from API:', response.data); // Debugging line
+export const loginUser  = createAsyncThunk('auth/loginUser ', async ({ username, password }, { rejectWithValue }) => {
+  try {
+      // Directly use the URL for the login API
+      const response = await axios.post('http://192.168.0.102:8000/api/login/', {
+          username,
+          password,
+      });
 
-        // Directly access the token
-        const token = response.data.token;
+      console.log('Response from API:', response.data); // Debugging line
 
-        // Store the token and credentials in AsyncStorage
-        await AsyncStorage.setItem('token', token);
-        await AsyncStorage.setItem('username', username); // Store username
-        await AsyncStorage.setItem('password', password); // Store password
-        return { token }; // Return the token only
-    } catch (error) {
-        console.error('Login error:', error.response);
-        return rejectWithValue(error.response?.data || 'Login failed. Please check your credentials.');
-    }
+      // Directly access the token
+      const token = response.data.token;
+
+      // Store the token and credentials in AsyncStorage
+      await AsyncStorage.setItem('token', token);
+      await AsyncStorage.setItem('username', username); // Store username
+      await AsyncStorage.setItem('password', password); // Store password
+      return { token }; // Return the token only
+  } catch (error) {
+      console.error('Login error:', error.response);
+      return rejectWithValue(error.response?.data || 'Login failed. Please check your credentials.');
+  }
 });
 
 

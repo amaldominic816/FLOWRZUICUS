@@ -1,7 +1,7 @@
 // src/redux/slices/cartSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Define initial state
 const initialState = {
@@ -12,27 +12,58 @@ const initialState = {
 
 // Create async thunk for adding item to cart
 export const addItemToCart = createAsyncThunk('cart/addItem', async (item) => {
-  // Retrieve the username and password from AsyncStorage
-  const username = await AsyncStorage.getItem('username'); // Adjust the key if needed
-  const password = await AsyncStorage.getItem('password'); // Adjust the key if needed
-  
-  // Make the API call with basic authentication
-  const response = await axios.post('http://192.168.0.102:8000/api/cart/add_item/', item, {
-    auth: {
-      username,
-      password,
-    },
-  });
+  const username = await AsyncStorage.getItem('username');
+  const password = await AsyncStorage.getItem('password');
 
-  return response.data; // Return the response data
+  const response = await axios.post(
+    'http://192.168.0.102:8000/api/cart/add_item/',
+    item,
+    {
+      auth: { username, password },
+    },
+  );
+
+  return response.data; // Ensure this returns { product: { id: ... }, quantity: 1 }
 });
+
+// Define async thunks for increasing and decreasing quantity
+export const increaseItemQuantity = createAsyncThunk(
+  'cart/increaseItem',
+  async (itemId) => {
+    const username = await AsyncStorage.getItem('username');
+    const password = await AsyncStorage.getItem('password');
+
+    const response = await axios.post(
+      'http://192.168.0.102:8000/api/cart/increase_quantity/',
+      { item_id: itemId },
+      { auth: { username, password }},
+    );
+
+    return response.data; // Ensure this returns { product: { id: ... }, quantity: newQuantity }
+  }
+);
+
+export const decreaseItemQuantity = createAsyncThunk(
+  'cart/decreaseItem',
+  async (itemId) => {
+    const username = await AsyncStorage.getItem('username');
+    const password = await AsyncStorage.getItem('password');
+
+    const response = await axios.post(
+      'http://192.168.0.102:8000/api/cart/decrease_quantity/',
+      { item_id: itemId },
+      { auth: { username, password }},
+    );
+
+    return response.data; // Ensure this returns { product: { id: ... }, quantity: newQuantity }
+  }
+);
 
 // Create cart slice
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    // You can add other reducers here
     clearCart: (state) => {
       state.items = [];
     },
@@ -40,10 +71,36 @@ const cartSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(addItemToCart.fulfilled, (state, action) => {
-        // Update the state to include the new item
-        state.items.push(action.payload);
+        const existingItem = state.items.find(item => item.product.id === action.payload.product.id);
+        if (existingItem) {
+          existingItem.quantity += 1; // Or set it to action.payload.quantity if the API returns the initial quantity.
+        } else {
+          state.items.push({ ...action.payload, quantity: 1 }); // Assuming API returns the item with its product id.
+        }
+      })
+      .addCase(increaseItemQuantity.fulfilled, (state, action) => {
+        const existingItem = state.items.find(item => item.product_detail.id === action.payload.product.id);
+        if (existingItem) {
+          existingItem.quantity = action.payload.quantity; // Update quantity from API response
+        }
+      })
+      .addCase(decreaseItemQuantity.fulfilled, (state, action) => {
+        const existingItemIndex = state.items.findIndex(item => item.product_detail.id === action.payload.product.id);
+        if (existingItemIndex >= 0) {
+          if (action.payload.quantity > 0) {
+            state.items[existingItemIndex].quantity = action.payload.quantity; // Update quantity from API response
+          } else {
+            state.items.splice(existingItemIndex, 1); // Remove item if quantity is 0
+          }
+        }
       })
       .addCase(addItemToCart.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+      .addCase(increaseItemQuantity.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+      .addCase(decreaseItemQuantity.rejected, (state, action) => {
         state.error = action.error.message;
       });
   },

@@ -1,4 +1,3 @@
-// src/redux/slices/showCartSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -13,6 +12,7 @@ export const fetchCartItems = createAsyncThunk('showCart/fetchCartItems', async 
       password,
     },
   });
+  console.log(response.data); // Log entire response to see its structure
 
   return response.data.results[0].items; // Adjust as needed based on your data structure
 });
@@ -23,20 +23,6 @@ const showCartSlice = createSlice({
     items: [],
     loading: false,
     error: null,
-  },
-  reducers: {
-    increaseQuantity: (state, action) => {
-      const item = state.items.find(item => item.id === action.payload);
-      if (item) {
-        item.quantity += 1;
-      }
-    },
-    decreaseQuantity: (state, action) => {
-      const item = state.items.find(item => item.id === action.payload && item.quantity > 1);
-      if (item) {
-        item.quantity -= 1;
-      }
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -53,7 +39,5 @@ const showCartSlice = createSlice({
       });
   },
 });
-
-export const { increaseQuantity, decreaseQuantity } = showCartSlice.actions;
 
 export default showCartSlice.reducer;

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Text, Image, TextInput, StyleSheet, FlatList, TouchableOpacity, StatusBar, Dimensions, ScrollView, ImageBackground } from 'react-native';
-import { SafeAreaView, Platform } from 'react-native';
+import { SafeAreaView, } from 'react-native';
 import Header from '../../screens/components/Header';
 import Colors from '../components/Colors';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,16 +13,16 @@ import { fetchOccasionBanners } from '../redux/slices/occasionsSlice';
 
 const HomePage = ({ navigation }) => {
   const dispatch = useDispatch();
-    // Selecting states from the stores slice
-    const { stores, loading: loadingStores, error: errorStores } = useSelector((state) => state.stores);
-  
-    // Selecting states from the occasion slice
-    const { banners, loading: loadingBanners, error: errorBanners } = useSelector((state) => state.occasion);
+  // Selecting states from the stores slice
+  const { stores, loading: loadingStores, error: errorStores } = useSelector((state) => state.stores);
 
-    const ocbanners = [
-      { id: '2', image: require('../../assets/images/banner.png') },
-      { id: '3', image: require('../../assets/images/banner.png') },
-    ];
+  // Selecting states from the occasion slice
+  const { banners, loading: loadingBanners, error: errorBanners } = useSelector((state) => state.occasion);
+
+  const ocbanners = [
+    { id: '2', image: require('../../assets/images/banner.png') },
+    { id: '3', image: require('../../assets/images/banner.png') },
+  ];
 
 
   useEffect(() => {
@@ -142,12 +142,12 @@ const HomePage = ({ navigation }) => {
               showsHorizontalScrollIndicator={false}
             >
               {banners.map((occasion) => (
-              <View key={occasion.id} style={styles.bannerCard}>
-                <Image source={{ uri: occasion.imageUrl }} style={styles.Occasionbanner} />
-                <View style={styles.occasionoverlay}>
-                  <Text style={styles.bannerText}>{occasion.title}</Text>
+                <View key={occasion.id} style={styles.bannerCard}>
+                  <Image source={{ uri: occasion.imageUrl }} style={styles.Occasionbanner} />
+                  <View style={styles.occasionoverlay}>
+                    <Text style={styles.bannerText}>{occasion.title}</Text>
+                  </View>
                 </View>
-              </View>
               ))}
             </ScrollView>
           </View>

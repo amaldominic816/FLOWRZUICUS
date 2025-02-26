@@ -1,3 +1,4 @@
+// src/screens/StoreOverviewPage.js
 import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
@@ -20,9 +21,15 @@ import Colors from '../components/Colors';
 import { launchImageLibrary } from 'react-native-image-picker';
 import ButtonPrimary from '../components/ButtonPrimary';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProductsByStoreId } from '../redux/slices/productsSlice';
+import {
+  fetchProductsByStoreId,
+} from '../redux/slices/productsSlice';
 import { fetchCategories } from '../redux/slices/categoriesSlice';
-import { addItemToCart } from '../redux/slices/cartSlice'; // import cart action
+import {
+  addItemToCart,
+  increaseItemQuantity,
+  decreaseItemQuantity,
+} from '../redux/slices/cartSlice';
 
 const { height } = Dimensions.get('window');
 
@@ -31,8 +38,8 @@ const StoreOverviewPage = ({ route, navigation }) => {
   const dispatch = useDispatch();
   const { products, loading: loadingProducts, error: errorProducts } = useSelector((state) => state.products);
   const { categories, loading: loadingCategories, error: errorCategories } = useSelector((state) => state.categories);
-  // Added for cart handling
-  const [cartItems, setCartItems] = useState({}); // Store quantities for items added to cart
+  const { items: cartItems } = useSelector((state) => state.cart);
+  
   const [activeCategory, setActiveCategory] = useState('All');
   const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
   const panY = useRef(new Animated.Value(height)).current;
@@ -94,37 +101,44 @@ const StoreOverviewPage = ({ route, navigation }) => {
     });
   };
 
+  // Handle adding items to the cart
   const handleAddToCart = (item) => {
-    const newItem = {
-      product_id: item.id,
-      quantity: cartItems[item.id] ? cartItems[item.id].quantity + 1 : 1,
-    };
-    setCartItems((prev) => ({ ...prev, [item.id]: newItem })); // Update local state
-    dispatch(addItemToCart(newItem)); // Dispatch action to add item to cart
-  };
-
-  const handleIncrease = (id) => {
-    const newQuantity = cartItems[id].quantity + 1;
-    setCartItems((prev) => ({ ...prev, [id]: { ...prev[id], quantity: newQuantity }}));
-  };
-
-  const handleDecrease = (id) => {
-    if (cartItems[id]?.quantity > 1) {
-      const newQuantity = cartItems[id].quantity - 1;
-      setCartItems((prev) => ({ ...prev, [id]: { ...prev[id], quantity: newQuantity }}));
+    const existingItem = cartItems.find(cartItem => cartItem.product_id === item.id);
+    
+    if (existingItem) {
+      dispatch(increaseItemQuantity(item.id));
+    } else {
+      const newItem = {
+        product_id: item.id,
+        quantity: 1,
+      };
+      dispatch(addItemToCart(newItem));
     }
   };
 
+  const handleIncrease = (id) => {
+    dispatch(increaseItemQuantity(id));
+  };
+
+  const handleDecrease = (id) => {
+    dispatch(decreaseItemQuantity(id));
+  };
+
+  const isItemInCart = (id) => {
+    return cartItems.some(item => item.product_id === id);
+  };
+
+  // Loading and error states
   if (loadingProducts || loadingCategories) {
-    return <Text>Loading...</Text>;
+    return <Text style={styles.loadingText}>Loading...</Text>;
   }
 
   if (errorProducts) {
-    return <Text>Error fetching products: {errorProducts}</Text>;
+    return <Text style={styles.errorText}>Error fetching products: {errorProducts}</Text>;
   }
 
   if (errorCategories) {
-    return <Text>Error fetching categories: {errorCategories}</Text>;
+    return <Text style={styles.errorText}>Error fetching categories: {errorCategories}</Text>;
   }
 
   return (
@@ -178,38 +192,47 @@ const StoreOverviewPage = ({ route, navigation }) => {
         <FlatList
           data={filteredProducts}
           numColumns={2}
-          keyExtractor={(item) => item.id.toString()} // Ensure id is a string
-          renderItem={({ item }) => (
-            <View style={styles.productCard}>
-              <View style={styles.imageContainer}>
-                <TouchableOpacity style={styles.wishlistButton}>
-                  <Image source={require('../../assets/images/favourite.png')} style={styles.wishlistIcon} />
-                </TouchableOpacity>
-                <Image source={{ uri: item.image }} style={styles.productImage} />
-              </View>
+          keyExtractor={(item) => item.id.toString()} 
+          renderItem={({ item }) => {
+            const itemInCart = isItemInCart(item.id);
+            const cartItem = cartItems.find(cartItem => cartItem.product_id === item.id);
+            const itemQuantity = itemInCart ? cartItem.quantity : 0;
 
-              <View style={styles.productInfo}>
-                <Text style={styles.productName}>{item.name}</Text>
-                <Text style={styles.productPrice}>{item.price}</Text>
-              </View>
+            // Ensure price is a number for toFixed
+            const price = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0;
 
-              {cartItems[item.id] ? (
-                <View style={styles.quantityControls}>
-                  <TouchableOpacity onPress={() => handleDecrease(item.id)} style={styles.quantityButton}>
-                    <Text style={styles.quantityText}>-</Text>
+            return (
+              <View style={styles.productCard}>
+                <View style={styles.imageContainer}>
+                  <TouchableOpacity style={styles.wishlistButton}>
+                    <Image source={require('../../assets/images/favourite.png')} style={styles.wishlistIcon} />
                   </TouchableOpacity>
-                  <Text style={styles.quantity}>{cartItems[item.id].quantity}</Text>
-                  <TouchableOpacity onPress={() => handleIncrease(item.id)} style={styles.quantityButton}>
-                    <Text style={styles.quantityText}>+</Text>
-                  </TouchableOpacity>
+                  <Image source={{ uri: item.image }} style={styles.productImage} />
                 </View>
-              ) : (
-                <TouchableOpacity style={styles.plusButton} onPress={() => handleAddToCart(item)}>
-                  <Text style={styles.plusIcon}>+</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          )}
+
+                <View style={styles.productInfo}>
+                  <Text style={styles.productName}>{item.title}</Text>
+                  <Text style={styles.productPrice}>AED {price.toFixed(2)}</Text>
+                </View>
+
+                {itemInCart ? (
+                  <View style={styles.quantityControls}>
+                    <TouchableOpacity onPress={() => handleDecrease(item.id)} style={styles.quantityButton}>
+                      <Text style={styles.quantityText}>-</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.quantity}>{itemQuantity}</Text>
+                    <TouchableOpacity onPress={() => handleIncrease(item.id)} style={styles.quantityButton}>
+                      <Text style={styles.quantityText}>+</Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <TouchableOpacity style={styles.plusButton} onPress={() => handleAddToCart(item)}>
+                    <Text style={styles.plusIcon}>+</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            );
+          }}
           contentContainerStyle={styles.flatListContent}
         />
       </ScrollView>
@@ -292,6 +315,15 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 20,
   },
+  storeInfoContainer: {
+    backgroundColor: '#fff',
+    paddingTop: 30,
+    paddingBottom: 10,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+    shadowRadius: 4,
+    marginTop: 10,
+  },
   storeName: {
     fontSize: 18,
     fontFamily: 'DMSans-Bold',
@@ -323,21 +355,21 @@ const styles = StyleSheet.create({
     height: 16,
     marginRight: 5,
   },
+  loadingText: {
+    fontSize: 20, 
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 20,
+  },
   floatingButtonContainer: {
     position: 'absolute',
     bottom: 20,
     alignSelf: 'center',
   },
-  storeInfoContainer: {
-    backgroundColor: '#fff',
-    paddingTop: 30,
-    paddingBottom: 10,
-    paddingHorizontal: 30,
-    borderRadius: 10,
-    shadowRadius: 4,
-    marginTop: 10,
-  },
-  // Updated container style for the tabs
   tabContainer: {
     flexDirection: 'row',
     paddingHorizontal: 10,
@@ -370,7 +402,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',
-    position: 'relative', // important for absolutely-positioned children
     shadowColor: '#E3D0CCFF',
     elevation: 2,
   },
@@ -404,16 +435,15 @@ const styles = StyleSheet.create({
   productInfo: {
     width: '100%',
     marginTop: 10,
-    alignItems: 'flex-start', // Align content to the left
+    alignItems: 'flex-start',
   },
   productName: {
-    fontSize: 10,
+    fontSize: 14,
     fontFamily: 'DMSans-Bold',
-    alignContent: 'space-between',
   },
   productPrice: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: 12,
+    color: '#000',
     fontFamily: 'DMSans-SemiBold',
   },
   flatListContent: {
@@ -425,16 +455,36 @@ const styles = StyleSheet.create({
     right: 10,
     width: 30,
     height: 30,
-    borderRadius: 15,    // half of 40 -> perfectly round
+    borderRadius: 15,
     backgroundColor: '#FE5993',
     alignItems: 'center',
     justifyContent: 'center',
   },
   plusIcon: {
     color: '#fff',
-    fontSize: 20
-    ,        // reduce if you want more padding
-    textAlign: 'center', // ensure horizontal centering
+    fontSize: 20,
+    textAlign: 'center',
+  },
+  quantityControls: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  quantityButton: {
+    width: 30,
+    height: 30,
+    borderRadius: 5,
+    backgroundColor: '#EEE',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  quantityText: {
+    fontSize: 16,
+    color: '#000',
+    fontFamily: 'DMSans-Bold',
+  },
+  quantity: {
+    fontSize: 16,
+    marginHorizontal: 10,
   },
   bottomSheetOverlay: {
     flex: 1,
@@ -516,25 +566,6 @@ const styles = StyleSheet.create({
     left: '58%',
     transform: [{ translateX: -Dimensions.get('window').width * 0.4 }],
     alignItems: 'center',
-  },
-  quantityControls: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  quantityButton: {
-    backgroundColor: '#FE5993',
-    borderRadius: 5,
-    padding: 5,
-    marginHorizontal: 10,
-  },
-  quantityText: {
-    color: '#fff',
-    fontSize: 18,
-  },
-  quantity: {
-    fontSize: 16,
-    marginHorizontal: 10,
   },
 });
 
