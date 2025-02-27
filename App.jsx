@@ -43,6 +43,9 @@ import { store } from './screens/redux/store';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetchUserDetails } from './screens/redux/slices/userSlice';
+import OccasionBannersPage from './screens/Home/OccasionPannerPage';
+import CategoriesPage from './screens/Home/CategoriesPage';
+import StoresPage from './screens/Home/StoresPage';
 
 
 
@@ -222,6 +225,21 @@ const AppNavigator = () => (
     <Stack.Screen
       name="ProductOverview"
       component={ProductOverview}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="OccasionBannersPage"
+      component={OccasionBannersPage}
+      options={{ headerShown: false }}
+    />
+       <Stack.Screen
+      name="CategoriesPage"
+      component={CategoriesPage}
+      options={{ headerShown: false }}
+    />
+         <Stack.Screen
+      name="StoresPage"
+      component={StoresPage}
       options={{ headerShown: false }}
     />
     <Stack.Screen

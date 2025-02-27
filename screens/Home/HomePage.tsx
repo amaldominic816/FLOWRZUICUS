@@ -170,9 +170,9 @@ const HomePage = ({ navigation }) => {
           <View style={styles.categoriesContainer}>
             <View style={styles.categoriesHeader}>
               <Text style={styles.categoriesTitle}>Shop by Occasions</Text>
-              <TouchableOpacity>
-                <Text style={styles.categoriesSeeAll}>See all</Text>
-              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('OccasionBannersPage')}>
+      <Text style={styles.categoriesSeeAll}>See all</Text>
+    </TouchableOpacity>
             </View>
             <ScrollView
               horizontal
@@ -194,9 +194,9 @@ const HomePage = ({ navigation }) => {
           <View style={styles.categoriesContainer}>
             <View style={styles.categoriesHeader}>
               <Text style={styles.categoriesTitle}>Categories</Text>
-              <TouchableOpacity>
-                <Text style={styles.categoriesSeeAll}>See all</Text>
-              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('CategoriesPage')}>
+      <Text style={styles.categoriesSeeAll}>See all</Text>
+    </TouchableOpacity>
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScrollView}>
               {categories.map((item) => (
@@ -214,7 +214,7 @@ const HomePage = ({ navigation }) => {
           <View style={styles.popularStoresContainer}>
             <View style={styles.popularStoresHeader}>
               <Text style={styles.popularStoresTitle}>Stores</Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('StoresPage')}>
                 <Text style={styles.popularStoresSeeAll}>See all</Text>
               </TouchableOpacity>
             </View>

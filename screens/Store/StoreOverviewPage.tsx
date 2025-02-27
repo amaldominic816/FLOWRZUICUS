@@ -192,26 +192,27 @@ const StoreOverviewPage = ({ route, navigation }) => {
             </TouchableOpacity>
           ))}
         </ScrollView>
-        <FlatList
+<FlatList
   data={filteredProducts}
   numColumns={2}
   keyExtractor={(item) => item.id.toString()}
   renderItem={({ item }) => {
-    const itemInCart = isItemInCart(item.id);
-    const cartItem = cartItems.find(cartItem => cartItem.product_id === item.id);
-    const itemQuantity = itemInCart ? cartItem.quantity : 0;
+    const itemInCart = isItemInCart(item.id); // Check if the item is in the cart
+    const cartItem = cartItems.find(cartItem => cartItem.product_id === item.id); // Find the cart item
+    const itemQuantity = itemInCart ? cartItem.quantity : 0; // Get the quantity if the item is in the cart
 
-    const price = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0;
+    const price = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0; // Ensure price is a number
 
     return (
- 
-      <TouchableOpacity style={styles.productCard} onPress={() => navigation.navigate('ProductOverview', {
-        id: item.id,
-        name: item.title,
-        price: price,
-        image: item.image,
-        // You can pass more relevant details as needed
-      })}>
+      <TouchableOpacity
+        style={styles.productCard}
+        onPress={() => navigation.navigate('ProductOverview', {
+          id: item.id,
+          name: item.title,
+          price: price,
+          image: item.image,
+        })}
+      >
         <View style={styles.imageContainer}>
           {/* Wishlist button and product image */}
           <TouchableOpacity style={styles.wishlistButton}>
@@ -225,7 +226,9 @@ const StoreOverviewPage = ({ route, navigation }) => {
           <Text style={styles.productPrice}>AED {price.toFixed(2)}</Text>
         </View>
 
+        {/* Conditional Rendering */}
         {itemInCart ? (
+          // Quantity Controls
           <View style={styles.quantityControls}>
             <TouchableOpacity onPress={() => handleDecrease(item.id)} style={styles.quantityButton}>
               <Text style={styles.quantityText}>-</Text>
@@ -236,6 +239,7 @@ const StoreOverviewPage = ({ route, navigation }) => {
             </TouchableOpacity>
           </View>
         ) : (
+          // Plus Button
           <TouchableOpacity style={styles.plusButton} onPress={() => handleAddToCart(item)}>
             <Text style={styles.plusIcon}>+</Text>
           </TouchableOpacity>
