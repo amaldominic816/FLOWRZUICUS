@@ -30,7 +30,7 @@ import {
   increaseItemQuantity,
   decreaseItemQuantity,
 } from '../redux/slices/cartSlice';
-
+import { fetchCartItems } from '../redux/slices/showCartSlice';
 const { height } = Dimensions.get('window');
 
 const StoreOverviewPage = ({ route, navigation }) => {
@@ -45,6 +45,7 @@ const StoreOverviewPage = ({ route, navigation }) => {
   const panY = useRef(new Animated.Value(height)).current;
   const [note, setNote] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+
 
   useEffect(() => {
     dispatch(fetchProductsByStoreId(storeId));
@@ -101,10 +102,10 @@ const StoreOverviewPage = ({ route, navigation }) => {
     });
   };
 
-  // Handle adding items to the cart
-  const handleAddToCart = (item) => {
+  const handleAddToCart = async (item) => {
     const existingItem = cartItems.find(cartItem => cartItem.product_id === item.id);
-    
+  
+    // Add to cart logic remains the same
     if (existingItem) {
       dispatch(increaseItemQuantity(item.id));
     } else {
@@ -112,8 +113,11 @@ const StoreOverviewPage = ({ route, navigation }) => {
         product_id: item.id,
         quantity: 1,
       };
-      dispatch(addItemToCart(newItem));
+      await dispatch(addItemToCart(newItem));
     }
+  
+    // Log the cart items to see if they are updating
+    console.log('Current Cart Items:', cartItems); // This may still show the old state, useEffect on cartItems may help
   };
 
   const handleIncrease = (id) => {
@@ -188,53 +192,59 @@ const StoreOverviewPage = ({ route, navigation }) => {
             </TouchableOpacity>
           ))}
         </ScrollView>
-
         <FlatList
-          data={filteredProducts}
-          numColumns={2}
-          keyExtractor={(item) => item.id.toString()} 
-          renderItem={({ item }) => {
-            const itemInCart = isItemInCart(item.id);
-            const cartItem = cartItems.find(cartItem => cartItem.product_id === item.id);
-            const itemQuantity = itemInCart ? cartItem.quantity : 0;
+  data={filteredProducts}
+  numColumns={2}
+  keyExtractor={(item) => item.id.toString()}
+  renderItem={({ item }) => {
+    const itemInCart = isItemInCart(item.id);
+    const cartItem = cartItems.find(cartItem => cartItem.product_id === item.id);
+    const itemQuantity = itemInCart ? cartItem.quantity : 0;
 
-            // Ensure price is a number for toFixed
-            const price = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0;
+    const price = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0;
 
-            return (
-              <View style={styles.productCard}>
-                <View style={styles.imageContainer}>
-                  <TouchableOpacity style={styles.wishlistButton}>
-                    <Image source={require('../../assets/images/favourite.png')} style={styles.wishlistIcon} />
-                  </TouchableOpacity>
-                  <Image source={{ uri: item.image }} style={styles.productImage} />
-                </View>
+    return (
+ 
+      <TouchableOpacity style={styles.productCard} onPress={() => navigation.navigate('ProductOverview', {
+        id: item.id,
+        name: item.title,
+        price: price,
+        image: item.image,
+        // You can pass more relevant details as needed
+      })}>
+        <View style={styles.imageContainer}>
+          {/* Wishlist button and product image */}
+          <TouchableOpacity style={styles.wishlistButton}>
+            <Image source={require('../../assets/images/favourite.png')} style={styles.wishlistIcon} />
+          </TouchableOpacity>
+          <Image source={{ uri: item.image }} style={styles.productImage} />
+        </View>
 
-                <View style={styles.productInfo}>
-                  <Text style={styles.productName}>{item.title}</Text>
-                  <Text style={styles.productPrice}>AED {price.toFixed(2)}</Text>
-                </View>
+        <View style={styles.productInfo}>
+          <Text style={styles.productName}>{item.title}</Text>
+          <Text style={styles.productPrice}>AED {price.toFixed(2)}</Text>
+        </View>
 
-                {itemInCart ? (
-                  <View style={styles.quantityControls}>
-                    <TouchableOpacity onPress={() => handleDecrease(item.id)} style={styles.quantityButton}>
-                      <Text style={styles.quantityText}>-</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.quantity}>{itemQuantity}</Text>
-                    <TouchableOpacity onPress={() => handleIncrease(item.id)} style={styles.quantityButton}>
-                      <Text style={styles.quantityText}>+</Text>
-                    </TouchableOpacity>
-                  </View>
-                ) : (
-                  <TouchableOpacity style={styles.plusButton} onPress={() => handleAddToCart(item)}>
-                    <Text style={styles.plusIcon}>+</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-            );
-          }}
-          contentContainerStyle={styles.flatListContent}
-        />
+        {itemInCart ? (
+          <View style={styles.quantityControls}>
+            <TouchableOpacity onPress={() => handleDecrease(item.id)} style={styles.quantityButton}>
+              <Text style={styles.quantityText}>-</Text>
+            </TouchableOpacity>
+            <Text style={styles.quantity}>{itemQuantity}</Text>
+            <TouchableOpacity onPress={() => handleIncrease(item.id)} style={styles.quantityButton}>
+              <Text style={styles.quantityText}>+</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <TouchableOpacity style={styles.plusButton} onPress={() => handleAddToCart(item)}>
+            <Text style={styles.plusIcon}>+</Text>
+          </TouchableOpacity>
+        )}
+      </TouchableOpacity>
+    );
+  }}
+  contentContainerStyle={styles.flatListContent}
+/>
       </ScrollView>
 
       <View style={styles.floatingButtonContainer}>

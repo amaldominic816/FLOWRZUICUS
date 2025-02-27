@@ -14,8 +14,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import ButtonPrimary from '../components/ButtonPrimary';
 import HeaderInner from '../components/Headerinner';
 import Colors from '../components/Colors';
+
 const screenWidth = Dimensions.get('window').width;
-const ProductOverview = ({navigation}) => {
+
+const ProductOverview = ({navigation, route}) => {
+  // Get product details from route parameters
+  const { id, name, price, image } = route.params;
+
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
 
@@ -30,20 +35,20 @@ const ProductOverview = ({navigation}) => {
 
       {/* Header */}
       <HeaderInner
-        title="Product OverView"
+        title="Product Overview"
         showBackButton={true}
         showNotificationIcon={true}
         showCartIcon={true}
         onBackPress={() => navigation.goBack()}
         onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
-        onCartPress={()=>navigation.navigate('CartPage')}
+        onCartPress={() => navigation.navigate('CartPage')}
       />
 
       {/* Main Content */}
       <ScrollView style={styles.content}>
         {/* Product Image */}
         <Image
-          source={require('../../assets/images/item-test.png')}
+          source={{ uri: image }} // Use the passed image URL
           style={styles.productImage}
         />
 
@@ -51,8 +56,8 @@ const ProductOverview = ({navigation}) => {
         <View style={styles.detailsBox}>
           <View style={styles.detailsRow}>
             <View style={styles.detailsTextContainer}>
-              <Text style={styles.productName}>Yellow Tulips</Text>
-              <Text style={styles.price}>$40</Text>
+              <Text style={styles.productName}>{name}</Text> {/* Use name parametr */}
+              <Text style={styles.price}>${price.toFixed(2)}</Text> {/* Display price */}
             </View>
             <View style={styles.quantityContainer}>
               <TouchableOpacity
@@ -128,23 +133,12 @@ const ProductOverview = ({navigation}) => {
 
           {activeTab === 'description' && (
             <Text style={styles.description}>
-           Yellow tulips are a vibrant and cheerful variety of tulips that radiate positivity and warmth. Their bright golden-yellow petals are reminiscent of sunshine, making them a popular choice for spreading happiness and lifting spirits. Symbolizing joy, friendship, and new beginnings, yellow tulips are perfect for celebrating special moments or simply brightening someone’s day.
-
-These stunning flowers bloom in the spring, often standing tall with strong green stems and a delicate cup-shaped bloom. Whether arranged in a bouquet or planted in a garden, yellow tulips add a touch of elegance and a splash of color to any setting. Their timeless beauty and uplifting hue make them a favorite among flower enthusiasts and a perfect representation of hope and optimism. 🌞🌷
+              Yellow tulips are a vibrant and cheerful variety of tulips that radiate positivity and warmth...
             </Text>
           )}
           {activeTab === 'careTips' && (
             <Text style={styles.description}>
-              ✂️ Trim Stems: Cut stems at a 45° angle for better water absorption.{'\n'}
-💧 Fresh Water: Change vase water every 2-3 days to keep it clean.{'\n'}
-🥤 Flower Food: Add flower food or a DIY mix of sugar, bleach, and lemon juice.{'\n'}
-🍃 Remove Leaves: Take off leaves below the waterline to avoid rotting.{'\n'}
-🌤️ Avoid Sunlight: Keep flowers away from direct sun and heat.{'\n'}
-🌬️ No Drafts: Avoid placing flowers near fans, ACs, or vents.{'\n'}
-🌡️ Cool Storage: Refrigerate flowers overnight to prolong freshness.{'\n'}
-💦 Mist Daily: Spray petals lightly to keep them hydrated.{'\n'}
-🥀 Remove Wilted Blooms: Take out dying flowers to protect the fresh ones.{'\n'}
-🍎 Keep Away from Fruits: Avoid placing flowers near ripening fruits.{'\n'}
+              ✂️ Trim Stems: Cut stems at a 45° angle for better water absorption...
             </Text>
           )}
         </View>
@@ -152,13 +146,13 @@ These stunning flowers bloom in the spring, often standing tall with strong gree
 
       {/* Footer Buttons */}
       <View style={styles.footerButtons}>
-      <ButtonPrimary
+        <ButtonPrimary
           buttonText="Add to Cart"
           onPress={() => navigation.navigate('CartPage')}
-          buttonWidth={Dimensions.get('window').width * 0.7} // Set width to 80% of the screen width
+          buttonWidth={Dimensions.get('window').width * 0.7}
           buttonHeight={50}
           fontSize={20}
-          gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
+          gradientColors={['#DE8542', '#FE5993']}
         />
         <View style={styles.buttonGap} />
         <TouchableOpacity style={styles.favoriteButton}>

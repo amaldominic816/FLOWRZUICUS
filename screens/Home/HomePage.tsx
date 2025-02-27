@@ -1,46 +1,82 @@
-import React, { useEffect } from 'react';
-import { View, Text, Image, TextInput, StyleSheet, FlatList, TouchableOpacity, StatusBar, Dimensions, ScrollView, ImageBackground } from 'react-native';
-import { SafeAreaView, } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  Image,
+  TextInput,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  StatusBar,
+  Dimensions,
+  ScrollView,
+  ImageBackground,
+  RefreshControl
+} from 'react-native';
+import { SafeAreaView } from 'react-native';
 import Header from '../../screens/components/Header';
 import Colors from '../components/Colors';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchStores } from '../redux/slices/storesSlice';
 import { fetchOccasionBanners } from '../redux/slices/occasionsSlice';
-
-
-
-
+import { fetchCategories } from '../redux/slices/categoriesSlice'; // Import the fetchCategories action
 
 const HomePage = ({ navigation }) => {
   const dispatch = useDispatch();
+  const [refreshing, setRefreshing] = useState(false);
+
   // Selecting states from the stores slice
   const { stores, loading: loadingStores, error: errorStores } = useSelector((state) => state.stores);
 
   // Selecting states from the occasion slice
   const { banners, loading: loadingBanners, error: errorBanners } = useSelector((state) => state.occasion);
 
-  const ocbanners = [
-    { id: '2', image: require('../../assets/images/banner.png') },
-    { id: '3', image: require('../../assets/images/banner.png') },
-  ];
+  // Selecting categories from the categories slice
+  const { categories, loading: loadingCategories, error: errorCategories } = useSelector((state) => state.categories);
 
-
+  // Load data initially on mount
   useEffect(() => {
     dispatch(fetchStores());
     dispatch(fetchOccasionBanners());
+    dispatch(fetchCategories());
   }, [dispatch]);
 
   // Combine loading states for better user experience
-  const loading = loadingStores || loadingBanners;
-  const error = errorStores || errorBanners;
+  const loading = loadingStores || loadingBanners || loadingCategories;
+  const error = errorStores || errorBanners || errorCategories;
 
-  if (loading) {
+  // Handler for pull-to-refresh
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await Promise.all([
+      dispatch(fetchStores()),
+      dispatch(fetchOccasionBanners()),
+      dispatch(fetchCategories())
+    ]);
+    setRefreshing(false);
+  };
+
+  if (loading && !refreshing) {
     return <Text>Loading...</Text>; // Show loading state
   }
 
   if (error) {
     return <Text>Error fetching data: {error}</Text>; // Show error state
   }
+
+  const renderCategoryItem = ({ item }) => (
+    <View key={item.id} style={styles.categoryCard}>
+      <View style={styles.categoryImageContainer}>
+        <Image source={{ uri: item.imageUrl }} style={styles.categoryImage} />
+        <Text style={styles.categoryInnerText}>{item.title}</Text> {/* Display category title */}
+      </View>
+    </View>
+  );
+
+  const ocbanners = [
+    { id: '2', image: require('../../assets/images/banner.png') },
+    { id: '3', image: require('../../assets/images/banner.png') },
+  ];
 
   const renderPopularStoreItem = ({ item }) => (
     <TouchableOpacity
@@ -68,9 +104,14 @@ const HomePage = ({ navigation }) => {
       </View>
     </TouchableOpacity>
   );
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View style={styles.container}>
           <StatusBar backgroundColor={Colors.background} barStyle="dark-content" />
 
@@ -84,7 +125,6 @@ const HomePage = ({ navigation }) => {
             onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
             onProfilePress={() => navigation.navigate('ProfileScreen')}
             onOcPress={() => navigation.navigate('MyOccasionsScreen')}
-
           />
           {/* Search Bar and Filter */}
           <View style={styles.searchSection}>
@@ -104,7 +144,6 @@ const HomePage = ({ navigation }) => {
                   }
                 }}
               />
-
             </View>
             <View style={styles.iconButtonfilter}>
               <Image
@@ -127,7 +166,7 @@ const HomePage = ({ navigation }) => {
             </ScrollView>
           </View>
 
-          {/* Categories Section */}
+          {/* Occasions Section */}
           <View style={styles.categoriesContainer}>
             <View style={styles.categoriesHeader}>
               <Text style={styles.categoriesTitle}>Shop by Occasions</Text>
@@ -135,7 +174,6 @@ const HomePage = ({ navigation }) => {
                 <Text style={styles.categoriesSeeAll}>See all</Text>
               </TouchableOpacity>
             </View>
-
             <ScrollView
               horizontal
               pagingEnabled
@@ -152,8 +190,25 @@ const HomePage = ({ navigation }) => {
             </ScrollView>
           </View>
 
-
-
+          {/* Categories Section */}
+          <View style={styles.categoriesContainer}>
+            <View style={styles.categoriesHeader}>
+              <Text style={styles.categoriesTitle}>Categories</Text>
+              <TouchableOpacity>
+                <Text style={styles.categoriesSeeAll}>See all</Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScrollView}>
+              {categories.map((item) => (
+                <View key={item.id} style={styles.categoryCard}>
+                  <View style={styles.categoryImageContainer}>
+                    <Image source={{ uri: item.imageUrl }} style={styles.categoryImage} />
+                    <Text style={styles.categoryInnerText}>{item.title}</Text> {/* Display category title */}
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
 
           {/* Popular Stores Section */}
           <View style={styles.popularStoresContainer}>
@@ -176,9 +231,6 @@ const HomePage = ({ navigation }) => {
               />
             )}
           </View>
-
-
-
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -408,11 +460,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   popularStoresTitle: {
-    fontSize: 18,
+    fontSize: 14,
     fontFamily: 'DMSans-Bold',
   },
   popularStoresSeeAll: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#000',
     fontFamily: 'DMSans-Light',
   },
@@ -475,11 +527,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   categoriesTitle: {
-    fontSize: 18,
+    fontSize: 14,
     fontFamily: 'DMSans-Bold',
   },
   categoriesSeeAll: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#000',
     fontFamily: 'DMSans-Light',
   },
@@ -487,15 +539,15 @@ const styles = StyleSheet.create({
 
 
   categoriesScrollView: {
-    paddingVertical: 10, // Adds spacing vertically
+    paddingVertical: 0, // Adds spacing vertically
   },
 
   categoriesGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap', // Allows wrapping to the next row
     justifyContent: 'space-between', // Ensures even horizontal spacing
-    marginTop: 10,
-    rowGap: 20, // Adds vertical spacing between rows
+    marginTop: 0,
+    rowGap: 10, // Adds vertical spacing between rows
   },
   categoryCard: {
     justifyContent: 'center',
@@ -504,8 +556,8 @@ const styles = StyleSheet.create({
   },
 
   categoryImageContainer: {
-    width: 80, // Circle width
-    height: 80, // Circle height
+    width: 60, // Circle width
+    height: 60, // Circle height
     borderRadius: 40, // Makes it circular
     justifyContent: 'center',
     alignItems: 'center',
@@ -522,7 +574,7 @@ const styles = StyleSheet.create({
   categoryInnerText: {
     position: 'absolute', // Places text at the bottom
     bottom: 5, // Adjust this to place text near the bottom edge
-    fontSize: 12,
+    fontSize: 10,
     fontFamily: 'DMSans-Light',
     color: '#FFF', // Contrast color for visibility
     textAlign: 'center',
