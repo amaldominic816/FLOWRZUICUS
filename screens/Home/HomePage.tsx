@@ -165,7 +165,25 @@ const HomePage = ({ navigation }) => {
               ))}
             </ScrollView>
           </View>
-
+ {/* Categories Section */}
+ <View style={styles.categoriesContainer}>
+            <View style={styles.categoriesHeader}>
+              <Text style={styles.categoriesTitle}>Categories</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('CategoriesPage')}>
+      <Text style={styles.categoriesSeeAll}>See all</Text>
+    </TouchableOpacity>
+            </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScrollView}>
+              {categories.map((item) => (
+                <View key={item.id} style={styles.categoryCard}>
+                  <View style={styles.categoryImageContainer}>
+                    <Image source={{ uri: item.imageUrl }} style={styles.categoryImage} />
+                    <Text style={styles.categoryInnerText}>{item.title}</Text> {/* Display category title */}
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
           {/* Occasions Section */}
           <View style={styles.categoriesContainer}>
             <View style={styles.categoriesHeader}>
@@ -190,25 +208,7 @@ const HomePage = ({ navigation }) => {
             </ScrollView>
           </View>
 
-          {/* Categories Section */}
-          <View style={styles.categoriesContainer}>
-            <View style={styles.categoriesHeader}>
-              <Text style={styles.categoriesTitle}>Categories</Text>
-              <TouchableOpacity onPress={() => navigation.navigate('CategoriesPage')}>
-      <Text style={styles.categoriesSeeAll}>See all</Text>
-    </TouchableOpacity>
-            </View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScrollView}>
-              {categories.map((item) => (
-                <View key={item.id} style={styles.categoryCard}>
-                  <View style={styles.categoryImageContainer}>
-                    <Image source={{ uri: item.imageUrl }} style={styles.categoryImage} />
-                    <Text style={styles.categoryInnerText}>{item.title}</Text> {/* Display category title */}
-                  </View>
-                </View>
-              ))}
-            </ScrollView>
-          </View>
+         
 
           {/* Popular Stores Section */}
           <View style={styles.popularStoresContainer}>
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
   },
   occasionoverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    // backgroundColor: 'rgba(0, 0, 0, 0)',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
@@ -578,7 +578,7 @@ const styles = StyleSheet.create({
     fontFamily: 'DMSans-Light',
     color: '#FFF', // Contrast color for visibility
     textAlign: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background for better visibility
+    backgroundColor: 'rgba(255, 255, 255, 0)', // Semi-transparent background for better visibility
     paddingHorizontal: 5,
     borderRadius: 5,
   },
