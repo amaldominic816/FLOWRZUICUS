@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, Platform, StatusBar } from 'react-native';
 import Colors from './Colors';
 
+import CalenderIcon from '../../assets/images/reminder-icon.svg'; // Replace with your SVG path
+
 const Header = ({ 
   title = 'Header', // Default title
   showCartIcon = true, // Visibility for cart icon
@@ -29,10 +31,7 @@ const Header = ({
       <View style={styles.iconsContainer}>
       {showNotificationIcon && (
           <TouchableOpacity style={styles.iconButton} onPress={onOcPress}>
-            <Image
-              source={require('../../assets/images/occ.png')}
-              style={styles.icon}
-            />
+             <CalenderIcon width={25} height={25} style={styles.icon} />
           </TouchableOpacity>
         )}
         {showCartIcon && (

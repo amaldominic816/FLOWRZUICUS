@@ -9,25 +9,25 @@ import {
   Modal,
   TextInput,
   Dimensions,
+  Alert,
 } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import HeaderInner from '../../screens/components/Headerinner';
 import Colors from '../components/Colors';
 import ReminderSvg from '../../assets/images/Reminder.svg';
+import ReminderBell from '../../assets/images/reminder-bell.svg'; // Replace with your SVG path
 
-// Import ButtonPrimary component
 import ButtonPrimary from '../components/ButtonPrimary';
-
 
 const initialQuickAddOptions = [
   {
     id: 'q1',
-    title: 'Happy Anniversary',
+    title: 'Anniversary',
     image: require('../../assets/images/flower.png'),
   },
   {
     id: 'q2',
-    title: 'Happy Birthday',
+    title: 'Birthday',
     image: require('../../assets/images/flower.png'),
   },
   {
@@ -38,30 +38,25 @@ const initialQuickAddOptions = [
 ];
 
 const MyOccasionsScreen = ({ navigation }) => {
-  // Vertical list for added occasions and horizontal quick add options
-  const [occasionsList, setOccasionsList] = useState([]); // Initially empty
+  const [occasionsList, setOccasionsList] = useState([]);
   const [quickAddOptions, setQuickAddOptions] = useState(initialQuickAddOptions);
-
   const [modalVisible, setModalVisible] = useState(false);
+  const [optionsModalVisible, setOptionsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentOccasion, setCurrentOccasion] = useState(null);
-
-  // Form fields
   const [occasionType, setOccasionType] = useState('Happy Anniversary');
   const [customOccasion, setCustomOccasion] = useState('');
   const [personName, setPersonName] = useState('');
   const [relationship, setRelationship] = useState('');
-  // Store date as a Date object; default to current date
   const [date, setDate] = useState(new Date());
   const [filter, setFilter] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedOccasion, setSelectedOccasion] = useState(null);
 
-  // Helper to format the date as YYYY-MM-DD
   const formatDate = (dateObj) => {
     return dateObj ? dateObj.toISOString().split('T')[0] : 'Select Date';
   };
 
-  // Open modal to add a new occasion
   const handleAddPress = () => {
     setIsEditing(false);
     setCurrentOccasion(null);
@@ -73,7 +68,6 @@ const MyOccasionsScreen = ({ navigation }) => {
     setModalVisible(true);
   };
 
-  // Open modal in edit mode when an occasion card is pressed
   const handleEditOccasion = (item) => {
     setIsEditing(true);
     setCurrentOccasion(item);
@@ -85,37 +79,31 @@ const MyOccasionsScreen = ({ navigation }) => {
     setModalVisible(true);
   };
 
-  // Set filter based on the selected quick add option
   const handleFilter = (type) => {
     setFilter(type);
   };
 
-  // Save a new or edited occasion
   const handleSave = () => {
-    // If "Other" is selected then use the custom input as the occasion name
     const finalOccasionType = occasionType === 'Other' ? customOccasion : occasionType;
     const newOccasion = {
       id: isEditing && currentOccasion ? currentOccasion.id : Date.now().toString(),
       occasionType: finalOccasionType,
       personName,
       relationship,
-      date, // Date stored as a Date object
+      date,
       image: require('../../assets/images/flower.png'),
     };
-    newOccasion.title = finalOccasionType; // For display purposes
+    newOccasion.title = finalOccasionType;
 
     if (isEditing) {
-      // Update existing occasion
       const updatedList = occasionsList.map((item) =>
         item.id === currentOccasion.id ? newOccasion : item
       );
       setOccasionsList(updatedList);
     } else {
-      // Add new occasion to vertical list
       setOccasionsList([...occasionsList, newOccasion]);
     }
 
-    // If adding a custom occasion, check if a quick add card exists and add if not
     if (occasionType === 'Other' && customOccasion.trim() !== '') {
       const exists = quickAddOptions.find(
         (option) => option.title.toLowerCase() === customOccasion.trim().toLowerCase()
@@ -138,7 +126,35 @@ const MyOccasionsScreen = ({ navigation }) => {
     setModalVisible(false);
   };
 
-  // Render a quick add card (horizontal list)
+  const handleOptionsPress = (item) => {
+    setSelectedOccasion(item);
+    setOptionsModalVisible(true);
+  };
+
+  const handleEdit = () => {
+    if (selectedOccasion) {
+      handleEditOccasion(selectedOccasion);
+      setOptionsModalVisible(false);
+    }
+  };
+
+  const handleDelete = () => {
+    if (selectedOccasion) {
+      Alert.alert(
+        "Delete Occasion",
+        "Are you sure you want to delete this occasion?",
+        [
+          { text: "Cancel", onPress: () => setOptionsModalVisible(false), style: "cancel" },
+          { text: "Delete", onPress: () => {
+              setOccasionsList(occasionsList.filter(item => item.id !== selectedOccasion.id));
+              setOptionsModalVisible(false);
+            }
+          }
+        ]
+      );
+    }
+  };
+
   const renderQuickAddCard = ({ item }) => (
     <TouchableOpacity style={styles.quickAddCard} onPress={() => handleFilter(item.title)}>
       <Image source={item.image} style={styles.occasionImage} />
@@ -146,25 +162,24 @@ const MyOccasionsScreen = ({ navigation }) => {
     </TouchableOpacity>
   );
 
-  // Render an occasion card for the vertical list of added occasions
   const renderOccasionListCard = ({ item }) => {
     return (
-      <TouchableOpacity style={styles.card} onPress={() => handleEditOccasion(item)}>
-        {/* Header: Date, Name, Menu */}
+      <View style={styles.card} >
         <View style={styles.header}>
           <View style={styles.dateContainer}>
             <Text style={styles.date}>{new Date(item.date).getDate()}</Text>
             <Text style={styles.month}>{new Date(item.date).toLocaleString("en-US", { month: "short" })}</Text>
           </View>
           <Text style={styles.name}>{item.personName}</Text>
+          <TouchableOpacity style={styles.menuButton} onPress={() => handleOptionsPress(item)}>
+            <Text style={styles.menuText}>...</Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Occasion & Relationship in same row */}
         <View style={styles.infoRow}>
           <View style={styles.infoItem}>
             <Text style={styles.label}>Occasion:</Text>
             <View style={styles.occasionContainer}>
-              {/* <Image source={getOccasionIcon(item.occasionType)} style={styles.icon} /> */}
               <Text style={styles.occasion}>{item.occasionType}</Text>
             </View>
           </View>
@@ -175,12 +190,12 @@ const MyOccasionsScreen = ({ navigation }) => {
             </View>
           )}
         </View>
-      </TouchableOpacity>
+      </View>
     );
   };
+
   return (
     <View style={styles.container}>
-      {/* Top Bar */}
       <HeaderInner
         title="Reminders"
         showBackButton={true}
@@ -191,38 +206,20 @@ const MyOccasionsScreen = ({ navigation }) => {
         onCartPress={() => navigation.navigate('CartPage')}
       />
 
-      {/* Quick Add Section is displayed only when no filter is active */}
-      {!filter && (
+
+{!filter && (
         <View style={styles.reminderSection}>
-          {/* GIF aligned to the left above text */}
-          <ReminderSvg width={100} height={50} style={styles.reminderSvg} />
-
+          <ReminderSvg width={140} height={70} style={styles.reminderSvg} />
           <View style={styles.reminderContent}>
-            {/* Left-side image */}
-
-
-            {/* Text Content */}
+            {/* Add your SVG here */}
+            <ReminderBell width={40} height={40} style={styles.reminderImage} />
             <Text style={styles.reminderSubtitle}>
               Never miss loved ones' special days with our reminders, tailor-made offers & personalised gifts
             </Text>
           </View>
-
-
-
-
-          {/* FlatList for occasions */}
-          <FlatList
-            data={quickAddOptions}
-            renderItem={renderQuickAddCard}
-            keyExtractor={(item) => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.occasionList}
-          />
         </View>
       )}
 
-      {/* If a filter is active, show a header with the filter and a clear option */}
       {filter && (
         <View style={styles.filterHeader}>
           <Text style={styles.filterHeaderText}>Filtered by: {filter}</Text>
@@ -232,7 +229,6 @@ const MyOccasionsScreen = ({ navigation }) => {
         </View>
       )}
 
-      {/* Vertical List of Added Occasions */}
       <View style={styles.listSection}>
         <FlatList
           data={
@@ -246,12 +242,10 @@ const MyOccasionsScreen = ({ navigation }) => {
         />
       </View>
 
-      {/* Floating "Add Occasion" Button using ButtonPrimary */}
       <View style={styles.addButtonWrapper}>
         <ButtonPrimary
           buttonText="Add a Reminder"
           onPress={handleAddPress}
-          // Adjust these values as needed for your design
           buttonWidth={Dimensions.get('window').width * 0.9}
           buttonHeight={50}
           fontSize={16}
@@ -259,7 +253,6 @@ const MyOccasionsScreen = ({ navigation }) => {
         />
       </View>
 
-      {/* Modal Popup Form */}
       <Modal visible={modalVisible} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
@@ -267,10 +260,9 @@ const MyOccasionsScreen = ({ navigation }) => {
               {isEditing ? 'Edit Occasion' : 'Add Occasion'}
             </Text>
 
-            {/* Occasion Type Picker */}
             <Text style={styles.inputLabel}>Select Occasion</Text>
             <View style={styles.pickerContainer}>
-              {['Happy Anniversary', 'Happy Birthday', 'Congratulations', 'Other'].map(
+              {['Anniversary', 'Birthday', 'Congratulations', 'Other'].map(
                 (type) => (
                   <TouchableOpacity
                     key={type}
@@ -294,7 +286,6 @@ const MyOccasionsScreen = ({ navigation }) => {
               />
             )}
 
-            {/* Person Name */}
             <Text style={styles.inputLabel}>Person Name</Text>
             <TextInput
               style={styles.input}
@@ -303,7 +294,6 @@ const MyOccasionsScreen = ({ navigation }) => {
               onChangeText={setPersonName}
             />
 
-            {/* Relationship */}
             <Text style={styles.inputLabel}>Relationship</Text>
             <TextInput
               style={styles.input}
@@ -312,7 +302,6 @@ const MyOccasionsScreen = ({ navigation }) => {
               onChangeText={setRelationship}
             />
 
-            {/* Date Picker using react-native-date-picker */}
             <Text style={styles.inputLabel}>Date</Text>
             <TouchableOpacity
               style={[styles.input, { justifyContent: 'center' }]}
@@ -334,7 +323,6 @@ const MyOccasionsScreen = ({ navigation }) => {
               }}
             />
 
-            {/* Modal Buttons using ButtonPrimary */}
             <View style={styles.modalButtons}>
               <View style={styles.modalButtonWrapper}>
                 <ButtonPrimary
@@ -357,6 +345,24 @@ const MyOccasionsScreen = ({ navigation }) => {
                 />
               </View>
             </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Options Modal */}
+      <Modal visible={optionsModalVisible} animationType="slide" transparent>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Options</Text>
+            <TouchableOpacity onPress={handleEdit} style={styles.optionButton}>
+              <Text style={styles.optionText}>Edit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleDelete} style={styles.optionButton}>
+              <Text style={styles.optionText}>Delete</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setOptionsModalVisible(false)} style={styles.optionButton}>
+              <Text style={styles.optionText}>Cancel</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -448,17 +454,6 @@ const styles = StyleSheet.create({
     right: 20,
     left: 20,
   },
-  // These styles were used by the old button implementations.
-  addButton: {
-    padding: 15,
-    borderRadius: 30,
-  },
-  addButtonText: {
-    fontSize: 14,
-    fontFamily: 'DMSans-Bold',
-    color: '#fff',
-    textAlign: 'center',
-  },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -516,11 +511,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 5,
   },
-  modalButtonText: {
-    fontSize: 14,
-    fontFamily: 'DMSans-Bold',
-    color: '#fff',
-  },
   emptyText: {
     fontSize: 14,
     color: '#555',
@@ -528,7 +518,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
   },
-
   card: {
     backgroundColor: "#fff",
     borderRadius: 10,
@@ -588,11 +577,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 5,
   },
-  icon: {
-    width: 20,
-    height: 20,
-    marginRight: 5,
-  },
   occasion: {
     fontSize: 16,
     fontWeight: "bold",
@@ -602,31 +586,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 5,
   },
-
-
-
   reminderSection: {
     padding: 10,
   },
-
-  reminderGif: {
-    width: 120,
-    height: 50,
-    marginBottom: 5, // Adds spacing between GIF and content below
-    alignSelf: 'flex-start', // Aligns the GIF to the left
-  },
-
   reminderContent: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-
-  leftImage: {
-    width: 40,
-    height: 40,
+  reminderImage: {
+    width: 40, // Adjust width as needed
+    height: 40, // Adjust height as needed
     marginRight: 10, // Space between image and text
   },
-
   reminderSubtitle: {
     fontSize: 14,
     color: '#555',
@@ -634,12 +605,16 @@ const styles = StyleSheet.create({
   },
   reminderSvg: {
     marginBottom: 0,
-    marginLeft: 0,// Aligns SVG to the left
+    marginLeft: 0,
   },
-
-
+  optionButton: {
+    padding: 15,
+    alignItems: 'center',
+  },
+  optionText: {
+    fontSize: 16,
+    color: '#333',
+  },
 });
-
-
 
 export default MyOccasionsScreen;

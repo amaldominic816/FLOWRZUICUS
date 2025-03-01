@@ -127,12 +127,11 @@ const TabNavigator = () => (
           iconSource = require('./assets/images/rewards.png');
         } else if (route.name === 'Gift') {
           iconSource = require('./assets/images/gift.png');
-        } else if (route.name === 'Events') { // Make sure the route name matches exactly
+        } else if (route.name === 'Events') {
           iconSource = require('./assets/images/event.png');
         }
 
         return focused ? (
-          // Linear gradient for selected item
           <LinearGradient
             colors={['#DE8542', '#FE5993']}
             start={{ x: 0, y: 0 }}
@@ -141,34 +140,32 @@ const TabNavigator = () => (
           >
             <Image
               source={iconSource}
-              style={[styles.tabIcon, { tintColor: 'white' }]} // White tint for selected icons
+              style={[styles.tabIcon, { tintColor: 'white' }]}
             />
           </LinearGradient>
         ) : (
-          // Plain icon for unselected items
           <View style={styles.tabItem}>
             <Image
               source={iconSource}
-              style={[styles.tabIcon, { tintColor: 'black' }]} // Black tint for unselected icons
+              style={[styles.tabIcon, { tintColor: 'black' }]}
             />
           </View>
         );
       },
-      // Style for the label text
       tabBarLabelStyle: {
-        marginTop:5,
-        fontSize: 12,           // Adjust font size
-        fontFamily: 'DMSans-SemiBold', // Use your desired font family      // Adjust the weight if needed
-        marginBottom: 0,        // Provide spacing from the bottom edge
+        marginTop: 5,
+        fontSize: 12,
+        fontFamily: 'DMSans-SemiBold',
+        marginBottom: 5, // Adjusted for better spacing
       },
-      tabBarActiveTintColor: '#000000FF',  // Color for the active label
-      tabBarInactiveTintColor: '#BABABAFF',// Color for the inactive label
+      tabBarActiveTintColor: '#000000FF',
+      tabBarInactiveTintColor: '#BABABAFF',
       tabBarStyle: {
-        height: 60,           // Adjust the height of the tab bar if necessary
-        paddingBottom: 0,
+        height: 70, // Increased height of the tab bar
+        paddingBottom: 10, // Added padding at the bottom
       },
-      tabBarShowLabel: true,   // Enable label display
-      headerShown: false,      // Hide the header in the tab navigator
+      tabBarShowLabel: true,
+      headerShown: false,
     })}
   >
     <Tab.Screen
@@ -193,9 +190,6 @@ const TabNavigator = () => (
     />
   </Tab.Navigator>
 );
-
-
-
 
 
 
@@ -400,22 +394,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 35,
     height: 35,
-    marginTop:10,
-    borderRadius: 25, // Circular shape
+    marginTop: 10,
+    borderRadius: 25,
   },
   tabIcon: {
-    marginTop:10,
-    marginBottom:10,
     width: 22,
     height: 22,
     resizeMode: 'contain',
   },
-  tabItem:{
-    marginTop:20,
+  tabItem: {
+    justifyContent: 'center',
+    alignItems: 'center',
     width: 22,
     height: 22,
-    marginBottom:30,
-    resizeMode: 'contain',
+    marginBottom: 5, // Adjusted for better spacing
   },
 
 

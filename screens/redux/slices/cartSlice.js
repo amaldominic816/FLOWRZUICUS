@@ -71,26 +71,26 @@ const cartSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(addItemToCart.fulfilled, (state, action) => {
-        const existingItem = state.items.find(item => item.product.id === action.payload.product.id);
+        const existingItem = state.items.find((item) => item.product.id === action.payload.product.id);
         if (existingItem) {
-          existingItem.quantity += 1; // Or set it to action.payload.quantity if the API returns the initial quantity.
+          existingItem.quantity += 1;
         } else {
-          state.items.push({ ...action.payload, quantity: 1 }); // Assuming API returns the item with its product id.
+          state.items.push({ ...action.payload, quantity: 1 });
         }
       })
       .addCase(increaseItemQuantity.fulfilled, (state, action) => {
-        const existingItem = state.items.find(item => item.product_detail.id === action.payload.product.id);
+        const existingItem = state.items.find((item) => item.product.id === action.payload.product.id);
         if (existingItem) {
-          existingItem.quantity = action.payload.quantity; // Update quantity from API response
+          existingItem.quantity = action.payload.quantity;
         }
       })
       .addCase(decreaseItemQuantity.fulfilled, (state, action) => {
-        const existingItemIndex = state.items.findIndex(item => item.product_detail.id === action.payload.product.id);
+        const existingItemIndex = state.items.findIndex((item) => item.product.id === action.payload.product.id);
         if (existingItemIndex >= 0) {
           if (action.payload.quantity > 0) {
-            state.items[existingItemIndex].quantity = action.payload.quantity; // Update quantity from API response
+            state.items[existingItemIndex].quantity = action.payload.quantity;
           } else {
-            state.items.splice(existingItemIndex, 1); // Remove item if quantity is 0
+            state.items.splice(existingItemIndex, 1);
           }
         }
       })

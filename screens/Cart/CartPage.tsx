@@ -7,7 +7,7 @@ import HeaderInner from '../../screens/components/Headerinner';
 import ButtonPrimary from '../../screens/components/ButtonPrimary';
 import Colors from '../components/Colors';
 
-const CartPage = () => {
+const CartPage = ({navigation}) => {
   const dispatch = useDispatch();
   const cartData = useSelector((state) => state.showCart.items) || [];
   const loading = useSelector((state) => state.showCart.loading);
@@ -68,7 +68,7 @@ const CartPage = () => {
         showBackButton={true}
         showNotificationIcon={true}
         showCartIcon={false}
-        onBackPress={() => { /* Handle back button pressed */ }}
+        onBackPress={() => navigation.goBack()}
       />
       <ScrollView style={styles.content} contentContainerStyle={{ paddingBottom: 100 }}>
         {localCartData.length === 0 ? (

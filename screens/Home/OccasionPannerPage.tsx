@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchOccasionBanners } from '../redux/slices/occasionsSlice'; // Import the fetchOccasionBanners action
 import HeaderInner from '../components/Headerinner';
 import Colors from '../components/Colors';
+import Loader from '../components/Loader';
 
 const OccasionBannersPage = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -24,7 +25,7 @@ const OccasionBannersPage = ({ navigation }) => {
   );
 
   if (loading) {
-    return <Text>Loading...</Text>; // Show loading state
+    return <Loader/>; // Show loading state// Show loading state
   }
 
   if (error) {

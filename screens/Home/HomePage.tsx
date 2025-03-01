@@ -165,32 +165,33 @@ const HomePage = ({ navigation }) => {
               ))}
             </ScrollView>
           </View>
- {/* Categories Section */}
- <View style={styles.categoriesContainer}>
-            <View style={styles.categoriesHeader}>
-              <Text style={styles.categoriesTitle}>Categories</Text>
-              <TouchableOpacity onPress={() => navigation.navigate('CategoriesPage')}>
+          {/* Categories Section */}
+         {/* Categories Section */}
+<View style={styles.categoriesContainer}>
+  <View style={styles.categoriesHeader}>
+    <Text style={styles.categoriesTitle}>Categories</Text>
+    <TouchableOpacity onPress={() => navigation.navigate('CategoriesPage')}>
       <Text style={styles.categoriesSeeAll}>See all</Text>
     </TouchableOpacity>
-            </View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScrollView}>
-              {categories.map((item) => (
-                <View key={item.id} style={styles.categoryCard}>
-                  <View style={styles.categoryImageContainer}>
-                    <Image source={{ uri: item.imageUrl }} style={styles.categoryImage} />
-                    <Text style={styles.categoryInnerText}>{item.title}</Text> {/* Display category title */}
-                  </View>
-                </View>
-              ))}
-            </ScrollView>
-          </View>
+  </View>
+  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScrollView}>
+    {categories.map((item) => (
+      <View key={item.id} style={styles.categoryCard}>
+        <View style={styles.categoryImageContainer}>
+          <Image source={{ uri: item.imageUrl }} style={styles.categoryImage} />
+        </View>
+        <Text style={styles.categoryInnerText}>{item.title}</Text> {/* Display category title */}
+      </View>
+    ))}
+  </ScrollView>
+</View>
           {/* Occasions Section */}
           <View style={styles.categoriesContainer}>
             <View style={styles.categoriesHeader}>
               <Text style={styles.categoriesTitle}>Shop by Occasions</Text>
               <TouchableOpacity onPress={() => navigation.navigate('OccasionBannersPage')}>
-      <Text style={styles.categoriesSeeAll}>See all</Text>
-    </TouchableOpacity>
+                <Text style={styles.categoriesSeeAll}>See all</Text>
+              </TouchableOpacity>
             </View>
             <ScrollView
               horizontal
@@ -208,7 +209,7 @@ const HomePage = ({ navigation }) => {
             </ScrollView>
           </View>
 
-         
+
 
           {/* Popular Stores Section */}
           <View style={styles.popularStoresContainer}>
@@ -549,39 +550,37 @@ const styles = StyleSheet.create({
     marginTop: 0,
     rowGap: 10, // Adds vertical spacing between rows
   },
-  categoryCard: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 15, // Adds space between each card horizontally
-  },
 
-  categoryImageContainer: {
-    width: 60, // Circle width
-    height: 60, // Circle height
-    borderRadius: 40, // Makes it circular
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: Colors.secondary, // Optional background color
-    overflow: 'hidden', // Ensures no content spills over
-    position: 'relative', // Allows absolute positioning for the text
-  },
-  categoryImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover', // Ensures the image fits inside the circle
-  },
+  // Updated styles
+categoryCard: {
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginRight: 15, // Adds space between each card horizontally
+},
 
-  categoryInnerText: {
-    position: 'absolute', // Places text at the bottom
-    bottom: 5, // Adjust this to place text near the bottom edge
-    fontSize: 10,
-    fontFamily: 'DMSans-Light',
-    color: '#FFF', // Contrast color for visibility
-    textAlign: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0)', // Semi-transparent background for better visibility
-    paddingHorizontal: 5,
-    borderRadius: 5,
-  },
+categoryImageContainer: {
+  width: 60, // Circle width
+  height: 60, // Circle height
+  borderRadius: 30, // Makes it circular
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: Colors.secondary, // Optional background color
+  overflow: 'hidden', // Ensures no content spills over
+},
+
+categoryImage: {
+  width: '100%',
+  height: '100%',
+  resizeMode: 'cover', // Ensures the image fits inside the circle
+},
+
+categoryInnerText: {
+  marginTop: 5, // Adds space between the image and the text
+  fontSize: 10,
+  fontFamily: 'DMSans-Light',
+  color: '#000', // Change to a color that contrasts with your background
+  textAlign: 'center',
+},
 
 });
 

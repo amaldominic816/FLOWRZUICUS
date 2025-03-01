@@ -31,6 +31,7 @@ import {
   decreaseItemQuantity,
 } from '../redux/slices/cartSlice';
 import { fetchCartItems } from '../redux/slices/showCartSlice';
+
 const { height } = Dimensions.get('window');
 
 const StoreOverviewPage = ({ route, navigation }) => {
@@ -38,7 +39,7 @@ const StoreOverviewPage = ({ route, navigation }) => {
   const dispatch = useDispatch();
   const { products, loading: loadingProducts, error: errorProducts } = useSelector((state) => state.products);
   const { categories, loading: loadingCategories, error: errorCategories } = useSelector((state) => state.categories);
-  const { items: cartItems } = useSelector((state) => state.cart);
+  const { items: cartItems } = useSelector((state) => state.showCart); // Fetching from showCartSlice
   
   const [activeCategory, setActiveCategory] = useState('All');
   const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
@@ -46,10 +47,10 @@ const StoreOverviewPage = ({ route, navigation }) => {
   const [note, setNote] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
-
   useEffect(() => {
     dispatch(fetchProductsByStoreId(storeId));
     dispatch(fetchCategories());
+    dispatch(fetchCartItems()); // Fetch cart items when the component mounts
   }, [dispatch, storeId]);
 
   const filteredProducts = activeCategory === 'All' ? products : products.filter((product) => product.category_name === activeCategory);
@@ -103,21 +104,19 @@ const StoreOverviewPage = ({ route, navigation }) => {
   };
 
   const handleAddToCart = async (item) => {
-    const existingItem = cartItems.find(cartItem => cartItem.product_id === item.id);
+    const existingItem = cartItems.flatMap(cartItem => cartItem.items).find(cartItem => cartItem.product === item.id);
   
-    // Add to cart logic remains the same
     if (existingItem) {
-      dispatch(increaseItemQuantity(item.id));
+      dispatch(increaseItemQuantity(existingItem.id)); // Use existing item ID
     } else {
       const newItem = {
-        product_id: item.id,
+        product: item.id,
         quantity: 1,
       };
       await dispatch(addItemToCart(newItem));
     }
   
-    // Log the cart items to see if they are updating
-    console.log('Current Cart Items:', cartItems); // This may still show the old state, useEffect on cartItems may help
+    console.log('Current Cart Items:', cartItems);
   };
 
   const handleIncrease = (id) => {
@@ -128,8 +127,16 @@ const StoreOverviewPage = ({ route, navigation }) => {
     dispatch(decreaseItemQuantity(id));
   };
 
+  // Function to check if an item is in the cart
   const isItemInCart = (id) => {
-    return cartItems.some(item => item.product_id === id);
+    // Ensure cartItems is defined and is an array
+    if (!Array.isArray(cartItems)) {
+      console.warn('cartItems is not an array:', cartItems);
+      return false;
+    }
+  
+    // Check if any item in the cart matches the product ID
+    return cartItems.some(item => item.product === id);
   };
 
   // Loading and error states
@@ -192,14 +199,20 @@ const StoreOverviewPage = ({ route, navigation }) => {
             </TouchableOpacity>
           ))}
         </ScrollView>
+
+
 <FlatList
   data={filteredProducts}
   numColumns={2}
   keyExtractor={(item) => item.id.toString()}
   renderItem={({ item }) => {
     const itemInCart = isItemInCart(item.id); // Check if the item is in the cart
-    const cartItem = cartItems.find(cartItem => cartItem.product_id === item.id); // Find the cart item
-    const itemQuantity = itemInCart ? cartItem.quantity : 0; // Get the quantity if the item is in the cart
+
+    // Find the cart item
+    const cartItem = cartItems.find(cartItem => cartItem.product === item.id);
+
+    // Safeguard against undefined cartItem
+    const itemQuantity = itemInCart && cartItem ? cartItem.quantity : 0; // Get the quantity if the item is in the cart
 
     const price = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0; // Ensure price is a number
 
@@ -230,11 +243,11 @@ const StoreOverviewPage = ({ route, navigation }) => {
         {itemInCart ? (
           // Quantity Controls
           <View style={styles.quantityControls}>
-            <TouchableOpacity onPress={() => handleDecrease(item.id)} style={styles.quantityButton}>
+            <TouchableOpacity onPress={() => handleDecrease(cartItem.id)} style={styles.quantityButton}>
               <Text style={styles.quantityText}>-</Text>
             </TouchableOpacity>
             <Text style={styles.quantity}>{itemQuantity}</Text>
-            <TouchableOpacity onPress={() => handleIncrease(item.id)} style={styles.quantityButton}>
+            <TouchableOpacity onPress={() => handleIncrease(cartItem.id)} style={styles.quantityButton}>
               <Text style={styles.quantityText}>+</Text>
             </TouchableOpacity>
           </View>
@@ -321,6 +334,7 @@ const StoreOverviewPage = ({ route, navigation }) => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

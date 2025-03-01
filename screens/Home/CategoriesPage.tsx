@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchCategories } from '../redux/slices/categoriesSlice'; // Import the fetchCategories action
 import HeaderInner from '../components/Headerinner';
 import Colors from '../components/Colors';
+import Loader from '../components/Loader';
 
-const CategoriesPage = ({navigation}) => {
+const CategoriesPage = ({ navigation }) => {
   const dispatch = useDispatch();
 
   // Selecting categories from the categories slice
@@ -20,13 +21,13 @@ const CategoriesPage = ({navigation}) => {
     <View key={item.id} style={styles.categoryCard}>
       <View style={styles.categoryImageContainer}>
         <Image source={{ uri: item.imageUrl }} style={styles.categoryImage} />
-        <Text style={styles.categoryInnerText}>{item.title}</Text>
       </View>
+      <Text style={styles.categoryInnerText}>{item.title}</Text> {/* Display category title outside the image */}
     </View>
   );
 
   if (loading) {
-    return <Text>Loading...</Text>; // Show loading state
+    return <Loader/>; // Show loading state
   }
 
   if (error) {
@@ -35,14 +36,14 @@ const CategoriesPage = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-         <HeaderInner
+      <HeaderInner
         title="Categories"
         showBackButton={true}
         showNotificationIcon={true}
         showCartIcon={true}
         onBackPress={() => navigation.goBack()}
         onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
-        onCartPress={()=>navigation.navigate('CartPage')}
+        onCartPress={() => navigation.navigate('CartPage')}
       />
       
       <FlatList
@@ -58,14 +59,13 @@ const CategoriesPage = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-   container: {
-        flex: 1,
-        backgroundColor:Colors.background,
-      },
-
+  container: {
+    flex: 1,
+    backgroundColor: Colors.background,
+  },
   categoriesGrid: {
-    padding:20,
-    marginTop:20,
+    padding: 20,
+    marginTop: 20,
     justifyContent: 'space-between', // Ensures even horizontal spacing
     marginBottom: 5, // Adds vertical spacing between rows
   },
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   categoryImageContainer: {
     width: 60,
     height: 60,
-    borderRadius: 40,
+    borderRadius: 30, // Adjusted for a circular shape
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f0f0f0',
@@ -91,14 +91,10 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   categoryInnerText: {
-    position: 'absolute',
-    bottom: 5,
+    marginTop: 5, // Adds space between the image and the text
     fontSize: 10,
-    color: '#FFF',
+    color: '#000', // Change to a color that contrasts with your background
     textAlign: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    paddingHorizontal: 5,
-    borderRadius: 5,
   },
 });
 
