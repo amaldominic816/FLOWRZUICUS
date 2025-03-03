@@ -34,7 +34,47 @@ const HomePage = ({ navigation }) => {
 
   // Selecting categories from the categories slice
   const { categories, loading: loadingCategories, error: errorCategories } = useSelector((state) => state.categories);
-
+  const storiesData = [
+    {
+      id: '1',
+      image: require('../../assets/images/in1.png'),
+      label: 'Logo1',
+      videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    },
+    {
+      id: '2',
+      image: require('../../assets/images/in2.png'),
+      label: 'Logo2',
+      videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    },
+    {
+      id: '3',
+      image: require('../../assets/images/in3.png'),
+      label: 'Logo3',
+      videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    },
+    {
+      id: '4',
+      image: require('../../assets/images/in4.png'),
+      label: 'Logo4',
+      videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    },
+    {
+      id: '5',
+      image: require('../../assets/images/j1.png'),
+      label: 'Logo5',
+      videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    },
+    {
+      id: '6',
+      image: require('../../assets/images/j2.png'),
+      label: 'Logo6',
+      videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    },
+  ];
+  const handleStoryPress = (story) => {
+    navigation.navigate('StoryViewer', { story });
+  };
   // Load data initially on mount
   useEffect(() => {
     dispatch(fetchStores());
@@ -115,18 +155,6 @@ const HomePage = ({ navigation }) => {
       >
         <View style={styles.container}>
           <StatusBar backgroundColor={Colors.background} barStyle="dark-content" />
-
-          {/* Header Section */}
-          {/* <HeaderHome
-            title="FLOWRZ" // Dynamic title
-            showCartIcon={true} // Show cart icon
-            showNotificationIcon={true} // Show notification icon
-            showProfileIcon={true} // Show profile icon
-            onCartPress={() => navigation.navigate('CartPage')}
-            onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
-            onProfilePress={() => navigation.navigate('ProfileScreen')}
-            onOcPress={() => navigation.navigate('MyOccasionsScreen')}
-          /> */}
              <HeaderHome 
         userName="User"
         onProfilePress={() => navigation.navigate('ProfileScreen')}
@@ -160,7 +188,26 @@ const HomePage = ({ navigation }) => {
               />
             </View>
           </View>
-
+{/* -- STORIES SECTION START -- */}
+{/* -- STORIES SECTION START -- */}
+<View style={styles.storiesContainer}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {storiesData.map((story) => (
+              <TouchableOpacity
+                key={story.id}
+                style={styles.storyItem}
+                onPress={() => handleStoryPress(story)}
+              >
+                <View style={styles.storyImageContainer}>
+                  <Image source={story.image} style={styles.storyImage} />
+                </View>
+                <Text style={styles.storyText}>{story.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+        {/* -- STORIES SECTION END -- */}
+          {/* -- STORIES SECTION END -- */}
           {/* Banner Section */}
           <View style={styles.bannerContainer}>
             <ScrollView
@@ -309,6 +356,40 @@ const styles = StyleSheet.create({
     color: '#000',
     fontFamily: 'DMSans-Light',
   },
+  storiesContainer: {
+    marginHorizontal: 16,
+    marginTop: 8,
+    marginBottom: 16,
+  },
+  
+  storyItem: {
+    alignItems: 'center',
+    marginRight: 15, // spacing between story circles
+  },
+  
+  storyImageContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+    borderWidth: 2,
+    borderColor: '#F70082', // or any color for the "story ring"
+  },
+  storyImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  storyText: {
+    marginTop: 4,
+    fontSize: 10,
+    color: '#000',
+    fontFamily: 'DMSans-Regular',
+    textAlign: 'center',
+  },
+
   bannerContainer: {
     width: width - 32,
     height: 150,

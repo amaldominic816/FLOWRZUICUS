@@ -47,6 +47,7 @@ import OccasionBannersPage from './screens/Home/OccasionPannerPage';
 import CategoriesPage from './screens/Home/CategoriesPage';
 import StoresPage from './screens/Home/StoresPage';
 import ReferralScreen from './screens/Profile/MyReferalsScreen';
+import StoryViewer from './screens/Home/StoryViewer';
 
 
 
@@ -272,6 +273,11 @@ const AppNavigator = () => (
       component={ReferralScreen}
       options={{ headerShown: false }}
     />
+    <Stack.Screen
+          name="StoryViewer"
+          component={StoryViewer}
+          options={{ headerShown: false }}
+        />
     <Stack.Screen
       name="MyOrdersScreen"
       component={MyOrdersScreen}
