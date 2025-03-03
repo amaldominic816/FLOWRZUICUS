@@ -46,6 +46,7 @@ import { fetchUserDetails } from './screens/redux/slices/userSlice';
 import OccasionBannersPage from './screens/Home/OccasionPannerPage';
 import CategoriesPage from './screens/Home/CategoriesPage';
 import StoresPage from './screens/Home/StoresPage';
+import ReferralScreen from './screens/Profile/MyReferalsScreen';
 
 
 
@@ -264,6 +265,11 @@ const AppNavigator = () => (
     <Stack.Screen
       name="PushNotificationsScreen"
       component={PushNotificationsScreen}
+      options={{ headerShown: false }}
+    />
+     <Stack.Screen
+      name="ReferralScreen"
+      component={ReferralScreen}
       options={{ headerShown: false }}
     />
     <Stack.Screen

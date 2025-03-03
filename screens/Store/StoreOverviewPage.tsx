@@ -40,7 +40,7 @@ const StoreOverviewPage = ({ route, navigation }) => {
   const { products, loading: loadingProducts, error: errorProducts } = useSelector((state) => state.products);
   const { categories, loading: loadingCategories, error: errorCategories } = useSelector((state) => state.categories);
   const { items: cartItems } = useSelector((state) => state.showCart); // Fetching from showCartSlice
-  
+
   const [activeCategory, setActiveCategory] = useState('All');
   const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
   const panY = useRef(new Animated.Value(height)).current;
@@ -104,20 +104,28 @@ const StoreOverviewPage = ({ route, navigation }) => {
   };
 
   const handleAddToCart = async (item) => {
-    const existingItem = cartItems.flatMap(cartItem => cartItem.items).find(cartItem => cartItem.product === item.id);
+    // Check if the item already exists in the cart (adjust lookup if needed)
+    const existingItem = cartItems.find(cartItem => {
+      return (cartItem.product_detail ? cartItem.product_detail.id : cartItem.product.id) === item.id;
+    });
   
     if (existingItem) {
-      dispatch(increaseItemQuantity(existingItem.id)); // Use existing item ID
+      dispatch(increaseItemQuantity(existingItem.id));
     } else {
       const newItem = {
-        product: item.id,
+        product_id: item.id, // Updated payload key as per API requirement
         quantity: 1,
       };
       await dispatch(addItemToCart(newItem));
+      // Refresh the cart data so UI updates in real time
+      dispatch(fetchCartItems());
     }
   
     console.log('Current Cart Items:', cartItems);
   };
+  
+  
+
 
   const handleIncrease = (id) => {
     dispatch(increaseItemQuantity(id));
@@ -134,7 +142,7 @@ const StoreOverviewPage = ({ route, navigation }) => {
       console.warn('cartItems is not an array:', cartItems);
       return false;
     }
-  
+
     // Check if any item in the cart matches the product ID
     return cartItems.some(item => item.product === id);
   };
@@ -201,67 +209,67 @@ const StoreOverviewPage = ({ route, navigation }) => {
         </ScrollView>
 
 
-<FlatList
-  data={filteredProducts}
-  numColumns={2}
-  keyExtractor={(item) => item.id.toString()}
-  renderItem={({ item }) => {
-    const itemInCart = isItemInCart(item.id); // Check if the item is in the cart
+        <FlatList
+          data={filteredProducts}
+          numColumns={2}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => {
+            const itemInCart = isItemInCart(item.id); // Check if the item is in the cart
 
-    // Find the cart item
-    const cartItem = cartItems.find(cartItem => cartItem.product === item.id);
+            // Find the cart item
+            const cartItem = cartItems.find(cartItem => cartItem.product === item.id);
 
-    // Safeguard against undefined cartItem
-    const itemQuantity = itemInCart && cartItem ? cartItem.quantity : 0; // Get the quantity if the item is in the cart
+            // Safeguard against undefined cartItem
+            const itemQuantity = itemInCart && cartItem ? cartItem.quantity : 0; // Get the quantity if the item is in the cart
 
-    const price = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0; // Ensure price is a number
+            const price = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0; // Ensure price is a number
 
-    return (
-      <TouchableOpacity
-        style={styles.productCard}
-        onPress={() => navigation.navigate('ProductOverview', {
-          id: item.id,
-          name: item.title,
-          price: price,
-          image: item.image,
-        })}
-      >
-        <View style={styles.imageContainer}>
-          {/* Wishlist button and product image */}
-          <TouchableOpacity style={styles.wishlistButton}>
-            <Image source={require('../../assets/images/favourite.png')} style={styles.wishlistIcon} />
-          </TouchableOpacity>
-          <Image source={{ uri: item.image }} style={styles.productImage} />
-        </View>
+            return (
+              <TouchableOpacity
+                style={styles.productCard}
+                onPress={() => navigation.navigate('ProductOverview', {
+                  id: item.id,
+                  name: item.title,
+                  price: price,
+                  image: item.image,
+                })}
+              >
+                <View style={styles.imageContainer}>
+                  {/* Wishlist button and product image */}
+                  <TouchableOpacity style={styles.wishlistButton}>
+                    <Image source={require('../../assets/images/favourite.png')} style={styles.wishlistIcon} />
+                  </TouchableOpacity>
+                  <Image source={{ uri: item.image }} style={styles.productImage} />
+                </View>
 
-        <View style={styles.productInfo}>
-          <Text style={styles.productName}>{item.title}</Text>
-          <Text style={styles.productPrice}>AED {price.toFixed(2)}</Text>
-        </View>
+                <View style={styles.productInfo}>
+                  <Text style={styles.productName}>{item.title}</Text>
+                  <Text style={styles.productPrice}>AED {price.toFixed(2)}</Text>
+                </View>
 
-        {/* Conditional Rendering */}
-        {itemInCart ? (
-          // Quantity Controls
-          <View style={styles.quantityControls}>
-            <TouchableOpacity onPress={() => handleDecrease(cartItem.id)} style={styles.quantityButton}>
-              <Text style={styles.quantityText}>-</Text>
-            </TouchableOpacity>
-            <Text style={styles.quantity}>{itemQuantity}</Text>
-            <TouchableOpacity onPress={() => handleIncrease(cartItem.id)} style={styles.quantityButton}>
-              <Text style={styles.quantityText}>+</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          // Plus Button
-          <TouchableOpacity style={styles.plusButton} onPress={() => handleAddToCart(item)}>
-            <Text style={styles.plusIcon}>+</Text>
-          </TouchableOpacity>
-        )}
-      </TouchableOpacity>
-    );
-  }}
-  contentContainerStyle={styles.flatListContent}
-/>
+                {/* Conditional Rendering */}
+                {itemInCart ? (
+                  // Quantity Controls
+                  <View style={styles.quantityControls}>
+                    <TouchableOpacity onPress={() => handleDecrease(cartItem.id)} style={styles.quantityButton}>
+                      <Text style={styles.quantityText}>-</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.quantity}>{itemQuantity}</Text>
+                    <TouchableOpacity onPress={() => handleIncrease(cartItem.id)} style={styles.quantityButton}>
+                      <Text style={styles.quantityText}>+</Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  // Plus Button
+                  <TouchableOpacity style={styles.plusButton} onPress={() => handleAddToCart(item)}>
+                    <Text style={styles.plusIcon}>+</Text>
+                  </TouchableOpacity>
+                )}
+              </TouchableOpacity>
+            );
+          }}
+          contentContainerStyle={styles.flatListContent}
+        />
       </ScrollView>
 
       <View style={styles.floatingButtonContainer}>
@@ -384,7 +392,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   loadingText: {
-    fontSize: 20, 
+    fontSize: 20,
     textAlign: 'center',
     marginTop: 20,
   },

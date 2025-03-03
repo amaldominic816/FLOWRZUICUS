@@ -23,8 +23,10 @@ export const addItemToCart = createAsyncThunk('cart/addItem', async (item) => {
     },
   );
 
-  return response.data; // Ensure this returns { product: { id: ... }, quantity: 1 }
+  console.log("API add item response:", response.data);
+  return response.data;
 });
+
 
 // Define async thunks for increasing and decreasing quantity
 export const increaseItemQuantity = createAsyncThunk(

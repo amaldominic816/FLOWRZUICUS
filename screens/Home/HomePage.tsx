@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchStores } from '../redux/slices/storesSlice';
 import { fetchOccasionBanners } from '../redux/slices/occasionsSlice';
 import { fetchCategories } from '../redux/slices/categoriesSlice'; // Import the fetchCategories action
+import HeaderHome from '../components/HeaderHome';
 
 const HomePage = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -116,7 +117,7 @@ const HomePage = ({ navigation }) => {
           <StatusBar backgroundColor={Colors.background} barStyle="dark-content" />
 
           {/* Header Section */}
-          <Header
+          {/* <HeaderHome
             title="FLOWRZ" // Dynamic title
             showCartIcon={true} // Show cart icon
             showNotificationIcon={true} // Show notification icon
@@ -125,7 +126,14 @@ const HomePage = ({ navigation }) => {
             onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
             onProfilePress={() => navigation.navigate('ProfileScreen')}
             onOcPress={() => navigation.navigate('MyOccasionsScreen')}
-          />
+          /> */}
+             <HeaderHome 
+        userName="User"
+        onProfilePress={() => navigation.navigate('ProfileScreen')}
+        onCalendarPress={() => navigation.navigate('MyOccasionsScreen')}
+        onCartPress={() => navigation.navigate('CartPage')}
+        onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
+      />
           {/* Search Bar and Filter */}
           <View style={styles.searchSection}>
             <View style={styles.searchBar}>
@@ -166,25 +174,7 @@ const HomePage = ({ navigation }) => {
             </ScrollView>
           </View>
           {/* Categories Section */}
-         {/* Categories Section */}
-<View style={styles.categoriesContainer}>
-  <View style={styles.categoriesHeader}>
-    <Text style={styles.categoriesTitle}>Categories</Text>
-    <TouchableOpacity onPress={() => navigation.navigate('CategoriesPage')}>
-      <Text style={styles.categoriesSeeAll}>See all</Text>
-    </TouchableOpacity>
-  </View>
-  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScrollView}>
-    {categories.map((item) => (
-      <View key={item.id} style={styles.categoryCard}>
-        <View style={styles.categoryImageContainer}>
-          <Image source={{ uri: item.imageUrl }} style={styles.categoryImage} />
-        </View>
-        <Text style={styles.categoryInnerText}>{item.title}</Text> {/* Display category title */}
-      </View>
-    ))}
-  </ScrollView>
-</View>
+        
           {/* Occasions Section */}
           <View style={styles.categoriesContainer}>
             <View style={styles.categoriesHeader}>
@@ -209,7 +199,25 @@ const HomePage = ({ navigation }) => {
             </ScrollView>
           </View>
 
-
+ {/* Categories Section */}
+ <View style={styles.categoriesContainer}>
+  <View style={styles.categoriesHeader}>
+    <Text style={styles.categoriesTitle}>Categories</Text>
+    <TouchableOpacity onPress={() => navigation.navigate('CategoriesPage')}>
+      <Text style={styles.categoriesSeeAll}>See all</Text>
+    </TouchableOpacity>
+  </View>
+  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScrollView}>
+    {categories.map((item) => (
+      <View key={item.id} style={styles.categoryCard}>
+        <View style={styles.categoryImageContainer}>
+          <Image source={{ uri: item.imageUrl }} style={styles.categoryImage} />
+        </View>
+        <Text style={styles.categoryInnerText}>{item.title}</Text> {/* Display category title */}
+      </View>
+    ))}
+  </ScrollView>
+</View>
 
           {/* Popular Stores Section */}
           <View style={styles.popularStoresContainer}>

@@ -16,14 +16,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import Colors from '../components/Colors';
 import { logout } from '../redux/slices/authSlice';
 import ButtonOutlined from '../components/ButtonOutlined';
-const { width } = Dimensions.get('window');
+import ButtonPrimary from '../components/ButtonPrimary';
 
+const { width } = Dimensions.get('window');
 
 const ProfileScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-
-
 
   // Select your state values
   const user = useSelector((state) => state.user.user);
@@ -37,46 +36,42 @@ const ProfileScreen = () => {
   if (status === 'failed') {
     return <Text>Error: {error}</Text>; // Handle error state
   }
+
   const userData = user && user.results ? user.results[0] : null;
 
   // Debugging log
   console.log("User Details:", user);
-
-
-
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         {/* Top Bar */}
         <Header
-          title="Profile" // Dynamic title
-          showCartIcon={true} // Show cart icon
-          showNotificationIcon={true} // Show notification icon
-          showProfileIcon={false} // Show profile icon
+          title="Profile"
+          showCartIcon={true}
+          showNotificationIcon={true}
+          showProfileIcon={false}
           onCartPress={() => navigation.navigate('CartPage')}
           onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
           onProfilePress={() => navigation.navigate('ProfileScreen')}
         />
+        
+      
+        {/* Profile Section */}
         <View style={styles.profileSection}>
           <Image
-            source={require('../../assets/images/profile-picture.png')} // Replace with dynamic image source
+            source={require('../../assets/images/profile-picture.png')} 
             style={styles.profileImage}
           />
-
-          {/* Fixed the lowercase 'view' to uppercase 'View' */}
           <View style={styles.profileInfo}>
-
             <>
               <Text style={styles.profileName}>{userData?.username}</Text>
               <Text style={styles.profileEmail}>{userData?.email}</Text>
             </>
-
           </View>
-
           <TouchableOpacity
             style={styles.editButton}
-            onPress={() => navigation.navigate('EditProfileScreen')} // Navigate to the profile edit screen
+            onPress={() => navigation.navigate('EditProfileScreen')}
           >
             <Image
               source={require('../../assets/images/ed.png')}
@@ -84,22 +79,41 @@ const ProfileScreen = () => {
             />
           </TouchableOpacity>
         </View>
+  {/* Refer & Earn Section */}
+  <View style={styles.referEarnContainer}>
+          <Image
+            source={require('../../assets/images/referal.png')} // Use an appropriate icon for the gift
+            style={styles.referEarnIcon}
+          />
+          <View style={styles.referEarnTextContainer}>
+            <Text style={styles.referEarnTitle}>Refer & Earn</Text>
+            <Text style={styles.referEarnDescription}>Get 70% off </Text>
+          </View>
+          <ButtonPrimary
+          buttonText="Refer Now"
+          onPress={()=>navigation.navigate('ReferralScreen')}
+          buttonWidth={Dimensions.get('window').width * 0.2}
+          buttonHeight={35}
+          fontSize={13}
+          gradientColors={[Colors.Gradient1, Colors.Gradient2]}
+        />
+        </View>
+
         {/* Account Settings */}
         <View style={styles.accountSettings}>
           <Text style={styles.accountSettingsTitle}>Account Setting</Text>
-
           {/* Account Options */}
           <View style={styles.settingsContainer}>
             {[
               {
                 title: 'My Order',
                 icon: require('../../assets/images/van.png'),
-                navigateTo: 'MyOrdersScreen', // Page to navigate
+                navigateTo: 'MyOrdersScreen', 
               },
               {
                 title: 'My Favorites',
                 icon: require('../../assets/images/myfav.png'),
-                navigateTo: 'MyOrdersScreen', // Page to navigate
+                navigateTo: 'MyFavoritesScreen', // Changed to the correct screen
               },
               {
                 title: 'Invoices',
@@ -158,18 +172,19 @@ const ProfileScreen = () => {
               </TouchableOpacity>
             ))}
           </View>
+
           <View style={styles.logcontainer}>
-      <ButtonOutlined
-        textColor='#000'
-        borderColor='#CACACAFF'
-        buttonWidth={Dimensions.get('window').width * 0.8}
-        buttonText='Logout'
-        onPress={() => {
-          dispatch(logout()); // Dispatch the logout action
-          navigation.navigate('LoginPage'); // Navigate back to the login screen after logout
-        }}
-      />
-    </View>
+            <ButtonOutlined
+              textColor='#000'
+              borderColor='#CACACAFF'
+              buttonWidth={Dimensions.get('window').width * 0.8}
+              buttonText='Logout'
+              onPress={() => {
+                dispatch(logout());
+                navigation.navigate('LoginPage');
+              }}
+            />
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -180,11 +195,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
-  },
-  logcontainer: {
-    padding: 20, // Adjust the padding as needed
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   scrollViewContent: {
     paddingBottom: 20,
@@ -282,7 +292,43 @@ const styles = StyleSheet.create({
     tintColor: '#333',
     resizeMode: 'contain',
   },
+  referEarnContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#F9E1E1',
+    padding: 15,
+    borderRadius: 10,
+    margin: 10,
+  },
+  referEarnIcon: {
+    width: 40,
+    height: 40,
+    marginRight: 10,
+  },
+  referEarnTextContainer: {
+    flex: 1,
+  },
+  referEarnTitle: {
+    fontSize: 16,
+     fontFamily:'DMSans-Bold',
+    color: '#333',
+  },
+  referEarnDescription: {
+    fontSize: 14,
+    color: '#666',
+    fontFamily:'DMSans-Regular'
+  },
+  referEarnButton: {
+    backgroundColor: '#FF6B6B',
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+  },
+  buttonText: {
+    color: '#FFF',
+    fontWeight: 'bold',
+  },
 });
 
 export default ProfileScreen;
-``
