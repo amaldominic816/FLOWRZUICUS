@@ -1,12 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, Platform, StatusBar } from 'react-native';
 import Colors from './Colors';
-
 import CalenderIcon from '../../assets/images/reminder-icon.svg'; // Replace with your SVG path
 
 const HeaderHome = ({ 
   profileImage = require('../../assets/images/profile-picture.png'), // Default profile image
-  userName = 'Sultan', // Default user name
+  userName = 'User', // Default user name
   onProfilePress, // Function to handle profile icon press
   onCartPress,
   onNotificationPress,
@@ -20,6 +19,15 @@ const HeaderHome = ({
     return 0; // iOS default
   };
 
+  // Compute dynamic greeting based on current time
+  const currentHour = new Date().getHours();
+  let timeGreeting = 'Good Morning';
+  if (currentHour >= 12 && currentHour < 18) {
+    timeGreeting = 'Good Afternoon';
+  } else if (currentHour >= 18) {
+    timeGreeting = 'Good Evening';
+  }
+
   return (
     <View style={[styles.header, { paddingTop: getHeaderPaddingTop() }]}>
       {/* Left Side: Profile Image and Greeting */}
@@ -29,7 +37,7 @@ const HeaderHome = ({
         </TouchableOpacity>
         <View>
           <Text style={styles.greeting}>Hi, {userName} 👋</Text>
-          <Text style={styles.subText}>Good Morning</Text>
+          <Text style={styles.subText}>{timeGreeting}</Text>
         </View>
       </View>
       

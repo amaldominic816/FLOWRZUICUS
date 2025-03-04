@@ -6,7 +6,7 @@ export const fetchCartItems = createAsyncThunk('showCart/fetchCartItems', async 
   const username = await AsyncStorage.getItem('username'); // Adjust the key if needed
   const password = await AsyncStorage.getItem('password'); // Adjust the key if needed
 
-  const response = await axios.get('http://192.168.0.102:8000/api/cart/', {
+  const response = await axios.get('http://192.168.0.100:8000/api/cart/', {
     auth: {
       username,
       password,

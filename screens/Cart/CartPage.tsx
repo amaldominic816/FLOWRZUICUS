@@ -118,7 +118,7 @@ const CartPage = ({navigation}) => {
 
         <ButtonPrimary
           buttonText="Continue"
-          onPress={() => { /* Handle checkout navigation */ }}
+          onPress={() => navigation.navigate('CheckoutPage')}
           buttonWidth={Dimensions.get('window').width * 0.9}
           buttonHeight={50}
           fontSize={20}

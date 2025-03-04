@@ -7,12 +7,12 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
-  Button,
   Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Header from '../../screens/components/Header';
 import { useDispatch, useSelector } from 'react-redux';
+import Snackbar from 'react-native-snackbar';  // <-- Add this import
+import Header from '../../screens/components/Header';
 import Colors from '../components/Colors';
 import { logout } from '../redux/slices/authSlice';
 import ButtonOutlined from '../components/ButtonOutlined';
@@ -29,18 +29,30 @@ const ProfileScreen = () => {
   const status = useSelector((state) => state.user.status);
   const error = useSelector((state) => state.user.error);
 
+  // Show snackbar if there's an error
+  useEffect(() => {
+    if (status === 'failed' && error) {
+      Snackbar.show({
+        text: error || 'Something went wrong.',
+        duration: Snackbar.LENGTH_LONG,
+        backgroundColor: 'red',   // Customize as needed
+        textColor: '#fff',        // Customize as needed
+      });
+    }
+  }, [status, error]);
+
+  // You can still show a loading indicator if desired:
   if (status === 'loading') {
-    return <Text>Loading...</Text>; // Show loading state
+    return <Text>Loading...</Text>; 
   }
 
-  if (status === 'failed') {
-    return <Text>Error: {error}</Text>; // Handle error state
-  }
+  // Remove the block that returns an error component:
+  // if (status === 'failed') {
+  //   return <Text>Error: {error}</Text>;
+  // }
 
   const userData = user && user.results ? user.results[0] : null;
 
-  // Debugging log
-  console.log("User Details:", user);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -55,19 +67,16 @@ const ProfileScreen = () => {
           onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
           onProfilePress={() => navigation.navigate('ProfileScreen')}
         />
-        
-      
+
         {/* Profile Section */}
         <View style={styles.profileSection}>
           <Image
-            source={require('../../assets/images/profile-picture.png')} 
+            source={require('../../assets/images/profile-picture.png')}
             style={styles.profileImage}
           />
           <View style={styles.profileInfo}>
-            <>
-              <Text style={styles.profileName}>{userData?.username}</Text>
-              <Text style={styles.profileEmail}>{userData?.email}</Text>
-            </>
+            <Text style={styles.profileName}>{userData?.username}</Text>
+            <Text style={styles.profileEmail}>{userData?.email}</Text>
           </View>
           <TouchableOpacity
             style={styles.editButton}
@@ -79,10 +88,11 @@ const ProfileScreen = () => {
             />
           </TouchableOpacity>
         </View>
-  {/* Refer & Earn Section */}
-  <View style={styles.referEarnContainer}>
+
+        {/* Refer & Earn Section */}
+        <View style={styles.referEarnContainer}>
           <Image
-            source={require('../../assets/images/referal.png')} // Use an appropriate icon for the gift
+            source={require('../../assets/images/referal.png')}
             style={styles.referEarnIcon}
           />
           <View style={styles.referEarnTextContainer}>
@@ -90,30 +100,29 @@ const ProfileScreen = () => {
             <Text style={styles.referEarnDescription}>Get 70% off </Text>
           </View>
           <ButtonPrimary
-          buttonText="Refer Now"
-          onPress={()=>navigation.navigate('ReferralScreen')}
-          buttonWidth={Dimensions.get('window').width * 0.2}
-          buttonHeight={35}
-          fontSize={13}
-          gradientColors={[Colors.Gradient1, Colors.Gradient2]}
-        />
+            buttonText="Refer Now"
+            onPress={() => navigation.navigate('ReferralScreen')}
+            buttonWidth={Dimensions.get('window').width * 0.2}
+            buttonHeight={35}
+            fontSize={13}
+            gradientColors={[Colors.Gradient1, Colors.Gradient2]}
+          />
         </View>
 
         {/* Account Settings */}
         <View style={styles.accountSettings}>
           <Text style={styles.accountSettingsTitle}>Account Setting</Text>
-          {/* Account Options */}
           <View style={styles.settingsContainer}>
             {[
               {
                 title: 'My Order',
                 icon: require('../../assets/images/van.png'),
-                navigateTo: 'MyOrdersScreen', 
+                navigateTo: 'MyOrdersScreen',
               },
               {
                 title: 'My Favorites',
                 icon: require('../../assets/images/myfav.png'),
-                navigateTo: 'MyFavoritesScreen', // Changed to the correct screen
+                navigateTo: 'MyFavoritesScreen',
               },
               {
                 title: 'Invoices',
@@ -175,10 +184,10 @@ const ProfileScreen = () => {
 
           <View style={styles.logcontainer}>
             <ButtonOutlined
-              textColor='#000'
-              borderColor='#CACACAFF'
+              textColor="#000"
+              borderColor="#CACACAFF"
               buttonWidth={Dimensions.get('window').width * 0.8}
-              buttonText='Logout'
+              buttonText="Logout"
               onPress={() => {
                 dispatch(logout());
                 navigation.navigate('LoginPage');
@@ -205,6 +214,9 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: Colors.background,
     marginBottom: 10,
+  },
+  logcontainer: {
+    alignItems: 'center',
   },
   profileImage: {
     width: 80,

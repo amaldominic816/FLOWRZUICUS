@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,33 +7,37 @@ import {
   FlatList,
   StyleSheet,
 } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
 import HeaderInner from '../../screens/components/Headerinner';
 import Colors from '../components/Colors';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchOrders } from '../redux/slices/ordersSlice';
+import Loader from '../components/Loader';
 
+const MyOrdersScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
 
-const orders = [
-  {
-    id: '1',
-    orderNumber: '101245847',
-    deliveryDate: '02/01/2025',
-    status: 'Received',
-    image: require('../../assets/images/flower.png'),
-  },
-];
+  // Select orders data from Redux
+  const { orders, status, error } = useSelector((state) => state.orders);
 
-const MyOrdersScreen = ({navigation}) => {
+  // Fetch orders on component mount
+  useEffect(() => {
+    dispatch(fetchOrders());
+  }, [dispatch]);
+
+  // Render each order card
   const renderItem = ({ item }) => (
     <View style={styles.orderCard}>
       {/* Top Section: Image + Details + Badge */}
       <View style={styles.topSection}>
         {/* Left Image */}
-        <Image source={item.image} style={styles.orderImage} />
+        <Image source={require('../../assets/images/flower.png')} style={styles.orderImage} />
 
         {/* Middle Details */}
         <View style={styles.orderDetails}>
-          <Text style={styles.orderNumber}>Order No: {item.orderNumber}</Text>
-          <Text style={styles.deliveryDate}>Deliver on: {item.deliveryDate}</Text>
+          <Text style={styles.orderNumber}>Order No: {item.order_number}</Text>
+          <Text style={styles.deliveryDate}>
+            Deliver on: {item.expected_delivery ? item.expected_delivery : 'TBD'}
+          </Text>
         </View>
 
         {/* Right Status Badge */}
@@ -44,7 +48,7 @@ const MyOrdersScreen = ({navigation}) => {
               style={styles.statusIcon}
             />
           </View>
-          <Text style={styles.statusText}>{item.status}</Text>
+          <Text style={styles.statusText}>{item.status_display}</Text>
         </View>
       </View>
 
@@ -57,7 +61,7 @@ const MyOrdersScreen = ({navigation}) => {
           />
           <Text style={styles.rateText}>Rate Order</Text>
         </TouchableOpacity>
-        {item.status === 'Received' && (
+        {item.status_display.toLowerCase() === 'received' && (
           <TouchableOpacity style={styles.messageButton}>
             <Image
               source={require('../../assets/images/view-msg.png')}
@@ -70,23 +74,38 @@ const MyOrdersScreen = ({navigation}) => {
     </View>
   );
 
+  // Show loading state
+  if (status === 'loading') {
+    return (
+     <Loader/>
+    );
+  }
+
+  // Show error state
+  if (status === 'failed') {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>Error fetching orders: {error}</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-   <HeaderInner
+      <HeaderInner
         title="My Orders"
         showBackButton={true}
         showNotificationIcon={true}
         showCartIcon={true}
         onBackPress={() => navigation.goBack()}
         onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
-        onCartPress={()=>navigation.navigate('CartPage')}
+        onCartPress={() => navigation.navigate('CartPage')}
       />
-
       {/* Orders List */}
       <FlatList
         data={orders}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.listContainer}
       />
     </View>
@@ -96,10 +115,8 @@ const MyOrdersScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:Colors.background,
+    backgroundColor: Colors.background,
   },
-
-
   listContainer: {
     padding: 10,
   },
@@ -128,15 +145,14 @@ const styles = StyleSheet.create({
   },
   orderNumber: {
     fontSize: 12,
-    fontFamily:'DMSans-Bold',
-
+    fontFamily: 'DMSans-Bold',
     color: '#333',
   },
   deliveryDate: {
     fontSize: 10,
     color: '#666',
     marginTop: 5,
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   statusBadge: {
     alignItems: 'center',
@@ -156,7 +172,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 12,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
     color: '#F25485',
     textAlign: 'center',
   },
@@ -172,7 +188,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
     flex: 1,
-    marginRight: 10,
+    marginRight: 0,
   },
   messageButton: {
     flexDirection: 'row',
@@ -185,13 +201,13 @@ const styles = StyleSheet.create({
   },
   rateText: {
     fontSize: 12,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
     color: '#F25485',
     marginLeft: 5,
   },
   messageText: {
     fontSize: 12,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
     color: '#F25485',
     marginLeft: 5,
   },
@@ -199,6 +215,24 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     resizeMode: 'contain',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    fontSize: 16,
+    color: 'red',
   },
 });
 

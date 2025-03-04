@@ -10,7 +10,6 @@ import {
   StatusBar,
   Dimensions,
   ScrollView,
-  ImageBackground,
   RefreshControl
 } from 'react-native';
 import { SafeAreaView } from 'react-native';
@@ -19,7 +18,8 @@ import Colors from '../components/Colors';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchStores } from '../redux/slices/storesSlice';
 import { fetchOccasionBanners } from '../redux/slices/occasionsSlice';
-import { fetchCategories } from '../redux/slices/categoriesSlice'; // Import the fetchCategories action
+import { fetchCategories } from '../redux/slices/categoriesSlice';
+import { fetchUserDetails } from '../redux/slices/userSlice';
 import HeaderHome from '../components/HeaderHome';
 
 const HomePage = ({ navigation }) => {
@@ -29,11 +29,15 @@ const HomePage = ({ navigation }) => {
   // Selecting states from the stores slice
   const { stores, loading: loadingStores, error: errorStores } = useSelector((state) => state.stores);
 
+  // Selecting user state from the user slice
+  const { user, status: userStatus, error: errorUsers } = useSelector((state) => state.user);
+
   // Selecting states from the occasion slice
   const { banners, loading: loadingBanners, error: errorBanners } = useSelector((state) => state.occasion);
 
   // Selecting categories from the categories slice
   const { categories, loading: loadingCategories, error: errorCategories } = useSelector((state) => state.categories);
+
   const storiesData = [
     {
       id: '1',
@@ -72,19 +76,23 @@ const HomePage = ({ navigation }) => {
       videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
     },
   ];
+
   const handleStoryPress = (story) => {
     navigation.navigate('StoryViewer', { story });
   };
+
   // Load data initially on mount
   useEffect(() => {
     dispatch(fetchStores());
     dispatch(fetchOccasionBanners());
     dispatch(fetchCategories());
+    dispatch(fetchUserDetails());
   }, [dispatch]);
 
   // Combine loading states for better user experience
-  const loading = loadingStores || loadingBanners || loadingCategories;
-  const error = errorStores || errorBanners || errorCategories;
+  const loading =
+    loadingStores || loadingBanners || loadingCategories || userStatus === 'loading';
+  const error = errorStores || errorBanners || errorCategories || errorUsers;
 
   // Handler for pull-to-refresh
   const onRefresh = async () => {
@@ -92,7 +100,8 @@ const HomePage = ({ navigation }) => {
     await Promise.all([
       dispatch(fetchStores()),
       dispatch(fetchOccasionBanners()),
-      dispatch(fetchCategories())
+      dispatch(fetchCategories()),
+      dispatch(fetchUserDetails()),
     ]);
     setRefreshing(false);
   };
@@ -109,7 +118,7 @@ const HomePage = ({ navigation }) => {
     <View key={item.id} style={styles.categoryCard}>
       <View style={styles.categoryImageContainer}>
         <Image source={{ uri: item.imageUrl }} style={styles.categoryImage} />
-        <Text style={styles.categoryInnerText}>{item.title}</Text> {/* Display category title */}
+        <Text style={styles.categoryInnerText}>{item.title}</Text>
       </View>
     </View>
   );
@@ -124,13 +133,14 @@ const HomePage = ({ navigation }) => {
       style={styles.popularStoreCardSingle}
       onPress={() =>
         navigation.navigate('StoreOverviewPage', {
-          storeId: item.id, // Pass store ID
+          storeId: item.id,
           storeName: item.business_name,
           storeLocation: item.address,
           storeImage: item.logo,
           storeRating: item.rating,
         })
-      }>
+      }
+    >
       <Image source={{ uri: item.logo }} style={styles.popularStoreImageSingle} />
       <View style={styles.popularStoreInfoSingle}>
         <Text style={styles.popularStoreNameSingle}>{item.business_name}</Text>
@@ -146,22 +156,23 @@ const HomePage = ({ navigation }) => {
     </TouchableOpacity>
   );
 
+  const userName =
+    user && user.results && user.results.length > 0 ? user.results[0].username : '';
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <View style={styles.container}>
           <StatusBar backgroundColor={Colors.background} barStyle="dark-content" />
-             <HeaderHome 
-        userName="User"
-        onProfilePress={() => navigation.navigate('ProfileScreen')}
-        onCalendarPress={() => navigation.navigate('MyOccasionsScreen')}
-        onCartPress={() => navigation.navigate('CartPage')}
-        onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
-      />
+          <HeaderHome 
+            userName={userName}
+            onProfilePress={() => navigation.navigate('ProfileScreen')}
+            onCalendarPress={() => navigation.navigate('MyOccasionsScreen')}
+            onCartPress={() => navigation.navigate('CartPage')}
+            onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
+          />
           {/* Search Bar and Filter */}
           <View style={styles.searchSection}>
             <View style={styles.searchBar}>
@@ -174,9 +185,9 @@ const HomePage = ({ navigation }) => {
                 placeholder="Search your flower"
                 placeholderTextColor={Colors.placeholder}
                 onSubmitEditing={(event) => {
-                  const searchQuery = event.nativeEvent.text; // Get the search input value
+                  const searchQuery = event.nativeEvent.text;
                   if (searchQuery.trim().length > 0) {
-                    navigation.navigate('SearchProducts', { query: searchQuery }); // Navigate to SearchProducts
+                    navigation.navigate('SearchProducts', { query: searchQuery });
                   }
                 }}
               />
@@ -188,40 +199,31 @@ const HomePage = ({ navigation }) => {
               />
             </View>
           </View>
-{/* -- STORIES SECTION START -- */}
-{/* -- STORIES SECTION START -- */}
-<View style={styles.storiesContainer}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {storiesData.map((story) => (
-              <TouchableOpacity
-                key={story.id}
-                style={styles.storyItem}
-                onPress={() => handleStoryPress(story)}
-              >
-                <View style={styles.storyImageContainer}>
-                  <Image source={story.image} style={styles.storyImage} />
-                </View>
-                <Text style={styles.storyText}>{story.label}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-        {/* -- STORIES SECTION END -- */}
-          {/* -- STORIES SECTION END -- */}
+          {/* STORIES SECTION */}
+          <View style={styles.storiesContainer}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {storiesData.map((story) => (
+                <TouchableOpacity
+                  key={story.id}
+                  style={styles.storyItem}
+                  onPress={() => handleStoryPress(story)}
+                >
+                  <View style={styles.storyImageContainer}>
+                    <Image source={story.image} style={styles.storyImage} />
+                  </View>
+                  <Text style={styles.storyText}>{story.label}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
           {/* Banner Section */}
           <View style={styles.bannerContainer}>
-            <ScrollView
-              horizontal
-              pagingEnabled
-              showsHorizontalScrollIndicator={false}
-            >
+            <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
               {ocbanners.map((banner) => (
                 <Image key={banner.id} source={banner.image} style={styles.banner} />
               ))}
             </ScrollView>
           </View>
-          {/* Categories Section */}
-        
           {/* Occasions Section */}
           <View style={styles.categoriesContainer}>
             <View style={styles.categoriesHeader}>
@@ -230,11 +232,7 @@ const HomePage = ({ navigation }) => {
                 <Text style={styles.categoriesSeeAll}>See all</Text>
               </TouchableOpacity>
             </View>
-            <ScrollView
-              horizontal
-              pagingEnabled
-              showsHorizontalScrollIndicator={false}
-            >
+            <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
               {banners.map((occasion) => (
                 <View key={occasion.id} style={styles.bannerCard}>
                   <Image source={{ uri: occasion.imageUrl }} style={styles.Occasionbanner} />
@@ -245,27 +243,25 @@ const HomePage = ({ navigation }) => {
               ))}
             </ScrollView>
           </View>
-
- {/* Categories Section */}
- <View style={styles.categoriesContainer}>
-  <View style={styles.categoriesHeader}>
-    <Text style={styles.categoriesTitle}>Categories</Text>
-    <TouchableOpacity onPress={() => navigation.navigate('CategoriesPage')}>
-      <Text style={styles.categoriesSeeAll}>See all</Text>
-    </TouchableOpacity>
-  </View>
-  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScrollView}>
-    {categories.map((item) => (
-      <View key={item.id} style={styles.categoryCard}>
-        <View style={styles.categoryImageContainer}>
-          <Image source={{ uri: item.imageUrl }} style={styles.categoryImage} />
-        </View>
-        <Text style={styles.categoryInnerText}>{item.title}</Text> {/* Display category title */}
-      </View>
-    ))}
-  </ScrollView>
-</View>
-
+          {/* Categories Section */}
+          <View style={styles.categoriesContainer}>
+            <View style={styles.categoriesHeader}>
+              <Text style={styles.categoriesTitle}>Categories</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('CategoriesPage')}>
+                <Text style={styles.categoriesSeeAll}>See all</Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScrollView}>
+              {categories.map((item) => (
+                <View key={item.id} style={styles.categoryCard}>
+                  <View style={styles.categoryImageContainer}>
+                    <Image source={{ uri: item.imageUrl }} style={styles.categoryImage} />
+                  </View>
+                  <Text style={styles.categoryInnerText}>{item.title}</Text>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
           {/* Popular Stores Section */}
           <View style={styles.popularStoresContainer}>
             <View style={styles.popularStoresHeader}>

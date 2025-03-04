@@ -16,7 +16,7 @@ export const addItemToCart = createAsyncThunk('cart/addItem', async (item) => {
   const password = await AsyncStorage.getItem('password');
 
   const response = await axios.post(
-    'http://192.168.0.102:8000/api/cart/add_item/',
+    'http://192.168.0.100:8000/api/cart/add_item/',
     item,
     {
       auth: { username, password },
