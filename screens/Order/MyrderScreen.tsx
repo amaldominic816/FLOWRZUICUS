@@ -24,61 +24,68 @@ const MyOrdersScreen = ({ navigation }) => {
     dispatch(fetchOrders());
   }, [dispatch]);
 
-  // Render each order card
+  // Render each order card with navigation on press
   const renderItem = ({ item }) => (
-    <View style={styles.orderCard}>
-      {/* Top Section: Image + Details + Badge */}
-      <View style={styles.topSection}>
-        {/* Left Image */}
-        <Image source={require('../../assets/images/flower.png')} style={styles.orderImage} />
-
-        {/* Middle Details */}
-        <View style={styles.orderDetails}>
-          <Text style={styles.orderNumber}>Order No: {item.order_number}</Text>
-          <Text style={styles.deliveryDate}>
-            Deliver on: {item.expected_delivery ? item.expected_delivery : 'TBD'}
-          </Text>
-        </View>
-
-        {/* Right Status Badge */}
-        <View style={styles.statusBadge}>
-          <View style={styles.statusCircle}>
-            <Image
-              source={require('../../assets/images/recieved.png')} // Replace with appropriate status icon
-              style={styles.statusIcon}
-            />
-          </View>
-          <Text style={styles.statusText}>{item.status_display}</Text>
-        </View>
-      </View>
-
-      {/* Bottom Section: Buttons */}
-      <View style={styles.actions}>
-        <TouchableOpacity style={styles.rateButton}>
+    <TouchableOpacity 
+      onPress={() => navigation.navigate('OrderDetailpage', { orderId: item.id })}
+    >
+      <View style={styles.orderCard}>
+        {/* Top Section: Image + Details + Badge */}
+        <View style={styles.topSection}>
+          {/* Left Image */}
           <Image
-            source={require('../../assets/images/star.png')}
-            style={styles.actionIcon}
+            source={require('../../assets/images/flower.png')}
+            style={styles.orderImage}
           />
-          <Text style={styles.rateText}>Rate Order</Text>
-        </TouchableOpacity>
-        {item.status_display.toLowerCase() === 'received' && (
-          <TouchableOpacity style={styles.messageButton}>
+
+          {/* Middle Details */}
+          <View style={styles.orderDetails}>
+            <Text style={styles.orderNumber}>
+              Order No: {item.order_number}
+            </Text>
+            <Text style={styles.deliveryDate}>
+              Deliver on: {item.expected_delivery ? item.expected_delivery : 'TBD'}
+            </Text>
+          </View>
+
+          {/* Right Status Badge */}
+          <View style={styles.statusBadge}>
+            <View style={styles.statusCircle}>
+              <Image
+                source={require('../../assets/images/recieved.png')} // Replace with appropriate status icon
+                style={styles.statusIcon}
+              />
+            </View>
+            <Text style={styles.statusText}>{item.status_display}</Text>
+          </View>
+        </View>
+
+        {/* Bottom Section: Buttons */}
+        <View style={styles.actions}>
+          <TouchableOpacity style={styles.rateButton}>
             <Image
-              source={require('../../assets/images/view-msg.png')}
+              source={require('../../assets/images/star.png')}
               style={styles.actionIcon}
             />
-            <Text style={styles.messageText}>View Message</Text>
+            <Text style={styles.rateText}>Rate Order</Text>
           </TouchableOpacity>
-        )}
+          {item.status_display.toLowerCase() === 'received' && (
+            <TouchableOpacity style={styles.messageButton}>
+              <Image
+                source={require('../../assets/images/view-msg.png')}
+                style={styles.actionIcon}
+              />
+              <Text style={styles.messageText}>View Message</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   // Show loading state
   if (status === 'loading') {
-    return (
-     <Loader/>
-    );
+    return <Loader />;
   }
 
   // Show error state
@@ -215,15 +222,6 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     resizeMode: 'contain',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 16,
-    color: '#333',
   },
   errorContainer: {
     flex: 1,

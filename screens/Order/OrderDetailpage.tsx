@@ -1,15 +1,41 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions, } from 'react-native';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  TouchableOpacity, 
+  Image, 
+  ScrollView, 
+  Dimensions 
+} from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import LinearGradient from 'react-native-linear-gradient';
 import HeaderInner from '../../screens/components/Headerinner';
 import ButtonOutlined from '../components/ButtonOutlined';
 import ButtonPrimary from '../components/ButtonPrimary';
 import Colors from '../components/Colors';
+import { useSelector } from 'react-redux';
 
+const OrderDetails = ({ navigation, route }) => {
+  // Get the orderId from route params passed when navigating
+  const { orderId } = route.params;
+  // Retrieve the order details from the orders slice using the orderId
+  const order = useSelector(state =>
+    state.orders.orders.find(o => o.id === orderId)
+  );
 
+  // If order data is not yet available, show a loading indicator
+  if (!order) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>Loading order details...</Text>
+      </View>
+    );
+  }
 
-const OrderDetails = ({ navigation }) => {
+  // For product section, use order.items if available; otherwise show a message.
+  const orderItems =
+    order.items && order.items.length > 0 ? order.items : null;
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <HeaderInner
@@ -30,7 +56,7 @@ const OrderDetails = ({ navigation }) => {
             style={styles.recipientImage}
           />
           <View style={styles.orderDetails}>
-            <Text style={styles.orderNumber}>Order No: 10129036</Text>
+            <Text style={styles.orderNumber}>Order No: {order.order_number}</Text>
             <TouchableOpacity style={styles.copyButton}>
               <Image
                 source={require('../../assets/images/copy.png')}
@@ -43,24 +69,21 @@ const OrderDetails = ({ navigation }) => {
         <ButtonOutlined
           buttonText="Track Order"
           onPress={() => navigation.navigate('OrderTracking')}
-          buttonWidth={Dimensions.get('window').width * 0.8} // 90% of the screen width
-          buttonHeight={50} // Custom height
-          fontSize={15} // Custom font size
-          borderColor="#FF7E5F" // Custom border color
-          textColor="#FF7E5F" // Custom text color
+          buttonWidth={Dimensions.get('window').width * 0.8}
+          buttonHeight={50}
+          fontSize={15}
+          borderColor="#FF7E5F"
+          textColor="#FF7E5F"
         />
 
-
-
-
-
-
-        <Text style={styles.deliveryStatus}>Delivered</Text>
+        <Text style={styles.deliveryStatus}>{order.status_display}</Text>
         <Text style={styles.deliveryMessage}>
-          The recipient has happily received your gift.
+          {order.status.toLowerCase() === 'delivered'
+            ? 'The recipient has happily received your gift.'
+            : 'Your order is on its way.'}
         </Text>
 
-        {/* Steps */}
+        {/* Steps Section */}
         <View style={styles.stepsContainer}>
           {["Received", "Preparing", "Delivering", "Delivered"].map((step, index) => (
             <View key={index} style={styles.step}>
@@ -82,10 +105,10 @@ const OrderDetails = ({ navigation }) => {
         <ButtonPrimary
           buttonText="Need Help ?"
           onPress={() => navigation.navigate('HelpScreen')}
-          buttonWidth={Dimensions.get('window').width * 0.8} // Set width to 80% of the screen width
+          buttonWidth={Dimensions.get('window').width * 0.8}
           buttonHeight={50}
           fontSize={15}
-          gradientColors={['#DE8542', '#FE5993']} // Optional custom gradient
+          gradientColors={['#DE8542', '#FE5993']}
         />
       </View>
 
@@ -99,30 +122,38 @@ const OrderDetails = ({ navigation }) => {
         </View>
         <View style={styles.deliveryTextWrapper}>
           <Text style={styles.deliveryLabel}>Delivery</Text>
-          <Text style={styles.deliveryDate}>07 / 05 / 2024 5:00 PM - 9:00 PM</Text>
+          <Text style={styles.deliveryDate}>
+            {order.expected_delivery ? order.expected_delivery : 'TBD'}
+          </Text>
         </View>
       </View>
 
       {/* Product Section */}
       <View style={styles.productContainer}>
-        <View style={styles.productDetails}>
-          <Image
-            source={require('../../assets/images/flower.png')}
-            style={styles.productImage}
-          />
-          <View style={styles.productInfo}>
-            <Text style={styles.productName}>Pink Tulips</Text>
-            <Text style={styles.productQty}>Qty: 2</Text>
-          </View>
-          <Text style={styles.productPrice}>AED 209.52</Text>
-        </View>
+        {orderItems ? (
+          orderItems.map((item, index) => (
+            <View key={index} style={styles.productDetails}>
+              <Image
+                source={{ uri: item.product_details.image_url || item.product_details.image }}
+                style={styles.productImage}
+              />
+              <View style={styles.productInfo}>
+                <Text style={styles.productName}>{item.product_details.title}</Text>
+                <Text style={styles.productQty}>Qty: {item.quantity}</Text>
+              </View>
+              <Text style={styles.productPrice}>AED {item.total_price}</Text>
+            </View>
+          ))
+        ) : (
+          <Text style={styles.noItemsText}>No items in this order.</Text>
+        )}
       </View>
 
       {/* Payment Details Section */}
       <View style={styles.paymentContainer}>
         <View style={styles.paymentRow}>
           <Text style={styles.paymentLabel}>Subtotal</Text>
-          <Text style={styles.paymentValue}>AED 220.00</Text>
+          <Text style={styles.paymentValue}>AED {order.total_amount}</Text>
         </View>
         <View style={styles.paymentRow}>
           <Text style={styles.paymentLabel}>Delivery charges</Text>
@@ -142,7 +173,6 @@ const OrderDetails = ({ navigation }) => {
       </View>
     </ScrollView>
   );
-
 };
 
 const styles = StyleSheet.create({
@@ -151,12 +181,21 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   contentContainer: {
-    paddingBottom: 20, // Add some padding for better spacing at the bottom
+    paddingBottom: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 16,
+    color: '#333',
   },
   copyIcon: {
-    width: 75, // Adjust the size as needed
+    width: 75,
     height: 75,
-    marginTop: 4, // Aligns with the order number text
+    marginTop: 4,
     resizeMode: 'contain',
   },
   orderDetails: {
@@ -164,21 +203,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   copyButton: {
-    marginLeft: 0, // Space between the text and the icon
+    marginLeft: 0,
   },
-  iconButtonn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 4,
-  },
-  iconImage: { width: 24, height: 24 },
   headerTitle: {
     fontSize: 18,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
     color: '#000',
   },
   deliveryContainer: {
@@ -206,7 +235,7 @@ const styles = StyleSheet.create({
   deliveryIcon: {
     width: 30,
     height: 30,
-    resizeMode: 'contain', // Ensures the image fits well
+    resizeMode: 'contain',
   },
   deliveryTextWrapper: {
     flex: 1,
@@ -215,16 +244,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#7E7E7E',
     marginBottom: 4,
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   deliveryDate: {
     fontSize: 16,
     fontWeight: '600',
     color: '#000',
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
-
-
   orderContainer: {
     margin: 16,
     backgroundColor: Colors.secondary,
@@ -250,16 +277,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#000',
-    fontFamily:'DMSans-Regular',
-  },
-  copyText: {
-    fontSize: 12,
-    color: '#FF8A80',
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   deliveryStatus: {
     fontSize: 16,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
     marginTop: 8,
   },
   deliveryMessage: {
@@ -288,10 +310,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
     color: '#7E7E7E',
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
-
-
   productContainer: {
     backgroundColor: Colors.secondary,
     borderRadius: 10,
@@ -318,20 +338,25 @@ const styles = StyleSheet.create({
   },
   productName: {
     fontSize: 16,
-
     color: '#000',
-    fontFamily:'DMSans-SemiBold',
+    fontFamily: 'DMSans-SemiBold',
   },
   productQty: {
     fontSize: 14,
     color: '#7E7E7E',
     marginTop: 4,
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   productPrice: {
     fontSize: 16,
-    fontFamily:'DMSans-SemiBold',
+    fontFamily: 'DMSans-SemiBold',
     color: '#000',
+  },
+  noItemsText: {
+    textAlign: 'center',
+    fontSize: 14,
+    color: '#7E7E7E',
+    fontFamily: 'DMSans-Regular',
   },
   paymentContainer: {
     backgroundColor: Colors.secondary,
@@ -352,11 +377,11 @@ const styles = StyleSheet.create({
   paymentLabel: {
     fontSize: 14,
     color: '#7E7E7E',
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
   paymentValue: {
     fontSize: 14,
-    fontFamily:'DMSans-SemiBold',
+    fontFamily: 'DMSans-SemiBold',
     color: '#000',
   },
   paymentNote: {
@@ -364,7 +389,7 @@ const styles = StyleSheet.create({
     color: '#7E7E7E',
     marginTop: 8,
     marginBottom: 16,
-    fontFamily:'DMSans-Regular',
+    fontFamily: 'DMSans-Regular',
   },
 });
 

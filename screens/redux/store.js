@@ -9,6 +9,9 @@ import occasionReducer from './slices/occasionsSlice';
 import cartReducer from './slices/cartSlice';
 import showCartReducer from './slices/showCartSlice'; // Import the renamed reducer
 import orderReducer from './slices/ordersSlice';
+import searchReducer from './slices/searchSlice';
+import createorderReducer from './slices/createorderSlice';
+
 
 
 
@@ -24,5 +27,7 @@ export const store = configureStore({
     cart: cartReducer,
     showCart: showCartReducer,
     orders:orderReducer,
+    createOrder:createorderReducer,
+    search: searchReducer,
   },
 });

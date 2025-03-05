@@ -21,6 +21,7 @@ import { fetchOccasionBanners } from '../redux/slices/occasionsSlice';
 import { fetchCategories } from '../redux/slices/categoriesSlice';
 import { fetchUserDetails } from '../redux/slices/userSlice';
 import HeaderHome from '../components/HeaderHome';
+import Loader from '../components/Loader';
 
 const HomePage = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -107,7 +108,7 @@ const HomePage = ({ navigation }) => {
   };
 
   if (loading && !refreshing) {
-    return <Text>Loading...</Text>; // Show loading state
+    return <Loader/>;
   }
 
   if (error) {
@@ -166,7 +167,7 @@ const HomePage = ({ navigation }) => {
       >
         <View style={styles.container}>
           <StatusBar backgroundColor={Colors.background} barStyle="dark-content" />
-          <HeaderHome 
+          <HeaderHome
             userName={userName}
             onProfilePress={() => navigation.navigate('ProfileScreen')}
             onCalendarPress={() => navigation.navigate('MyOccasionsScreen')}
@@ -355,7 +356,7 @@ const styles = StyleSheet.create({
   storiesContainer: {
     marginHorizontal: 16,
     marginTop: 8,
-    marginBottom: 16,
+    marginBottom: 0,
   },
   
   storyItem: {
@@ -364,8 +365,8 @@ const styles = StyleSheet.create({
   },
   
   storyImageContainer: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
@@ -644,8 +645,8 @@ categoryCard: {
 },
 
 categoryImageContainer: {
-  width: 60, // Circle width
-  height: 60, // Circle height
+  width: 50, // Circle width
+  height: 50, // Circle height
   borderRadius: 30, // Makes it circular
   justifyContent: 'center',
   alignItems: 'center',

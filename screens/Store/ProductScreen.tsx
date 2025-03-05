@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   StatusBar,
   Dimensions,
 } from 'react-native';
-import Svg, {Path} from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import ButtonPrimary from '../components/ButtonPrimary';
 import HeaderInner from '../components/Headerinner';
@@ -17,9 +17,12 @@ import Colors from '../components/Colors';
 
 const screenWidth = Dimensions.get('window').width;
 
-const ProductOverview = ({navigation, route}) => {
-  // Get product details from route parameters
-  const { id, name, price, image } = route.params;
+const ProductOverview = ({ navigation, route }) => {
+  // Destructure the product from route parameters. 
+  // Make sure that your navigation call from SearchScreen passes the product as { product: item }
+  const { product } = route.params;
+  // Destructure product properties
+  const { id, name, price, image } = product;
 
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
@@ -56,19 +59,16 @@ const ProductOverview = ({navigation, route}) => {
         <View style={styles.detailsBox}>
           <View style={styles.detailsRow}>
             <View style={styles.detailsTextContainer}>
-              <Text style={styles.productName}>{name}</Text> {/* Use name parametr */}
-              <Text style={styles.price}>${price.toFixed(2)}</Text> {/* Display price */}
+              <Text style={styles.productName}>{name}</Text>
+              {/* Convert price to a number before formatting */}
+              <Text style={styles.price}>${Number(price).toFixed(2)}</Text>
             </View>
             <View style={styles.quantityContainer}>
-              <TouchableOpacity
-                onPress={handleDecrease}
-                style={styles.quantityButton}>
+              <TouchableOpacity onPress={handleDecrease} style={styles.quantityButton}>
                 <Text style={styles.quantityText}>-</Text>
               </TouchableOpacity>
               <Text style={styles.quantity}>{quantity}</Text>
-              <TouchableOpacity
-                onPress={handleIncrease}
-                style={styles.quantityButton}>
+              <TouchableOpacity onPress={handleIncrease} style={styles.quantityButton}>
                 <Text style={styles.quantityText}>+</Text>
               </TouchableOpacity>
             </View>
@@ -102,30 +102,18 @@ const ProductOverview = ({navigation, route}) => {
         <View style={styles.tabContentBox}>
           <View style={styles.tabs}>
             <TouchableOpacity
-              style={[
-                styles.tabButton,
-                activeTab === 'description' && styles.activeTabButton,
-              ]}
-              onPress={() => setActiveTab('description')}>
-              <Text
-                style={[
-                  styles.tabText,
-                  activeTab === 'description' && styles.activeTabText,
-                ]}>
+              style={[styles.tabButton, activeTab === 'description' && styles.activeTabButton]}
+              onPress={() => setActiveTab('description')}
+            >
+              <Text style={[styles.tabText, activeTab === 'description' && styles.activeTabText]}>
                 Description
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[
-                styles.tabButton,
-                activeTab === 'careTips' && styles.activeTabButton,
-              ]}
-              onPress={() => setActiveTab('careTips')}>
-              <Text
-                style={[
-                  styles.tabText,
-                  activeTab === 'careTips' && styles.activeTabText,
-                ]}>
+              style={[styles.tabButton, activeTab === 'careTips' && styles.activeTabButton]}
+              onPress={() => setActiveTab('careTips')}
+            >
+              <Text style={[styles.tabText, activeTab === 'careTips' && styles.activeTabText]}>
                 Care Tips
               </Text>
             </TouchableOpacity>
@@ -169,16 +157,14 @@ const ProductOverview = ({navigation, route}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: Colors.background},
+  container: { flex: 1, backgroundColor: Colors.background },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
   },
-
-
-  content: {padding: 16},
+  content: { padding: 16 },
   productImage: {
     width: '80%',
     height: undefined,
@@ -193,15 +179,15 @@ const styles = StyleSheet.create({
     padding: 16,
     marginTop: 16,
   },
-
   detailsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  productName: {fontSize: 20, fontFamily:'DMSans-Bold'},
-  price: {fontSize: 18, color: '#000', marginTop: 4,fontFamily:'DMSans-Regular'},
-  quantityContainer: {flexDirection: 'row', alignItems: 'center'},
+  detailsTextContainer: { flex: 1 },
+  productName: { fontSize: 20, fontFamily: 'DMSans-Bold' },
+  price: { fontSize: 18, color: '#000', marginTop: 4, fontFamily: 'DMSans-Regular' },
+  quantityContainer: { flexDirection: 'row', alignItems: 'center' },
   quantityButton: {
     paddingVertical: 6,
     paddingHorizontal: 16,
@@ -209,14 +195,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginHorizontal: 8,
   },
-  quantityText: {fontSize: 18,fontFamily:'DMSans-Regular'},
-  includes: {marginTop: 24},
-  sectionTitle: {fontSize: 18, fontFamily:'DMSans-Bold', marginBottom: 8},
+  quantityText: { fontSize: 18, fontFamily: 'DMSans-Regular' },
+  quantity: { fontSize: 18, fontFamily: 'DMSans-Regular' },
+  includes: { marginTop: 24 },
+  sectionTitle: { fontSize: 18, fontFamily: 'DMSans-Bold', marginBottom: 8 },
   includesImagesContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  includesImage: {width: 70, height: 70, borderRadius: 10},
+  includesImage: { width: 70, height: 70, borderRadius: 10 },
   tabContentBox: {
     backgroundColor: Colors.secondary,
     borderRadius: 20,
@@ -229,22 +216,17 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     marginBottom: 16,
   },
-  tabButton: {flex: 1, alignItems: 'center', padding: 12},
-  tabText: {color: '#777'},
-  activeTabButton: {borderBottomWidth: 2, borderColor: '#FF6F61'},
-  activeTabText: {color: '#FF6F61', fontFamily:'DMSans-Bold'},
-  description: {fontSize: 12, color: '#555', fontFamily:'DMSans-Regular'},
-
+  tabButton: { flex: 1, alignItems: 'center', padding: 12 },
+  tabText: { color: '#777' },
+  activeTabButton: { borderBottomWidth: 2, borderColor: '#FF6F61' },
+  activeTabText: { color: '#FF6F61', fontFamily: 'DMSans-Bold' },
+  description: { fontSize: 12, color: '#555', fontFamily: 'DMSans-Regular' },
   footerButtons: {
     flexDirection: 'row',
     alignItems: 'center',
     margin: 16,
   },
-
-
-  buttonGap: {
-    width: 16,
-  },
+  buttonGap: { width: 16 },
   favoriteButton: {
     width: 50,
     height: 50,

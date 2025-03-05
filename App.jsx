@@ -48,6 +48,7 @@ import CategoriesPage from './screens/Home/CategoriesPage';
 import StoresPage from './screens/Home/StoresPage';
 import ReferralScreen from './screens/Profile/MyReferalsScreen';
 import StoryViewer from './screens/Home/StoryViewer';
+import OrderSuccessPage from './screens/Order/OrderSuccessPage';
 
 
 
@@ -246,6 +247,11 @@ const AppNavigator = () => (
     <Stack.Screen
       name="CheckoutPage"
       component={CheckoutPage}
+      options={{ headerShown: false }}
+    />
+     <Stack.Screen
+      name="OrderSuccessPage"
+      component={OrderSuccessPage}
       options={{ headerShown: false }}
     />
     <Stack.Screen

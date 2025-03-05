@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,65 +9,39 @@ import {
   Modal,
   ScrollView,
   Dimensions,
+  TextInput,
 } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import SearchInner from '../../screens/components/SearchInner';
+import { fetchProducts } from '../redux/slices/searchSlice'; // adjust path as needed
 
 const { height } = Dimensions.get('window');
 
 const SearchProducts = ({ route, navigation }) => {
-  // Get the passed searchQuery from HomePage
   const initialQuery = route.params?.query || '';
   const [searchQuery, setSearchQuery] = useState(initialQuery);
-
-  // Handle search input changes
-  const handleSearch = (text) => {
-    setSearchQuery(text);
-  };
-
-  // Sample product data with card properties (image, price, isNew)
-  const products = [
-    {
-      id: '1',
-      name: 'Pink Tulips',
-      price: '$130',
-      image: require('../../assets/images/j1.png'),
-      isNew: true,
-    },
-    {
-      id: '2',
-      name: 'Yellow Tulips',
-      price: '$150',
-      image: require('../../assets/images/j1.png'),
-      isNew: true,
-    },
-    {
-      id: '3',
-      name: 'White Lilies',
-      price: '$130',
-      image: require('../../assets/images/in4.png'),
-      isNew: false,
-    },
-    {
-      id: '4',
-      name: 'Orchids',
-      price: '$150',
-      image: require('../../assets/images/j3.png'),
-      isNew: true,
-    },
-  ];
-
-  // Filter products based on search query
-  const filteredProducts = products.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // --- Filter Bottom Sheet State & Options ---
+  const dispatch = useDispatch();
+  const { products, loading, error } = useSelector((state) => state.search);
+  
+  // Declare filter state only once
   const [isFilterSheetVisible, setFilterSheetVisible] = useState(false);
   const [activeFilterCategory, setActiveFilterCategory] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({});
 
-  // Dummy filter options – each option shows a count (number of available products)
+  // Fetch products when the query changes
+  useEffect(() => {
+    dispatch(fetchProducts(searchQuery));
+  }, [dispatch, searchQuery]);
+
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+  };
+
+  // Debug Redux state if needed
+  const state = useSelector((state) => state);
+  console.log('Redux state:', state);
+
   const filterOptions = {
     Color: [
       { id: '1', name: 'Rose', count: 10 },
@@ -91,16 +65,10 @@ const SearchProducts = ({ route, navigation }) => {
     ],
   };
 
-  // Toggle expanding/collapsing a filter category
   const handleToggleFilterCategory = (category) => {
-    if (activeFilterCategory === category) {
-      setActiveFilterCategory(null);
-    } else {
-      setActiveFilterCategory(category);
-    }
+    setActiveFilterCategory(activeFilterCategory === category ? null : category);
   };
 
-  // Handle selecting/deselecting a sub-option (single selection per category)
   const handleSelectFilter = (category, optionId) => {
     setSelectedFilters((prev) => ({
       ...prev,
@@ -115,7 +83,6 @@ const SearchProducts = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Header remains unchanged */}
       <SearchInner
         showBackButton={true}
         onBackPress={() => navigation.goBack()}
@@ -125,25 +92,23 @@ const SearchProducts = ({ route, navigation }) => {
         onCartPress={() => navigation.navigate('CartPage')}
         onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
       />
-
-      {/* Display the search query */}
       <Text style={styles.searchResultsText}>
         Results for: "{searchQuery}"
       </Text>
-
-      {/* Product list with card style */}
+      {loading && <Text style={styles.statusText}>Loading...</Text>}
+      {error && <Text style={styles.statusText}>Error: {error}</Text>}
       <FlatList
-        data={filteredProducts}
-        keyExtractor={(item) => item.id}
+        data={products}
+        keyExtractor={(item) => item.id.toString()}
         numColumns={2}
         contentContainerStyle={styles.flatListContent}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.productCard}
-            onPress={() => navigation.navigate('ProductOverview')}
+            onPress={() => navigation.navigate('ProductOverview', { product: item })}
           >
             <View style={styles.imageContainer}>
-              {item.isNew && (
+              {Number(item.rating) >= 4 && (
                 <View style={styles.newTag}>
                   <Text style={styles.newText}>New</Text>
                 </View>
@@ -154,17 +119,19 @@ const SearchProducts = ({ route, navigation }) => {
                   style={styles.wishlistIcon}
                 />
               </TouchableOpacity>
-              <Image source={item.image} style={styles.productImage} />
+              <Image
+                source={{ uri: item.image_url }}
+                style={styles.productImage}
+              />
             </View>
             <View style={styles.productInfo}>
-              <Text style={styles.productName}>{item.name}</Text>
-              <Text style={styles.productPrice}>{item.price}</Text>
+              <Text style={styles.productName}>{item.title_translated}</Text>
+              <Text style={styles.vendorName}>By: {item.vendor_name}</Text>
+              <Text style={styles.productPrice}>${item.price}</Text>
             </View>
           </TouchableOpacity>
         )}
       />
-
-      {/* Floating Filter Button with Gradient at Center Bottom */}
       <TouchableOpacity
         style={styles.filterFloatingButton}
         onPress={() => setFilterSheetVisible(true)}
@@ -178,8 +145,6 @@ const SearchProducts = ({ route, navigation }) => {
           <Text style={styles.filterFloatingButtonText}>Filter</Text>
         </LinearGradient>
       </TouchableOpacity>
-
-      {/* Filter Bottom Sheet Modal */}
       <Modal
         transparent
         visible={isFilterSheetVisible}
@@ -210,7 +175,8 @@ const SearchProducts = ({ route, navigation }) => {
                           key={option.id}
                           style={[
                             styles.filterOptionItem,
-                            selectedFilters[category] === option.id && styles.selectedFilterOption,
+                            selectedFilters[category] === option.id &&
+                              styles.selectedFilterOption,
                           ]}
                           onPress={() => handleSelectFilter(category, option.id)}
                         >
@@ -224,7 +190,10 @@ const SearchProducts = ({ route, navigation }) => {
                 </View>
               ))}
             </ScrollView>
-            <TouchableOpacity style={styles.applyFilterButton} onPress={closeFilterSheet}>
+            <TouchableOpacity
+              style={styles.applyFilterButton}
+              onPress={closeFilterSheet}
+            >
               <Text style={styles.applyFilterButtonText}>Apply Filter</Text>
             </TouchableOpacity>
           </View>
@@ -235,18 +204,10 @@ const SearchProducts = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  searchResultsText: {
-    fontSize: 16,
-    padding: 10,
-    color: '#333',
-  },
-  flatListContent: {
-    paddingBottom: 100, // Increased bottom padding to accommodate the floating filter button
-  },
+  container: { flex: 1, backgroundColor: '#fff' },
+  searchResultsText: { fontSize: 16, padding: 10, color: '#333' },
+  statusText: { textAlign: 'center', marginVertical: 10 },
+  flatListContent: { paddingBottom: 100 },
   productCard: {
     width: '45%',
     backgroundColor: '#fff',
@@ -267,11 +228,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'relative',
   },
-  productImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
+  productImage: { width: '100%', height: '100%', resizeMode: 'cover' },
   newTag: {
     position: 'absolute',
     top: 10,
@@ -282,11 +239,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     zIndex: 1,
   },
-  newText: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
+  newText: { fontSize: 12, fontWeight: 'bold', color: '#fff' },
   wishlistButton: {
     position: 'absolute',
     top: 5,
@@ -297,29 +250,12 @@ const styles = StyleSheet.create({
     elevation: 3,
     zIndex: 1,
   },
-  wishlistIcon: {
-    width: 20,
-    height: 20,
-    resizeMode: 'contain',
-  },
-  productInfo: {
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  productName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  productPrice: {
-    fontSize: 14,
-    color: '#666',
-    fontWeight: '600',
-  },
-  filterFloatingButton: {
-    position: 'absolute',
-    bottom: 20,
-    alignSelf: 'center',
-  },
+  wishlistIcon: { width: 20, height: 20, resizeMode: 'contain' },
+  productInfo: { alignItems: 'center', marginTop: 10 },
+  productName: { fontSize: 16, fontWeight: 'bold' },
+  vendorName: { fontSize: 12, color: '#555', marginTop: 2 },
+  productPrice: { fontSize: 14, color: '#666', fontWeight: '600' },
+  filterFloatingButton: { position: 'absolute', bottom: 20, alignSelf: 'center' },
   filterGradient: {
     borderRadius: 50,
     paddingVertical: 12,
@@ -350,38 +286,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
   },
-  filterBottomSheetTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  filterCloseButton: {
-    fontSize: 16,
-    color: '#FF5733',
-  },
+  filterBottomSheetTitle: { fontSize: 18, fontWeight: 'bold' },
+  filterCloseButton: { fontSize: 16, color: '#FF5733' },
   filterCategory: {
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
   },
-  filterCategoryText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  filterOptionsList: {
-    marginLeft: 20,
-    marginTop: 8,
-  },
-  filterOptionItem: {
-    paddingVertical: 8,
-  },
-  filterOptionText: {
-    fontSize: 14,
-    color: '#333',
-  },
-  selectedFilterOption: {
-    backgroundColor: '#ffe5e7',
-    borderRadius: 5,
-  },
+  filterCategoryText: { fontSize: 16, fontWeight: 'bold' },
+  filterOptionsList: { marginLeft: 20, marginTop: 8 },
+  filterOptionItem: { paddingVertical: 8 },
+  filterOptionText: { fontSize: 14, color: '#333' },
+  selectedFilterOption: { backgroundColor: '#ffe5e7', borderRadius: 5 },
   applyFilterButton: {
     marginTop: 20,
     backgroundColor: '#FE5993',
@@ -389,11 +305,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
   },
-  applyFilterButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+  applyFilterButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
 });
 
 export default SearchProducts;

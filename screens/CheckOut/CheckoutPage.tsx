@@ -8,28 +8,45 @@ import {
   Image,
   Dimensions,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import HeaderInner from '../../screens/components/Headerinner';
 import ButtonPrimary from '../components/ButtonPrimary';
 import DatePicker from 'react-native-date-picker';
 import Colors from '../components/Colors';
 import Modal from 'react-native-modal';
+import { useDispatch, useSelector } from 'react-redux';
+import { createOrder } from '../redux/slices/createorderSlice';
 
 const CheckoutPage = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.createOrder);
+
+  // UI State
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
-  const [deliveryType, setDeliveryType] = useState('delivery'); // Default to 'delivery'
+  const [deliveryType, setDeliveryType] = useState('delivery');
   const [selectedDate, setSelectedDate] = useState(new Date());
-  // State to control the separate modals:
   const [showPicker, setShowPicker] = useState(false);
   const [showBottomSheet, setShowBottomSheet] = useState(false);
   const [deliveryNote, setDeliveryNote] = useState('');
   const [promoCode, setPromoCode] = useState('');
-
-  // This state tracks the date option chosen by the user.
-  // It can be "today", "tomorrow", or "pick" (custom date).
   const [selectedDateOption, setSelectedDateOption] = useState('today');
-  // Time-slot selection (always available regardless of date option)
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('11 am - 1 pm');
+
+  // Example order payload – update with your dynamic values as needed.
+  const orderPayload = {
+    user: 11, // Example user ID
+    total_amount: "550.00",
+    shipping_address: "", // Populate if available
+    phone: "",
+    email: "",
+    notes: deliveryNote,
+    items: [
+      { product: 5, quantity: 1, price: "200.00" },
+      { product: 3, quantity: 1, price: "250.00" },
+      { product: 2, quantity: 1, price: "100.00" },
+    ],
+  };
 
   const paymentMethods = [
     { id: 'applepay', name: 'Apple Pay', icon: require('../../assets/images/applepay.png') },
@@ -38,6 +55,17 @@ const CheckoutPage = ({ navigation }) => {
     { id: 'creditcard', name: 'Credit Card', icon: require('../../assets/images/creditcard.png') },
     { id: 'paypal', name: 'PayPal', icon: require('../../assets/images/paypal.png') },
   ];
+
+  const handlePayNow = async () => {
+    try {
+      // Dispatch the createOrder action and wait for it to complete
+      // Navigate to OrderDetailpage and pass the created order details
+      navigation.navigate('OrderSuccessPage');
+    } catch (err) {
+      console.error('Order creation failed:', err);
+      // Optionally, show an error message to the user
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -58,10 +86,7 @@ const CheckoutPage = ({ navigation }) => {
           <Text style={styles.sectionTitle}>Select Pickup Method</Text>
           <View style={styles.deliveryTypeOptions}>
             <TouchableOpacity
-              style={[
-                styles.deliveryTypeBox,
-                deliveryType === 'delivery' && styles.deliveryTypeSelected,
-              ]}
+              style={[styles.deliveryTypeBox, deliveryType === 'delivery' && styles.deliveryTypeSelected]}
               onPress={() => setDeliveryType('delivery')}
             >
               <Image source={require('../../assets/images/delivery.png')} style={styles.deliveryIcon} />
@@ -69,12 +94,8 @@ const CheckoutPage = ({ navigation }) => {
                 Delivery
               </Text>
             </TouchableOpacity>
-
             <TouchableOpacity
-              style={[
-                styles.deliveryTypeBox,
-                deliveryType === 'pickup' && styles.deliveryTypeSelected,
-              ]}
+              style={[styles.deliveryTypeBox, deliveryType === 'pickup' && styles.deliveryTypeSelected]}
               onPress={() => setDeliveryType('pickup')}
             >
               <Image source={require('../../assets/images/store.png')} style={styles.deliveryIcon} />
@@ -84,7 +105,7 @@ const CheckoutPage = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
-          {/* ETA or Delivery Time Section */}
+          {/* ETA or Delivery Time */}
           {deliveryType === 'pickup' ? (
             <View style={styles.etaContainer}>
               <TouchableOpacity style={styles.etaBox}>
@@ -102,8 +123,7 @@ const CheckoutPage = ({ navigation }) => {
               <Text style={styles.sectionTitle}>Delivery Time</Text>
               <TouchableOpacity onPress={() => setShowBottomSheet(true)}>
                 <Text style={styles.dateTimeText}>
-                  {selectedDate.toLocaleDateString()}{' '}
-                  {selectedDateOption && selectedTimeSlot ? `(${selectedTimeSlot})` : ''}
+                  {selectedDate.toLocaleDateString()} {selectedDateOption && selectedTimeSlot ? `(${selectedTimeSlot})` : ''}
                 </Text>
                 <Text style={styles.changeText}>Change</Text>
               </TouchableOpacity>
@@ -111,7 +131,7 @@ const CheckoutPage = ({ navigation }) => {
           )}
         </View>
 
-        {/* DatePicker Modal (Calendar View) */}
+        {/* DatePicker Modal */}
         <DatePicker
           modal
           open={showPicker}
@@ -189,14 +209,6 @@ const CheckoutPage = ({ navigation }) => {
               style={styles.promoInput}
               placeholderTextColor="#000"
             />
-            <ButtonPrimary
-              buttonText="Apply"
-              onPress={() => navigation.navigate('CheckoutPage')}
-              buttonWidth={Dimensions.get('window').width * 0.2}
-              buttonHeight={30}
-              fontSize={12}
-              gradientColors={['#DE8542', '#FE5993']}
-            />
           </View>
         </View>
 
@@ -205,18 +217,13 @@ const CheckoutPage = ({ navigation }) => {
         {paymentMethods.map((method) => (
           <TouchableOpacity
             key={method.id}
-            style={[
-              styles.paymentOption,
-              selectedPaymentMethod === method.id && styles.paymentOptionSelected,
-            ]}
+            style={[styles.paymentOption, selectedPaymentMethod === method.id && styles.paymentOptionSelected]}
             onPress={() => setSelectedPaymentMethod(method.id)}
           >
             <Image source={method.icon} style={styles.paymentIcon} />
             <Text style={styles.paymentText}>{method.name}</Text>
             <View style={styles.radioButton}>
-              {selectedPaymentMethod === method.id && (
-                <View style={styles.radioInnerCircle} />
-              )}
+              {selectedPaymentMethod === method.id && <View style={styles.radioInnerCircle} />}
             </View>
           </TouchableOpacity>
         ))}
@@ -239,18 +246,22 @@ const CheckoutPage = ({ navigation }) => {
             <Text style={styles.totalText}>$55.00</Text>
           </View>
         </View>
-
-        <ButtonPrimary
-          buttonText="Pay Now"
-          onPress={() => navigation.navigate('OrderDetailpage')}
-          buttonWidth={Dimensions.get('window').width * 0.9}
-          buttonHeight={50}
-          fontSize={20}
-          gradientColors={['#DE8542', '#FE5993']}
-        />
+        {loading ? (
+          <ActivityIndicator size="large" color={Colors.primary} />
+        ) : (
+          <ButtonPrimary
+            buttonText="Pay Now"
+            onPress={handlePayNow}
+            buttonWidth={Dimensions.get('window').width * 0.9}
+            buttonHeight={50}
+            fontSize={20}
+            gradientColors={['#DE8542', '#FE5993']}
+          />
+        )}
+        {error && <Text style={{ color: 'red', textAlign: 'center' }}>Error: {JSON.stringify(error)}</Text>}
       </View>
 
-      {/* *************** BOTTOM SHEET MODAL *************** */}
+      {/* Bottom Sheet Modal for Delivery Date & Time Slot */}
       <Modal
         isVisible={showBottomSheet}
         onBackdropPress={() => setShowBottomSheet(false)}
@@ -264,10 +275,7 @@ const CheckoutPage = ({ navigation }) => {
                 setSelectedDate(new Date());
                 setSelectedDateOption('today');
               }}
-              style={[
-                styles.dateOption,
-                selectedDateOption === 'today' && styles.selectedOption,
-              ]}
+              style={[styles.dateOption, selectedDateOption === 'today' && styles.selectedOption]}
             >
               <Text style={styles.optionText}>Today</Text>
             </TouchableOpacity>
@@ -278,55 +286,38 @@ const CheckoutPage = ({ navigation }) => {
                 setSelectedDate(tomorrow);
                 setSelectedDateOption('tomorrow');
               }}
-              style={[
-                styles.dateOption,
-                selectedDateOption === 'tomorrow' && styles.selectedOption,
-              ]}
+              style={[styles.dateOption, selectedDateOption === 'tomorrow' && styles.selectedOption]}
             >
               <Text style={styles.optionText}>Tomorrow</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                // Open the calendar modal but keep the bottom sheet open so that the time-slot section remains visible.
                 setShowPicker(true);
                 setSelectedDateOption('pick');
               }}
-              style={[
-                styles.dateOption,
-                selectedDateOption === 'pick' && styles.selectedOption,
-              ]}
+              style={[styles.dateOption, selectedDateOption === 'pick' && styles.selectedOption]}
             >
               <Text style={styles.optionText}>Pick Date</Text>
             </TouchableOpacity>
           </View>
 
-          {/* Always show the time-slot selection regardless of date option */}
           <Text style={styles.bottomSheetTitle}>Select Time Slot</Text>
           <View style={styles.timeSlotsContainer}>
             <TouchableOpacity
               onPress={() => setSelectedTimeSlot('11 am - 1 pm')}
-              style={[
-                styles.timeSlot,
-                selectedTimeSlot === '11 am - 1 pm' && styles.selectedTimeSlot,
-              ]}
+              style={[styles.timeSlot, selectedTimeSlot === '11 am - 1 pm' && styles.selectedTimeSlot]}
             >
               <Text style={styles.optionText}>11 am - 1 pm</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => setSelectedTimeSlot('1 pm - 3 pm')}
-              style={[
-                styles.timeSlot,
-                selectedTimeSlot === '1 pm - 3 pm' && styles.selectedTimeSlot,
-              ]}
+              style={[styles.timeSlot, selectedTimeSlot === '1 pm - 3 pm' && styles.selectedTimeSlot]}
             >
               <Text style={styles.optionText}>1 pm - 3 pm</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => setSelectedTimeSlot('3 pm - 5 pm')}
-              style={[
-                styles.timeSlot,
-                selectedTimeSlot === '3 pm - 5 pm' && styles.selectedTimeSlot,
-              ]}
+              style={[styles.timeSlot, selectedTimeSlot === '3 pm - 5 pm' && styles.selectedTimeSlot]}
             >
               <Text style={styles.optionText}>3 pm - 5 pm</Text>
             </TouchableOpacity>
@@ -342,7 +333,6 @@ const CheckoutPage = ({ navigation }) => {
           />
         </View>
       </Modal>
-      {/* *************** END BOTTOM SHEET MODAL *************** */}
     </View>
   );
 };
@@ -519,7 +509,6 @@ const styles = StyleSheet.create({
   summaryRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
   summaryText: { fontSize: 14, color: '#555', fontFamily: 'DMSans-Regular' },
   totalText: { fontSize: 16, color: '#000', fontFamily: 'DMSans-Bold' },
-  // ------- Bottom Sheet Styles -------
   bottomModal: { justifyContent: 'flex-end', margin: 0 },
   bottomSheet: {
     backgroundColor: '#FFF',
