@@ -5,7 +5,6 @@ import Colors from '../components/Colors';
 import ButtonOutlined from '../components/ButtonOutlined';
 
 const OrderSuccessPage = ({ navigation }) => {
-  // Redirect to HomePage after 2 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.navigate('Main');
