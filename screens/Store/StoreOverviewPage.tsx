@@ -1,4 +1,4 @@
-// src/screens/StoreOverviewPage.js
+
 import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
