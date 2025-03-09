@@ -1,64 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { increaseItemQuantity, decreaseItemQuantity, clearCart } from '../redux/slices/cartSlice';
-import { fetchCartItems } from '../redux/slices/showCartSlice';
+import { fetchCart, increaseQuantity, decreaseQuantity, removeItem } from '../redux/slices/cartSlice';
 import HeaderInner from '../../screens/components/Headerinner';
 import ButtonPrimary from '../../screens/components/ButtonPrimary';
 import Colors from '../components/Colors';
+import Loader from '../components/Loader';
 
-const CartPage = ({navigation}) => {
+const CartPage = ({ navigation }) => {
   const dispatch = useDispatch();
-  const cartData = useSelector((state) => state.showCart.items) || [];
-  const loading = useSelector((state) => state.showCart.loading);
-  const error = useSelector((state) => state.showCart.error);
-
-  // Local state for cart items
-  const [localCartData, setLocalCartData] = useState(cartData);
+  const { cart, loading, error } = useSelector((state) => state.cart);
+  const items = cart && cart.items ? cart.items : [];
 
   useEffect(() => {
-    if (cartData.length > 0) {
-      setLocalCartData(cartData); // Update local state when fetching data
-    }
-  }, [cartData]);
-
-  useEffect(() => {
-    dispatch(fetchCartItems());
+    dispatch(fetchCart());
   }, [dispatch]);
 
   const handleIncrease = (itemId) => {
-    setLocalCartData((prevCartData) => 
-      prevCartData.map(item => 
-        item.id === itemId ? { ...item, quantity: (item.quantity || 0) + 1 } : item ));
-
-    dispatch(increaseItemQuantity(itemId));
+    dispatch(increaseQuantity(itemId));
   };
 
   const handleDecrease = (itemId) => {
-    setLocalCartData((prevCartData) =>
-      prevCartData.map(item => 
-        item.id === itemId ? { ...item, quantity: Math.max((item.quantity || 0) - 1, 0) } : item ));
+    dispatch(decreaseQuantity(itemId));
+  };
 
-    dispatch(decreaseItemQuantity(itemId));
+  const handleRemove = (cartId, itemId) => {
+    dispatch(removeItem({ cartId, itemId }));
   };
 
   const calculateTotal = () => {
-    const subtotal = localCartData.reduce((acc, item) => {
+    const subtotal = items.reduce((acc, item) => {
       const price = parseFloat(item.product_detail?.price);
       return acc + (price > 0 ? price * (item.quantity || 0) : 0);
     }, 0);
-    const deliveryFee = 5.0; // Static delivery fee
+    const deliveryFee = 5.0; // Static fee
     return { subtotal, deliveryFee, total: subtotal + deliveryFee };
   };
 
   const { subtotal, deliveryFee, total } = calculateTotal();
 
-  if (loading) {
-    return <Text>Loading...</Text>;
+  // Only show a full-page loader if the cart hasn't been fetched yet.
+  if (!cart && loading) {
+    return <Loader/>;
   }
-
   if (error) {
-    return <Text>Error: {error}</Text>;
+    return <Text style={styles.errorText}>Error: {error}</Text>;
   }
 
   return (
@@ -71,29 +57,35 @@ const CartPage = ({navigation}) => {
         onBackPress={() => navigation.goBack()}
       />
       <ScrollView style={styles.content} contentContainerStyle={{ paddingBottom: 100 }}>
-        {localCartData.length === 0 ? (
+        {items.length === 0 ? (
           <Text>No items in your cart.</Text>
         ) : (
-          localCartData.map((item) => {
+          items.map((item) => {
             const quantity = item.quantity || 0;
-
             return (
-              <TouchableOpacity key={item.id} style={styles.cartItem}>
+              <View key={item.id} style={styles.cartItem}>
+                {/* Remove Button */}
                 <Image source={{ uri: item.product_detail.image }} style={styles.cartItemImage} />
                 <View style={styles.cartItemDetails}>
                   <Text style={styles.itemName}>{item.product_detail.title}</Text>
                   <Text style={styles.itemPrice}>${parseFloat(item.product_detail.price).toFixed(2)}</Text>
                 </View>
                 <View style={styles.quantityControls}>
-                  <TouchableOpacity onPress={() => handleDecrease(item.id)} style={styles.quantityButton}>
-                    <Text style={styles.quantityText}>-</Text>
-                  </TouchableOpacity>
+                  {quantity > 1 ? (
+                    <TouchableOpacity onPress={() => handleDecrease(item.id)} style={styles.quantityButton}>
+                      <Text style={styles.quantityText}>-</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity onPress={() => handleRemove(cart.id, item.id)} style={styles.quantityButton}>
+                      <Image source={require('../../assets/images/delete.png')} style={styles.deleteIcon} />
+                    </TouchableOpacity>
+                  )}
                   <Text style={styles.quantity}>{quantity}</Text>
                   <TouchableOpacity onPress={() => handleIncrease(item.id)} style={styles.quantityButton}>
                     <Text style={styles.quantityText}>+</Text>
                   </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
+              </View>
             );
           })
         )}
@@ -128,10 +120,9 @@ const CartPage = ({navigation}) => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
-
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 16 },
   content: { flex: 1 },
   floatingContainer: {
     backgroundColor: Colors.background,
@@ -144,9 +135,8 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 0,
     marginBottom: 10,
-    borderRadius: 10, // Increase space if needed
+    borderRadius: 10,
   },
-
   cartItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -155,6 +145,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginTop: 10,
+  },
+  removeButton: {
+    marginRight: 10,
+  },
+  removeButtonText: {
+    fontSize: 16,
+    color: 'red',
   },
   cartItemImage: { width: 60, height: 60, borderRadius: 10 },
   cartItemDetails: { flex: 1, marginLeft: 10 },
@@ -169,30 +166,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  quantityText: { fontSize: 16, color: '#000', fontFamily: 'DMSans-Bold', },
+  quantityText: { fontSize: 16, color: '#000', fontFamily: 'DMSans-Bold' },
   quantity: { fontSize: 16, marginHorizontal: 10 },
-  promoSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderRadius: 20,
-    padding: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-    marginBottom: 16,
-  },
-  promoInput: {
-    flex: 1,
-    padding: 10,
-    fontSize: 14,
-    fontFamily: 'DMSans-Regular',
-    backgroundColor: '#fff',
-    borderRadius: 10,
-  },
-
   summarySection: {
     backgroundColor: '#F6CFAC',
     borderRadius: 10,
@@ -205,12 +180,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   summaryLabel: { fontSize: 14, color: '#555', fontFamily: 'DMSans-Regular' },
-  summaryValue: { fontSize: 14, color: '#555', fontFamily: 'DMSans-SemiBold', },
+  summaryValue: { fontSize: 14, color: '#555', fontFamily: 'DMSans-SemiBold' },
   summaryValueBold: { fontSize: 16, fontFamily: 'DMSans-Bold', color: '#000' },
   divider: { height: 1, backgroundColor: '#D2AE8FFF', marginVertical: 8 },
-
-  continueButtonText: { fontSize: 16, fontFamily: 'DMSans-Bold', color: '#FFF' },
-
+  deleteIcon: {
+    width: 10,
+    height: 10,
+    resizeMode: 'contain',
+  },
 });
 
 export default CartPage;

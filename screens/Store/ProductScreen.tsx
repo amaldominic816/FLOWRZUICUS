@@ -14,22 +14,54 @@ import LinearGradient from 'react-native-linear-gradient';
 import ButtonPrimary from '../components/ButtonPrimary';
 import HeaderInner from '../components/Headerinner';
 import Colors from '../components/Colors';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  addItem,
+  increaseQuantity,
+  decreaseQuantity,
+  fetchCart,
+} from '../redux/slices/cartSlice';
 
 const screenWidth = Dimensions.get('window').width;
 
 const ProductOverview = ({ navigation, route }) => {
-  // Destructure the product from route parameters. 
-  // Make sure that your navigation call from SearchScreen passes the product as { product: item }
+  // Expect product to be passed as an object in route.params
   const { product } = route.params;
   // Destructure product properties
   const { id, name, price, image } = product;
 
+  // Local quantity state for products not yet in cart
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
 
-  const handleIncrease = () => setQuantity(quantity + 1);
-  const handleDecrease = () => {
+  const dispatch = useDispatch();
+  // Get cart from Redux store
+  const { cart } = useSelector((state) => state.cart);
+  const cartItems = cart && cart.items ? cart.items : [];
+  // Find if the product is already in the cart (assuming each cart item has a "product" field that holds the product id)
+  const productInCart = cartItems.find(item => item.product === id);
+
+  // Handlers for local quantity (before adding to cart)
+  const handleIncreaseLocal = () => setQuantity(quantity + 1);
+  const handleDecreaseLocal = () => {
     if (quantity > 1) setQuantity(quantity - 1);
+  };
+
+  // Handlers when product is already in cart (updates Redux state)
+  const handleIncreaseCart = () => dispatch(increaseQuantity(productInCart.id));
+  const handleDecreaseCart = () => dispatch(decreaseQuantity(productInCart.id));
+
+  // Handle add to cart action. If not in cart, dispatch addItem.
+  const handleAddToCart = async () => {
+    if (cart && cart.id) {
+      dispatch(addItem({ cartId: cart.id, productId: id, quantity }));
+    } else {
+      // Optionally, fetch the cart if not loaded
+      await dispatch(fetchCart());
+      if (cart && cart.id) {
+        dispatch(addItem({ cartId: cart.id, productId: id, quantity }));
+      }
+    }
   };
 
   return (
@@ -51,7 +83,7 @@ const ProductOverview = ({ navigation, route }) => {
       <ScrollView style={styles.content}>
         {/* Product Image */}
         <Image
-          source={{ uri: image }} // Use the passed image URL
+          source={{ uri: image }}
           style={styles.productImage}
         />
 
@@ -60,17 +92,32 @@ const ProductOverview = ({ navigation, route }) => {
           <View style={styles.detailsRow}>
             <View style={styles.detailsTextContainer}>
               <Text style={styles.productName}>{name}</Text>
-              {/* Convert price to a number before formatting */}
               <Text style={styles.price}>${Number(price).toFixed(2)}</Text>
             </View>
             <View style={styles.quantityContainer}>
-              <TouchableOpacity onPress={handleDecrease} style={styles.quantityButton}>
-                <Text style={styles.quantityText}>-</Text>
-              </TouchableOpacity>
-              <Text style={styles.quantity}>{quantity}</Text>
-              <TouchableOpacity onPress={handleIncrease} style={styles.quantityButton}>
-                <Text style={styles.quantityText}>+</Text>
-              </TouchableOpacity>
+              { productInCart ? (
+                // If product is already in cart, show Redux-based quantity controls
+                <>
+                  <TouchableOpacity onPress={handleDecreaseCart} style={styles.quantityButton}>
+                    <Text style={styles.quantityText}>-</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.quantity}>{productInCart.quantity}</Text>
+                  <TouchableOpacity onPress={handleIncreaseCart} style={styles.quantityButton}>
+                    <Text style={styles.quantityText}>+</Text>
+                  </TouchableOpacity>
+                </>
+              ) : (
+                // Otherwise, let the user select desired quantity locally
+                <>
+                  <TouchableOpacity onPress={handleDecreaseLocal} style={styles.quantityButton}>
+                    <Text style={styles.quantityText}>-</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.quantity}>{quantity}</Text>
+                  <TouchableOpacity onPress={handleIncreaseLocal} style={styles.quantityButton}>
+                    <Text style={styles.quantityText}>+</Text>
+                  </TouchableOpacity>
+                </>
+              )}
             </View>
           </View>
         </View>
@@ -134,14 +181,25 @@ const ProductOverview = ({ navigation, route }) => {
 
       {/* Footer Buttons */}
       <View style={styles.footerButtons}>
-        <ButtonPrimary
-          buttonText="Add to Cart"
-          onPress={() => navigation.navigate('CartPage')}
-          buttonWidth={Dimensions.get('window').width * 0.7}
-          buttonHeight={50}
-          fontSize={20}
-          gradientColors={['#DE8542', '#FE5993']}
-        />
+        { productInCart ? (
+          <ButtonPrimary
+            buttonText="View Cart"
+            onPress={() => navigation.navigate('CartPage')}
+            buttonWidth={Dimensions.get('window').width * 0.7}
+            buttonHeight={50}
+            fontSize={20}
+            gradientColors={['#DE8542', '#FE5993']}
+          />
+        ) : (
+          <ButtonPrimary
+            buttonText="Add to Cart"
+            onPress={handleAddToCart}
+            buttonWidth={Dimensions.get('window').width * 0.7}
+            buttonHeight={50}
+            fontSize={20}
+            gradientColors={['#DE8542', '#FE5993']}
+          />
+        )}
         <View style={styles.buttonGap} />
         <TouchableOpacity style={styles.favoriteButton}>
           <Svg width="24" height="24" viewBox="0 0 24 24">

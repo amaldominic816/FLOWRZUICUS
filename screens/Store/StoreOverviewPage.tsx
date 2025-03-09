@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
@@ -21,25 +20,27 @@ import Colors from '../components/Colors';
 import { launchImageLibrary } from 'react-native-image-picker';
 import ButtonPrimary from '../components/ButtonPrimary';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  fetchProductsByStoreId,
-} from '../redux/slices/productsSlice';
+import { fetchProductsByStoreId } from '../redux/slices/productsSlice';
 import { fetchCategories } from '../redux/slices/categoriesSlice';
 import {
-  addItemToCart,
-  increaseItemQuantity,
-  decreaseItemQuantity,
+  addItem,
+  increaseQuantity,
+  decreaseQuantity,
+  removeItem,
+  fetchCart,
 } from '../redux/slices/cartSlice';
-import { fetchCartItems } from '../redux/slices/showCartSlice';
 
 const { height } = Dimensions.get('window');
 
 const StoreOverviewPage = ({ route, navigation }) => {
   const { storeId, storeName, storeLocation, storeImage, storeRating } = route.params;
   const dispatch = useDispatch();
+
   const { products, loading: loadingProducts, error: errorProducts } = useSelector((state) => state.products);
   const { categories, loading: loadingCategories, error: errorCategories } = useSelector((state) => state.categories);
-  const { items: cartItems } = useSelector((state) => state.showCart); // Fetching from showCartSlice
+  const { cart, loading: loadingCart, error: errorCart } = useSelector((state) => state.cart);
+  const cartItems = cart && cart.items ? cart.items : [];
+  const cartCount = cartItems.length;
 
   const [activeCategory, setActiveCategory] = useState('All');
   const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
@@ -50,10 +51,13 @@ const StoreOverviewPage = ({ route, navigation }) => {
   useEffect(() => {
     dispatch(fetchProductsByStoreId(storeId));
     dispatch(fetchCategories());
-    dispatch(fetchCartItems()); // Fetch cart items when the component mounts
+    dispatch(fetchCart());
   }, [dispatch, storeId]);
 
-  const filteredProducts = activeCategory === 'All' ? products : products.filter((product) => product.category_name === activeCategory);
+  const filteredProducts =
+    activeCategory === 'All'
+      ? products
+      : products.filter((product) => product.category_name === activeCategory);
 
   const openBottomSheet = () => {
     setBottomSheetVisible(true);
@@ -104,60 +108,50 @@ const StoreOverviewPage = ({ route, navigation }) => {
   };
 
   const handleAddToCart = async (item) => {
-    // Check if the item already exists in the cart (adjust lookup if needed)
-    const existingItem = cartItems.find(cartItem => {
-      return (cartItem.product_detail ? cartItem.product_detail.id : cartItem.product.id) === item.id;
-    });
-  
+    const existingItem = cartItems.find(cartItem => cartItem.product === item.id);
     if (existingItem) {
-      dispatch(increaseItemQuantity(existingItem.id));
-    } else {
-      const newItem = {
-        product_id: item.id, // Updated payload key as per API requirement
+      dispatch(increaseQuantity(existingItem.id));
+    } else if (cart && cart.id) {
+      const payload = {
+        cartId: cart.id,
+        productId: item.id,
         quantity: 1,
       };
-      await dispatch(addItemToCart(newItem));
-      // Refresh the cart data so UI updates in real time
-      dispatch(fetchCartItems());
+      await dispatch(addItem(payload));
     }
-  
-    console.log('Current Cart Items:', cartItems);
   };
-  
-  
-
 
   const handleIncrease = (id) => {
-    dispatch(increaseItemQuantity(id));
+    dispatch(increaseQuantity(id));
   };
 
   const handleDecrease = (id) => {
-    dispatch(decreaseItemQuantity(id));
+    dispatch(decreaseQuantity(id));
   };
 
-  // Function to check if an item is in the cart
+  const handleRemove = (itemId) => {
+    dispatch(removeItem({ cartId: cart.id, itemId }));
+  };
+
   const isItemInCart = (id) => {
-    // Ensure cartItems is defined and is an array
     if (!Array.isArray(cartItems)) {
       console.warn('cartItems is not an array:', cartItems);
       return false;
     }
-
-    // Check if any item in the cart matches the product ID
-    return cartItems.some(item => item.product === id);
+    return cartItems.some(cartItem => cartItem.product === id);
   };
 
-  // Loading and error states
-  if (loadingProducts || loadingCategories) {
+  if (loadingProducts || loadingCategories || (!cart && loadingCart)) {
     return <Text style={styles.loadingText}>Loading...</Text>;
   }
-
   if (errorProducts) {
     return <Text style={styles.errorText}>Error fetching products: {errorProducts}</Text>;
   }
-
   if (errorCategories) {
     return <Text style={styles.errorText}>Error fetching categories: {errorCategories}</Text>;
+  }
+  if (errorCart) {
+    return <Text style={styles.errorText}>Error fetching cart: {errorCart}</Text>;
   }
 
   return (
@@ -195,12 +189,7 @@ const StoreOverviewPage = ({ route, navigation }) => {
               onPress={() => setActiveCategory(category.title)}
               style={styles.tabButton}
             >
-              <Text
-                style={[
-                  styles.tabText,
-                  activeCategory === category.title && styles.activeTabText,
-                ]}
-              >
+              <Text style={[styles.tabText, activeCategory === category.title && styles.activeTabText]}>
                 {category.title}
               </Text>
               {activeCategory === category.title && <View style={styles.activeIndicator} />}
@@ -208,34 +197,26 @@ const StoreOverviewPage = ({ route, navigation }) => {
           ))}
         </ScrollView>
 
-
         <FlatList
           data={filteredProducts}
           numColumns={2}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => {
-            const itemInCart = isItemInCart(item.id); // Check if the item is in the cart
-
-            // Find the cart item
+            const itemInCart = isItemInCart(item.id);
             const cartItem = cartItems.find(cartItem => cartItem.product === item.id);
-
-            // Safeguard against undefined cartItem
-            const itemQuantity = itemInCart && cartItem ? cartItem.quantity : 0; // Get the quantity if the item is in the cart
-
-            const price = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0; // Ensure price is a number
+            const itemQuantity = itemInCart && cartItem ? cartItem.quantity : 0;
+            const price = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0;
 
             return (
               <TouchableOpacity
                 style={styles.productCard}
-                onPress={() => navigation.navigate('ProductOverview', {
-                  id: item.id,
-                  name: item.title,
-                  price: price,
-                  image: item.image,
-                })}
+                onPress={() =>
+                  navigation.navigate('ProductOverview', {
+                    product: item,
+                  })
+                }
               >
                 <View style={styles.imageContainer}>
-                  {/* Wishlist button and product image */}
                   <TouchableOpacity style={styles.wishlistButton}>
                     <Image source={require('../../assets/images/favourite.png')} style={styles.wishlistIcon} />
                   </TouchableOpacity>
@@ -247,20 +228,24 @@ const StoreOverviewPage = ({ route, navigation }) => {
                   <Text style={styles.productPrice}>AED {price.toFixed(2)}</Text>
                 </View>
 
-                {/* Conditional Rendering */}
                 {itemInCart ? (
-                  // Quantity Controls
                   <View style={styles.quantityControls}>
-                    <TouchableOpacity onPress={() => handleDecrease(cartItem.id)} style={styles.quantityButton}>
-                      <Text style={styles.quantityText}>-</Text>
-                    </TouchableOpacity>
+                    {cartItem.quantity > 1 ? (
+                      <TouchableOpacity onPress={() => handleDecrease(cartItem.id)} style={styles.quantityButton}>
+                        <Text style={styles.quantityText}>-</Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <TouchableOpacity onPress={() => handleRemove(cartItem.id)} style={styles.quantityButton}>
+  <Image source={require('../../assets/images/delete.png')} style={styles.deleteIcon} />
+</TouchableOpacity>
+
+                    )}
                     <Text style={styles.quantity}>{itemQuantity}</Text>
                     <TouchableOpacity onPress={() => handleIncrease(cartItem.id)} style={styles.quantityButton}>
                       <Text style={styles.quantityText}>+</Text>
                     </TouchableOpacity>
                   </View>
                 ) : (
-                  // Plus Button
                   <TouchableOpacity style={styles.plusButton} onPress={() => handleAddToCart(item)}>
                     <Text style={styles.plusIcon}>+</Text>
                   </TouchableOpacity>
@@ -272,7 +257,7 @@ const StoreOverviewPage = ({ route, navigation }) => {
         />
       </ScrollView>
 
-      <View style={styles.floatingButtonContainer}>
+      <View style={[styles.floatingButtonContainer, { bottom: cartCount > 0 ? 80 : 20 }]}>
         <ButtonPrimary
           buttonText="Customize Order"
           onPress={openBottomSheet}
@@ -282,6 +267,22 @@ const StoreOverviewPage = ({ route, navigation }) => {
           gradientColors={['#DE8542', '#FE5993']}
         />
       </View>
+
+      {cartCount > 0 && (
+        <LinearGradient
+          colors={['#DE8542', '#FE5993']}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }}
+          style={styles.cartSummaryBottomSheet}
+        >
+          <Text style={styles.cartSummaryText}>
+            {cartCount === 1 ? '1 Item Added' : `${cartCount} Items Added`}
+          </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('CartPage')}>
+            <Text style={styles.cartSummaryText}>View Cart &gt;</Text>
+          </TouchableOpacity>
+        </LinearGradient>
+      )}
 
       <Modal
         transparent
@@ -349,7 +350,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   scrollContent: {
-    paddingBottom: 20,
+    paddingBottom: 110,
   },
   storeInfoContainer: {
     backgroundColor: '#fff',
@@ -365,6 +366,12 @@ const styles = StyleSheet.create({
     fontFamily: 'DMSans-Bold',
     marginBottom: 5,
   },
+  deleteIcon: {
+    width: 10,
+    height: 10,
+    resizeMode: 'contain',
+  },
+  
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -401,11 +408,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
   },
-  floatingButtonContainer: {
-    position: 'absolute',
-    bottom: 20,
-    alignSelf: 'center',
-  },
+
   tabContainer: {
     flexDirection: 'row',
     paddingHorizontal: 10,
@@ -522,6 +525,34 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginHorizontal: 10,
   },
+
+  floatingButtonContainer: {
+    position: 'absolute',
+    alignSelf: 'center',
+    zIndex: 999,
+  },
+
+  cartSummaryBottomSheet: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    overflow: 'hidden',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  cartSummaryText: {
+    color: '#fff',
+    fontSize: 16,
+    fontFamily: 'DMSans-Bold',
+  },
+
   bottomSheetOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
