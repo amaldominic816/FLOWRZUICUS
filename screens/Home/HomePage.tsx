@@ -365,14 +365,14 @@ const styles = StyleSheet.create({
   },
   
   storyImageContainer: {
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
     borderWidth: 2,
-    borderColor: '#F70082', // or any color for the "story ring"
+    borderColor: '#F70082',
   },
   storyImage: {
     width: '100%',
