@@ -19,7 +19,7 @@ export const fetchUserDetails = createAsyncThunk('user/fetchUserDetails', async 
   }
 
   // Make an API call to fetch user details
-  const response = await axios.get('http://192.168.0.100:8000/auth/users/', {
+  const response = await axios.get('http://192.168.0.102:8000/auth/users/', {
     headers: {
       Authorization: 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64'),
     },

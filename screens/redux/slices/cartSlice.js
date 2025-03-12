@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { encode } from 'base-64';
 
 // Base URL for your API endpoints
-const baseUrl = 'http://192.168.0.100:8000/api';
+const baseUrl = 'http://192.168.0.102:8000/api';
 
 // Helper function to get basic auth header from AsyncStorage
 const getAuthHeader = async () => {

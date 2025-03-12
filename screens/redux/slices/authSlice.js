@@ -8,7 +8,7 @@ import apiService from '../../api/apiService';
 export const loginUser  = createAsyncThunk('auth/loginUser ', async ({ username, password }, { rejectWithValue }) => {
   try {
       // Directly use the URL for the login API
-      const response = await axios.post('http://192.168.0.100:8000/api/login/', {
+      const response = await axios.post('http://192.168.0.102:8000/api/login/', {
           username,
           password,
       });

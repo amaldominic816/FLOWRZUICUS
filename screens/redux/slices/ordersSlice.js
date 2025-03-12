@@ -19,7 +19,7 @@ export const fetchOrders = createAsyncThunk('orders/fetchOrders', async () => {
   }
 
   // Make an API call to fetch orders using Basic Auth
-  const response = await axios.get('http://192.168.0.100:8000/api/orders/orders/', {
+  const response = await axios.get('http://192.168.0.102:8000/api/orders/orders/', {
     headers: {
       Authorization: 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64'),
     },

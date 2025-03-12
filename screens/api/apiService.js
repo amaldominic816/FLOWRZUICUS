@@ -1,6 +1,6 @@
 import api from './api';
 import axios from 'axios';
-const BASE_URL = 'http://192.168.0.100:8000/api';
+const BASE_URL = 'http://192.168.0.102:8000/api';
 
 
 const apiService = {

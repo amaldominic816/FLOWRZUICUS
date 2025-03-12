@@ -18,7 +18,7 @@ export const createOrder = createAsyncThunk(
 
       // Make the API call with basic authentication
       const response = await axios.post(
-        'http://192.168.0.100:8000/api/orders/orders/',
+        'http://192.168.0.102:8000/api/orders/orders/',
         orderData,
         {
           auth: {
