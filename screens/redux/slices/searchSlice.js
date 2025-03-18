@@ -6,7 +6,7 @@ export const fetchProducts = createAsyncThunk(
   async (query, {rejectWithValue}) => {
     try {
       const response = await axios.get(
-        'http://192.168.0.102:8000/api/product/search/',
+        'http://192.168.0.100:8000/api/product/search/',
         {params: {q: query}},
       );
       return response.data;

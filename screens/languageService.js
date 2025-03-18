@@ -11,11 +11,10 @@ const setLanguage = (lang) => {
     .then((response) => response.json())
     .then((data) => {
       if (data.status === 'language.changed_successfully') {
-        i18n.changeLanguage(lang); // Change language in i18n
+        i18n.changeLanguage(lang);
       }
     })
     .catch((error) => console.error('Error changing language:', error));
 };
 
-// Example usage
-setLanguage('ar'); // Set Arabic language
+setLanguage('ar');
