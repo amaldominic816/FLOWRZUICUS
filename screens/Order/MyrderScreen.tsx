@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -11,23 +11,35 @@ import HeaderInner from '../../screens/components/Headerinner';
 import Colors from '../components/Colors';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchOrders } from '../redux/slices/ordersSlice';
+import { fetchBookings } from '../redux/slices/bookingsSlice';
 import Loader from '../components/Loader';
 
 const MyOrdersScreen = ({ navigation }) => {
   const dispatch = useDispatch();
+  const [activeTab, setActiveTab] = useState('Orders');
 
-  // Select orders data from Redux
+  // Orders slice data
   const { orders, status, error } = useSelector((state) => state.orders);
 
-  // Fetch orders on component mount
+  // Bookings slice data
+  const {
+    bookings,
+    status: bookingStatus,
+    error: bookingError,
+  } = useSelector((state) => state.bookings);
+
+  // Fetch orders and bookings on component mount
   useEffect(() => {
     dispatch(fetchOrders());
+    dispatch(fetchBookings());
   }, [dispatch]);
 
   // Render each order card with navigation on press
-  const renderItem = ({ item }) => (
-    <TouchableOpacity 
-      onPress={() => navigation.navigate('OrderDetailpage', { orderId: item.id })}
+  const renderOrderItem = ({ item }) => (
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('OrderDetailpage', { orderId: item.id })
+      }
     >
       <View style={styles.orderCard}>
         {/* Top Section: Image + Details + Badge */}
@@ -52,7 +64,7 @@ const MyOrdersScreen = ({ navigation }) => {
           <View style={styles.statusBadge}>
             <View style={styles.statusCircle}>
               <Image
-                source={require('../../assets/images/recieved.png')} // Replace with appropriate status icon
+                source={require('../../assets/images/recieved.png')}
                 style={styles.statusIcon}
               />
             </View>
@@ -83,19 +95,27 @@ const MyOrdersScreen = ({ navigation }) => {
     </TouchableOpacity>
   );
 
-  // Show loading state
-  if (status === 'loading') {
-    return <Loader />;
-  }
-
-  // Show error state
-  if (status === 'failed') {
-    return (
-      <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>Error fetching orders: {error}</Text>
+  const renderBookingItem = ({ item }) => (
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('BookingDetailsScreen', { bookingId: item.id })
+      }
+    >
+      <View style={styles.bookingCard}>
+        <Text style={styles.bookingTitle}>{item.product_name}</Text>
+        <Text style={styles.bookingDetail}>
+          Booking Date: {new Date(item.booking_date).toLocaleDateString()}
+        </Text>
+        <Text style={styles.bookingDetail}>Vendor: {item.vendor_name}</Text>
+        <Text style={styles.bookingDetail}>Status: {item.status}</Text>
       </View>
-    );
-  }
+    </TouchableOpacity>
+  );
+  
+
+  // For bookings slice, the API returns an object with a "results" array
+  const bookingList =
+    bookings && bookings.results ? bookings.results : bookings;
 
   return (
     <View style={styles.container}>
@@ -108,13 +128,82 @@ const MyOrdersScreen = ({ navigation }) => {
         onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
         onCartPress={() => navigation.navigate('CartPage')}
       />
-      {/* Orders List */}
-      <FlatList
-        data={orders}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.listContainer}
-      />
+
+      {/* Tabs for Orders and Booking */}
+      <View style={styles.tabContainer}>
+        <TouchableOpacity
+          style={[
+            styles.tabButton,
+            activeTab === 'Orders' && styles.activeTab,
+          ]}
+          onPress={() => setActiveTab('Orders')}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === 'Orders' && styles.activeTabText,
+            ]}
+          >
+            Orders
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.tabButton,
+            activeTab === 'Booking' && styles.activeTab,
+          ]}
+          onPress={() => setActiveTab('Booking')}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === 'Booking' && styles.activeTabText,
+            ]}
+          >
+            Booking
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {activeTab === 'Orders' ? (
+        // Orders List with loading and error handling
+        status === 'loading' ? (
+          <Loader />
+        ) : status === 'failed' ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>Error fetching orders: {error}</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={orders}
+            renderItem={renderOrderItem}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={styles.listContainer}
+          />
+        )
+      ) : (
+        // Booking Tab Content with loading and error handling
+        bookingStatus === 'loading' ? (
+          <Loader />
+        ) : bookingStatus === 'failed' ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>
+              Error fetching bookings: {bookingError}
+            </Text>
+          </View>
+        ) : bookingList && bookingList.length > 0 ? (
+          <FlatList
+            data={bookingList}
+            renderItem={renderBookingItem}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={styles.listContainer}
+          />
+        ) : (
+          <View style={styles.noBookingContainer}>
+            <Text style={styles.noBookingText}>No Booking Available</Text>
+          </View>
+        )
+      )}
     </View>
   );
 };
@@ -231,6 +320,58 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 16,
     color: 'red',
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: '#ffff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  tabButton: {
+    flex: 1,
+    paddingVertical: 15,
+    alignItems: 'center',
+  },
+  activeTab: {
+    borderBottomWidth: 2,
+    borderBottomColor: '#F25485',
+  },
+  tabText: {
+    fontSize: 16,
+    color: '#666',
+    fontFamily: 'DMSans-Bold',
+  },
+  activeTabText: {
+    color: '#F25485',
+  },
+  noBookingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noBookingText: {
+    fontSize: 18,
+    color: '#999',
+    fontFamily: 'DMSans-Regular',
+  },
+  bookingCard: {
+    backgroundColor: Colors.secondary,
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 10,
+    elevation: 2,
+  },
+  bookingTitle: {
+    fontSize: 14,
+    fontFamily: 'DMSans-Bold',
+    color: '#333',
+    marginBottom: 5,
+  },
+  bookingDetail: {
+    fontSize: 12,
+    fontFamily: 'DMSans-Regular',
+    color: '#666',
   },
 });
 

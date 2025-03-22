@@ -11,6 +11,16 @@ import showCartReducer from './slices/showCartSlice'; // Import the renamed redu
 import orderReducer from './slices/ordersSlice';
 import searchReducer from './slices/searchSlice';
 import createorderReducer from './slices/createorderSlice';
+import eventStoreReducer from './slices/eventStoreSlice';
+import eventProductsReducer from './slices/eventProductsSlice';
+import bookingReducer from './slices/bookingSlice';
+import bookingsReducer from './slices/bookingsSlice.js';
+import bookingdetailsReducer from './slices/bookingDetailsSlice.js';
+import sendGiftCardReducer from './slices/sendGiftCardSlice.js';
+import walletReducer from './slices/walletSlice';
+
+
+
 
 
 
@@ -29,5 +39,16 @@ export const store = configureStore({
     orders:orderReducer,
     createOrder:createorderReducer,
     search: searchReducer,
+
+    events: eventStoreReducer,
+    eventProducts: eventProductsReducer,
+    booking: bookingReducer,
+    bookings:bookingsReducer,
+    bookingDetails:bookingdetailsReducer,
+
+
+    giftCard:sendGiftCardReducer,
+
+    wallet: walletReducer,
   },
 });

@@ -1,97 +1,94 @@
+// TransactionHistoryBottomSheet.js
+
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Dimensions } from 'react-native';
-import Modal from 'react-native-modal';
+import { View, Text, StyleSheet, FlatList, Modal, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import Colors from '../components/Colors';
 
-// Dummy transaction data
-const transactions = [
-  { id: '1', type: 'Credit', amount: '+ $50.00', date: '2023-10-01' },
-  { id: '2', type: 'Debit', amount: '- $20.00', date: '2023-10-02' },
-  { id: '3', type: 'Credit', amount: '+ $30.00', date: '2023-10-03' },
-  { id: '4', type: 'Debit', amount: '- $10.00', date: '2023-10-04' },
-];
+const screenHeight = Dimensions.get('window').height; // Get screen height
+const bottomSheetHeight = screenHeight * 0.5; // 50% of screen height
 
-const TransactionHistoryBottomSheet = ({ isVisible, onClose }) => {
+const TransactionHistoryBottomSheet = ({ isVisible, onClose, transactions }) => {
+  if (!isVisible) return null;
+
   return (
     <Modal
-      isVisible={isVisible}
-      onBackdropPress={onClose}
-      onSwipeComplete={onClose}
-      swipeDirection="down"
-      style={styles.modal}
+      transparent={true}
+      visible={isVisible}
+      onRequestClose={onClose}
+      animationType="slide"
     >
-      <View style={styles.container}>
-        <Text style={styles.title}>Transaction History</Text>
-        <FlatList
-          data={transactions}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.transactionItem}>
-              <View>
-                <Text style={styles.transactionType}>{item.type}</Text>
-                <Text style={styles.transactionDate}>{item.date}</Text>
-              </View>
-              <Text style={styles.transactionAmount}>{item.amount}</Text>
-            </View>
-          )}
-        />
-        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-          <Text style={styles.closeButtonText}>Close</Text>
-        </TouchableOpacity>
+      <View style={styles.overlay}>
+        <View style={[styles.bottomSheet, { height: bottomSheetHeight }]}>
+          <Text style={styles.title}>Transaction History</Text>
+
+          {/* Scrollable area for transaction items */}
+          <ScrollView contentContainerStyle={styles.transactionList}>
+            <FlatList
+              data={transactions}
+              keyExtractor={(item) => item.transaction_id}
+              renderItem={({ item }) => (
+                <View style={styles.transactionItem}>
+                  <Text style={styles.transactionText}>Type: {item.transaction_type}</Text>
+                  <Text style={styles.transactionText}>Amount: AED {item.amount}</Text>
+                  <Text style={styles.transactionText}>Status: {item.status}</Text>
+                  <Text style={styles.transactionText}>Date: {new Date(item.created_at).toLocaleString()}</Text>
+                </View>
+              )}
+            />
+          </ScrollView>
+
+          {/* Close Button */}
+          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  modal: {
+  overlay: {
+    flex: 1,
     justifyContent: 'flex-end',
-    margin: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  container: {
-    backgroundColor: '#fff',
-    padding: 16,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    maxHeight: Dimensions.get('window').height * 0.6,
+  bottomSheet: {
+    backgroundColor: Colors.background,
+    padding: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    overflow: 'hidden',
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    textAlign: 'center',
+    fontFamily: 'DMSans-Bold',
+    color: '#F25485',
+    marginBottom: 15,
+  },
+  transactionList: {
+    paddingBottom: 20, // Ensure enough space at the bottom
   },
   transactionItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: '#ccc',
   },
-  transactionType: {
+  transactionText: {
     fontSize: 14,
-    fontWeight: 'bold',
-  },
-  transactionDate: {
-    fontSize: 12,
-    color: '#888',
-  },
-  transactionAmount: {
-    fontSize: 14,
-    fontWeight: 'bold',
     color: '#333',
+    marginBottom: 5,
   },
   closeButton: {
-    marginTop: 16,
-    padding: 12,
-    backgroundColor: '#FF6F61',
-    borderRadius: 8,
+    marginTop: 20,
+    backgroundColor: '#F25485',
+    paddingVertical: 10,
     alignItems: 'center',
+    borderRadius: 5,
   },
   closeButtonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
   },
 });
 

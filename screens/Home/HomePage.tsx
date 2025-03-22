@@ -84,10 +84,18 @@ const HomePage = ({ navigation }) => {
 
   // Load data initially on mount
   useEffect(() => {
-    dispatch(fetchStores());
-    dispatch(fetchOccasionBanners());
-    dispatch(fetchCategories());
-    dispatch(fetchUserDetails());
+    const fetchData = async () => {
+      try {
+        await dispatch(fetchStores());
+        await dispatch(fetchOccasionBanners());
+        await dispatch(fetchCategories());
+        await dispatch(fetchUserDetails());
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    fetchData();
   }, [dispatch]);
 
   // Combine loading states for better user experience

@@ -1,4 +1,6 @@
-import React from 'react';
+// EventScreen.js
+
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,115 +14,48 @@ import {
   FlatList,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 import Header from '../../screens/components/Header';
 import Colors from '../components/Colors';
+import { fetchStores } from '../redux/slices/eventStoreSlice';
+
 const { width } = Dimensions.get('window');
 
 const EventScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  // Get stores and loading status from Redux store
+  const { stores, status } = useSelector((state) => state.events);
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchStores()); // Fetch stores if idle
+    }
+  }, [dispatch, status]);
+
   const occasionbanners = [
     { id: '2', image: require('../../assets/images/ocbg1.jpg'), title: 'Valentines Day' },
     { id: '3', image: require('../../assets/images/ocbirbg.jpeg'), title: 'Happy Birth Day' },
-
-  ];
-  const popularStoresData = [
-    {
-      id: '1',
-      name: 'Flower Bliss',
-      location: 'Madinah, Saudi Arab',
-      rating: 4.8,
-      image: require('../../assets/images/j1.png'),
-    },
-    {
-      id: '2',
-      name: 'Bloom Haven',
-      location: 'Jeddah, Saudi Arab',
-      rating: 4.7,
-      image: require('../../assets/images/j2.png'),
-    },
-    {
-      id: '3',
-      name: 'Petal Paradise',
-      location: 'Riyadh, Saudi Arab',
-      rating: 4.9,
-      image: require('../../assets/images/j3.png'),
-    },
-    {
-      id: '4',
-      name: 'Petal Paradise',
-      location: 'Riyadh, Saudi Arab',
-      rating: 4.9,
-      image: require('../../assets/images/j4.png'),
-    },
-    {
-      id: '2',
-      name: 'Bloom Haven',
-      location: 'Jeddah, Saudi Arab',
-      rating: 4.7,
-      image: require('../../assets/images/flower.png'),
-    },
-    {
-      id: '2',
-      name: 'Bloom Haven',
-      location: 'Jeddah, Saudi Arab',
-      rating: 4.7,
-      image: require('../../assets/images/j2.png'),
-    },
-
-    {
-      id: '2',
-      name: 'Bloom Haven',
-      location: 'Jeddah, Saudi Arab',
-      rating: 4.7,
-      image: require('../../assets/images/j1.png'),
-    },
-    {
-      id: '2',
-      name: 'Bloom Haven',
-      location: 'Jeddah, Saudi Arab',
-      rating: 4.7,
-      image: require('../../assets/images/j4.png'),
-    },
-    {
-      id: '2',
-      name: 'Bloom Haven',
-      location: 'Jeddah, Saudi Arab',
-      rating: 4.7,
-      image: require('../../assets/images/j2.png'),
-    },
-    {
-      id: '2',
-      name: 'Bloom Haven',
-      location: 'Jeddah, Saudi Arab',
-      rating: 4.7,
-      image: require('../../assets/images/j1.png'),
-    },
-    {
-      id: '2',
-      name: 'Bloom Haven',
-      location: 'Jeddah, Saudi Arab',
-      rating: 4.7,
-      image: require('../../assets/images/j3.png'),
-    },
-
-    // Add more stores
   ];
 
-  const renderPopularStoreItem = ({ item }) => (
+  const renderStoreItem = ({ item }) => (
     <TouchableOpacity
       style={styles.popularStoreCardSingle}
       onPress={() =>
-        navigation.navigate('StoreOverviewPage', {
-          name: item.name,
-          image: item.image,
-          location: item.location,
-          rating: item.rating,
+        navigation.navigate('EventStoreOverviewPage', {
+          storeId: item.id,
+          storeName: item.business_name,
+          storeImage: item.logo_url,
+          storeLocation: item.address,
+          storeRating: item.rating,
         })
-      }>
-      <Image source={item.image} style={styles.popularStoreImageSingle} />
+      }
+    >
+      <Image source={{ uri: item.logo_url }} style={styles.popularStoreImageSingle} />
       <View style={styles.popularStoreInfoSingle}>
-        <Text style={styles.popularStoreNameSingle}>{item.name}</Text>
-        <Text style={styles.popularStoreLocationSingle}>{item.location}</Text>
+        <Text style={styles.popularStoreNameSingle}>{item.business_name}</Text>
+        <Text style={styles.popularStoreLocationSingle}>{item.address}</Text>
         <View style={styles.popularStoreRatingRow}>
           <Image
             source={require('../../assets/images/star.png')}
@@ -157,13 +92,12 @@ const EventScreen = () => {
               placeholder="Search your flower"
               placeholderTextColor={Colors.placeholder}
               onSubmitEditing={(event) => {
-                const searchQuery = event.nativeEvent.text; // Get the search input value
+                const searchQuery = event.nativeEvent.text;
                 if (searchQuery.trim().length > 0) {
-                  navigation.navigate('SearchProducts', { query: searchQuery }); // Navigate to SearchProducts
+                  navigation.navigate('SearchProducts', { query: searchQuery });
                 }
               }}
             />
-
           </View>
         </View>
         <View style={styles.categoriesContainer}>
@@ -184,12 +118,9 @@ const EventScreen = () => {
                 <View style={styles.occasionoverlay}>
                   <Text style={styles.bannerText}>{occasionbanner.title}</Text>
                 </View>
-
               </View>
-
             ))}
           </ScrollView>
-
         </View>
         {/* Popular Stores Section */}
         <View style={styles.popularStoresContainer}>
@@ -199,17 +130,22 @@ const EventScreen = () => {
               <Text style={styles.popularStoresSeeAll}>See all</Text>
             </TouchableOpacity>
           </View>
-          <FlatList
-            data={popularStoresData}
-            renderItem={renderPopularStoreItem}
-            keyExtractor={(item) => item.id}
-            showsVerticalScrollIndicator={false}
-          />
+          {status === 'loading' ? (
+            <Text>Loading...</Text>
+          ) : (
+            <FlatList
+              data={stores}
+              renderItem={renderStoreItem}
+              keyExtractor={(item) => item.id.toString()}
+              showsVerticalScrollIndicator={false}
+            />
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -283,14 +219,12 @@ const styles = StyleSheet.create({
     fontFamily: 'DMSans-Medium',
   },
   searchSection: {
-
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: 16,
     marginBottom: 8,
     marginTop: 8,
   },
-
   searchBar: {
     flex: 1,
     flexDirection: 'row',

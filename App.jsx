@@ -49,7 +49,10 @@ import StoresPage from './screens/Home/StoresPage';
 import ReferralScreen from './screens/Profile/MyReferalsScreen';
 import StoryViewer from './screens/Home/StoryViewer';
 import OrderSuccessPage from './screens/Order/OrderSuccessPage';
-
+import EventStoreOverviewPage from './screens/Events/EventStoreOverviewPage';
+import EventsProductOverview from './screens/Events/EventsProductOverview';
+import EventSuccessPage from './screens/Events/EventbookingSucPage';
+import BookingDetailsScreen from './screens/Events/BookingDetailsScreen';
 
 
 const Stack = createStackNavigator();
@@ -237,6 +240,26 @@ const AppNavigator = () => (
          <Stack.Screen
       name="StoresPage"
       component={StoresPage}
+      options={{ headerShown: false }}
+    />
+          <Stack.Screen
+      name="EventStoreOverviewPage"
+      component={EventStoreOverviewPage}
+      options={{ headerShown: false }}
+    />
+     <Stack.Screen
+      name="EventsProductOverview"
+      component={EventsProductOverview}
+      options={{ headerShown: false }}
+    />
+      <Stack.Screen
+      name="BookingDetailsScreen"
+      component={BookingDetailsScreen}
+      options={{ headerShown: false }}
+    />
+      <Stack.Screen
+      name="EventSuccessPage"
+      component={EventSuccessPage }
       options={{ headerShown: false }}
     />
     <Stack.Screen
