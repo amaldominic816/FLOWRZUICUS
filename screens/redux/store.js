@@ -18,6 +18,8 @@ import bookingsReducer from './slices/bookingsSlice.js';
 import bookingdetailsReducer from './slices/bookingDetailsSlice.js';
 import sendGiftCardReducer from './slices/sendGiftCardSlice.js';
 import walletReducer from './slices/walletSlice';
+import notificationSlice from './slices/notificationSlice';
+import streakReducer from './slices/streakSlice.js';
 
 
 
@@ -39,6 +41,11 @@ export const store = configureStore({
     orders:orderReducer,
     createOrder:createorderReducer,
     search: searchReducer,
+
+    notifications: notificationSlice,
+
+    streakData :streakReducer,
+
 
     events: eventStoreReducer,
     eventProducts: eventProductsReducer,

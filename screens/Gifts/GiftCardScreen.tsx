@@ -3,7 +3,6 @@ import {
   View,
   Text,
   Image,
-  FlatList,
   ScrollView,
   StyleSheet,
   Dimensions,
@@ -21,69 +20,7 @@ const banners = [
   { id: '1', image: require('../../assets/images/banner.png') },
 ];
 
-const giftCards = [
-  {
-    id: '1',
-    title: 'Pink Tulips',
-    image: require('../../assets/images/j1.png'),
-  },
-];
-
-const myGifts = [
-  {
-    id: '1',
-    title: '1 Item from Madinah',
-    details: 'Fill the card for details',
-    icons: [
-      require('../../assets/images/gfone.png'),
-      require('../../assets/images/gftwo.png'),
-    ],
-  },
-];
-
 const GiftCardScreen = ({ navigation }) => {
-  const renderGiftCard = ({ item }) => (
-    <View style={styles.giftCard}>
-      <Image source={item.image} style={styles.giftCardImage} />
-      <Text style={styles.giftCardTitle}>{item.title}</Text>
-      <ButtonPrimary
-                      buttonText="Redeem"
-                      onPress={() => navigation.navigate('')}
-                      buttonWidth={Dimensions.get('window').width * 0.8}
-                      buttonHeight={40}
-                      fontSize={12}
-                      gradientColors={['#DE8542', '#FE5993']}
-                    />
-    </View>
-  );
-
-  const renderMyGift = ({ item }) => (
-    <View style={styles.myGiftCard}>
-      <View style={styles.topContainer}>
-        <Text style={styles.giftHeaderText}>Your gift</Text>
-      </View>
-      <View style={styles.middleContainer}>
-        <View style={styles.iconContainer}>
-          <Image source={require('../../assets/images/gift_icon.png')} style={styles.giftIcon} />
-        </View>
-        <View style={styles.textAndIconsContainer}>
-          <View style={styles.rowContainer}>
-            <Text style={styles.myGiftTitle}>
-              <Text style={styles.boldText}>1 Item</Text> from Madinah
-            </Text>
-            <View style={styles.myGiftIcons}>
-              {item.icons.map((icon, index) => (
-                <Image key={index} source={icon} style={styles.myGiftIcon} />
-              ))}
-            </View>
-          </View>
-          <Text style={styles.myGiftDescription}>Fil the card</Text>
-          <Text style={styles.myGiftDetails}>For details</Text>
-        </View>
-      </View>
-    </View>
-  );
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
@@ -97,7 +34,7 @@ const GiftCardScreen = ({ navigation }) => {
           onCartPress={() => navigation.navigate('CartPage')}
           onNotificationPress={() => navigation.navigate('PushNotificationsScreen')}
           onProfilePress={() => navigation.navigate('ProfileScreen')}
-          onOcPress={()=>navigation.navigate('MyOccasionsScreen')}
+          onOcPress={() => navigation.navigate('MyOccasionsScreen')}
         />
 
         {/* Banner Section */}
@@ -124,23 +61,15 @@ const GiftCardScreen = ({ navigation }) => {
 
         {/* Redeem Section */}
         <Text style={styles.sectionTitle}>Redeem</Text>
-        <FlatList
-          data={giftCards}
-          renderItem={renderGiftCard}
-          keyExtractor={(item) => item.id}
-          horizontal
-          contentContainerStyle={styles.giftCardList}
-          showsHorizontalScrollIndicator={false}
-        />
+        <View style={styles.noDataContainer}>
+          <Text style={styles.noDataText}>No Data Available</Text>
+        </View>
 
-        {/* My Gift Cards Section */}
+        {/* My Gift Card Section */}
         <Text style={styles.sectionTitle}>My Gift Card</Text>
-        <FlatList
-          data={myGifts}
-          renderItem={renderMyGift}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.myGiftList}
-        />
+        <View style={styles.noDataContainer}>
+          <Text style={styles.noDataText}>No Data Available</Text>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -171,119 +100,20 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontFamily:'DMSans-Bold',
+    fontFamily: 'DMSans-Bold',
     color: '#333',
     paddingHorizontal: 15,
     marginVertical: 10,
   },
-  giftCardList: {
+  noDataContainer: {
     paddingHorizontal: 15,
-  },
-  giftCard: {
-    backgroundColor: Colors.secondary,
-    borderRadius: 10,
-    marginRight: 10,
-    marginLeft:10,
-    alignItems: 'center',
-    padding: 10,
-    resizeMode:'contain',
-  },
-  giftCardImage: {
-    width: 100,
-    height: 100,
-    resizeMode: 'contain',
-  },
-  giftCardTitle: {
-    marginTop:10,
-    fontSize: 14,
-    color: '#333',
-    marginBottom: 10,
-    fontFamily:'DMSans-SemiBold',
-  },
-  redeemButton: {
-    backgroundColor: '#F25485',
-    paddingHorizontal: 15,
-    paddingVertical: 5,
-    borderRadius: 5,
-  },
-  redeemText: {
-    color: '#fff',
-    fontSize: 12,
-    fontFamily:'DMSans-Bold',
-  },
-  myGiftList: {
-    paddingHorizontal: 15,
-  },
-  myGiftCard: {
-    backgroundColor: '#F8F8F8',
-    borderRadius: 15,
-    padding: 15,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-  },
-
-  topContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 5,
-  },
-  giftHeaderText:{
-    fontFamily:'DMSans-SemiBold',
-      },
-  middleContainer: {
-    flexDirection: 'row',
+    paddingVertical: 10,
     alignItems: 'center',
   },
-  iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#FFC0CB',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 10,
-  },
-  giftIcon: {
-    width: 24,
-    height: 24,
-  },
-  textAndIconsContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  myGiftTitle: {
-    fontSize: 16,
-    color: '#333',
-    fontFamily:'DMSans-Regular',
-  },
-  boldText: {
-    fontFamily:'DMSans-Bold',
-  },
-  myGiftDescription: {
+  noDataText: {
     fontSize: 14,
     color: '#777',
-    fontFamily:'DMSans-Regular',
-  },
-  myGiftDetails: {
-    fontSize: 14,
-    fontFamily:'DMSans-SemiBold',
-    color: '#333',
-  },
-  myGiftIcons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  myGiftIcon: {
-    width: 47,
-    height: 30,
-    marginHorizontal: 3,
-    resizeMode: 'contain',
+    fontFamily: 'DMSans-Regular',
   },
 });
 
