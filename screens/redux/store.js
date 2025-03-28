@@ -20,8 +20,8 @@ import sendGiftCardReducer from './slices/sendGiftCardSlice.js';
 import walletReducer from './slices/walletSlice';
 import notificationSlice from './slices/notificationSlice';
 import streakReducer from './slices/streakSlice.js';
-
-
+import storiesReducer from './slices/storiesSlice.js';
+import remiderReducer from './slices/remiderSlice.js';
 
 
 
@@ -46,6 +46,9 @@ export const store = configureStore({
 
     streakData :streakReducer,
 
+    stories :storiesReducer,
+
+    reminders :remiderReducer,
 
     events: eventStoreReducer,
     eventProducts: eventProductsReducer,

@@ -20,6 +20,7 @@ import { fetchStores } from '../redux/slices/storesSlice';
 import { fetchOccasionBanners } from '../redux/slices/occasionsSlice';
 import { fetchCategories } from '../redux/slices/categoriesSlice';
 import { fetchUserDetails } from '../redux/slices/userSlice';
+import { fetchStories } from '../redux/slices/storiesSlice';
 import HeaderHome from '../components/HeaderHome';
 import Loader from '../components/Loader';
 
@@ -38,45 +39,11 @@ const HomePage = ({ navigation }) => {
 
   // Selecting categories from the categories slice
   const { categories, loading: loadingCategories, error: errorCategories } = useSelector((state) => state.categories);
+  
+  // State for stories from the stories slice
+  const { stories, loading: storiesLoading, error: storiesError } = useSelector((state) => state.stories);
 
-  const storiesData = [
-    {
-      id: '1',
-      image: require('../../assets/images/in1.png'),
-      label: 'Logo1',
-      videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
-    },
-    {
-      id: '2',
-      image: require('../../assets/images/in2.png'),
-      label: 'Logo2',
-      videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
-    },
-    {
-      id: '3',
-      image: require('../../assets/images/in3.png'),
-      label: 'Logo3',
-      videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
-    },
-    {
-      id: '4',
-      image: require('../../assets/images/in4.png'),
-      label: 'Logo4',
-      videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
-    },
-    {
-      id: '5',
-      image: require('../../assets/images/j1.png'),
-      label: 'Logo5',
-      videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
-    },
-    {
-      id: '6',
-      image: require('../../assets/images/j2.png'),
-      label: 'Logo6',
-      videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
-    },
-  ];
+
 
   const handleStoryPress = (story) => {
     navigation.navigate('StoryViewer', { story });
@@ -90,6 +57,7 @@ const HomePage = ({ navigation }) => {
         await dispatch(fetchOccasionBanners());
         await dispatch(fetchCategories());
         await dispatch(fetchUserDetails());
+        await dispatch(fetchStories());
       } catch (error) {
         console.error(error);
       }
@@ -100,8 +68,9 @@ const HomePage = ({ navigation }) => {
 
   // Combine loading states for better user experience
   const loading =
-    loadingStores || loadingBanners || loadingCategories || userStatus === 'loading';
-  const error = errorStores || errorBanners || errorCategories || errorUsers;
+    loadingStores || loadingBanners || loadingCategories || userStatus === 'loading' || storiesLoading;
+  const error = errorStores || errorBanners || errorCategories || errorUsers || storiesError;
+
 
   // Handler for pull-to-refresh
   const onRefresh = async () => {
@@ -111,6 +80,7 @@ const HomePage = ({ navigation }) => {
       dispatch(fetchOccasionBanners()),
       dispatch(fetchCategories()),
       dispatch(fetchUserDetails()),
+      dispatch(fetchStories()),
     ]);
     setRefreshing(false);
   };
@@ -120,8 +90,14 @@ const HomePage = ({ navigation }) => {
   }
 
   if (error) {
-    return <Text>Error fetching data: {error}</Text>; // Show error state
+    return (
+      <Text>
+        Error fetching data:{" "}
+        {typeof error === "object" && error.detail ? error.detail : error.toString()}
+      </Text>
+    );
   }
+  
 
   const renderCategoryItem = ({ item }) => (
     <View key={item.id} style={styles.categoryCard}>
@@ -162,6 +138,22 @@ const HomePage = ({ navigation }) => {
           <Text style={styles.popularStoreRatingSingle}>{item.rating}</Text>
         </View>
       </View>
+    </TouchableOpacity>
+  );
+
+  const renderStoryItem = (story, index) => (
+    <TouchableOpacity
+      key={story.id}
+      style={styles.storyItem}
+      onPress={() => navigation.navigate('StoryViewer', { story, index, stories })}
+    >
+      <View style={styles.storyImageContainer}>
+        <Image
+          source={{ uri: story.image_url || story.image }}
+          style={styles.storyImage}
+        />
+      </View>
+      <Text style={styles.storyText}>{story.user.username}</Text>
     </TouchableOpacity>
   );
 
@@ -209,22 +201,17 @@ const HomePage = ({ navigation }) => {
             </View>
           </View>
           {/* STORIES SECTION */}
+          {/* STORIES SECTION */}
           <View style={styles.storiesContainer}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {storiesData.map((story) => (
-                <TouchableOpacity
-                  key={story.id}
-                  style={styles.storyItem}
-                  onPress={() => handleStoryPress(story)}
-                >
-                  <View style={styles.storyImageContainer}>
-                    <Image source={story.image} style={styles.storyImage} />
-                  </View>
-                  <Text style={styles.storyText}>{story.label}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+  {stories && stories.length > 0 ? (
+    stories.map((story, index) => renderStoryItem(story, index))
+  ) : (
+    <Text>No stories available</Text>
+  )}
+</ScrollView>
+</View>
+
           {/* Banner Section */}
           <View style={styles.bannerContainer}>
             <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -15,9 +15,10 @@ import DatePicker from 'react-native-date-picker';
 import HeaderInner from '../../screens/components/Headerinner';
 import Colors from '../components/Colors';
 import ReminderSvg from '../../assets/images/Reminder.svg';
-import ReminderBell from '../../assets/images/reminder-bell.svg'; // Replace with your SVG path
-
+import ReminderBell from '../../assets/images/reminder-bell.svg';
 import ButtonPrimary from '../components/ButtonPrimary';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchReminders, addReminder, updateReminder, deleteReminder } from '../redux/slices/remiderSlice';
 
 const initialQuickAddOptions = [
   {
@@ -38,7 +39,10 @@ const initialQuickAddOptions = [
 ];
 
 const MyOccasionsScreen = ({ navigation }) => {
-  const [occasionsList, setOccasionsList] = useState([]);
+  const dispatch = useDispatch();
+  // Use API data from redux (using API response field names)
+  const reminders = useSelector((state) => state.reminders.reminders);
+  
   const [quickAddOptions, setQuickAddOptions] = useState(initialQuickAddOptions);
   const [modalVisible, setModalVisible] = useState(false);
   const [optionsModalVisible, setOptionsModalVisible] = useState(false);
@@ -52,6 +56,10 @@ const MyOccasionsScreen = ({ navigation }) => {
   const [filter, setFilter] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedOccasion, setSelectedOccasion] = useState(null);
+
+  useEffect(() => {
+    dispatch(fetchReminders());
+  }, [dispatch]);
 
   const formatDate = (dateObj) => {
     return dateObj ? dateObj.toISOString().split('T')[0] : 'Select Date';
@@ -73,9 +81,11 @@ const MyOccasionsScreen = ({ navigation }) => {
     setCurrentOccasion(item);
     setOccasionType(item.occasionType || item.title);
     setCustomOccasion(item.occasionType === 'Other' ? item.title : '');
-    setPersonName(item.personName);
+    // API returns "person_name" so we update accordingly
+    setPersonName(item.person_name);
     setRelationship(item.relationship);
-    setDate(item.date ? new Date(item.date) : new Date());
+    // Use next_birthday to display the date
+    setDate(item.next_birthday ? new Date(item.next_birthday) : new Date());
     setModalVisible(true);
   };
 
@@ -88,20 +98,18 @@ const MyOccasionsScreen = ({ navigation }) => {
     const newOccasion = {
       id: isEditing && currentOccasion ? currentOccasion.id : Date.now().toString(),
       occasionType: finalOccasionType,
+      // Use personName from API (but when saving locally, we can stick with our naming)
       personName,
       relationship,
       date,
       image: require('../../assets/images/flower.png'),
+      title: finalOccasionType,
     };
-    newOccasion.title = finalOccasionType;
 
     if (isEditing) {
-      const updatedList = occasionsList.map((item) =>
-        item.id === currentOccasion.id ? newOccasion : item
-      );
-      setOccasionsList(updatedList);
+      dispatch(updateReminder(newOccasion));
     } else {
-      setOccasionsList([...occasionsList, newOccasion]);
+      dispatch(addReminder(newOccasion));
     }
 
     if (occasionType === 'Other' && customOccasion.trim() !== '') {
@@ -146,7 +154,7 @@ const MyOccasionsScreen = ({ navigation }) => {
         [
           { text: "Cancel", onPress: () => setOptionsModalVisible(false), style: "cancel" },
           { text: "Delete", onPress: () => {
-              setOccasionsList(occasionsList.filter(item => item.id !== selectedOccasion.id));
+              dispatch(deleteReminder(selectedOccasion.id));
               setOptionsModalVisible(false);
             }
           }
@@ -163,14 +171,17 @@ const MyOccasionsScreen = ({ navigation }) => {
   );
 
   const renderOccasionListCard = ({ item }) => {
+    // Using API field names: person_name and next_birthday
     return (
       <View style={styles.card} >
         <View style={styles.header}>
           <View style={styles.dateContainer}>
-            <Text style={styles.date}>{new Date(item.date).getDate()}</Text>
-            <Text style={styles.month}>{new Date(item.date).toLocaleString("en-US", { month: "short" })}</Text>
+            <Text style={styles.date}>{new Date(item.next_birthday).getDate()}</Text>
+            <Text style={styles.month}>
+              {new Date(item.next_birthday).toLocaleString("en-US", { month: "short" })}
+            </Text>
           </View>
-          <Text style={styles.name}>{item.personName}</Text>
+          <Text style={styles.name}>{item.person_name}</Text>
           <TouchableOpacity style={styles.menuButton} onPress={() => handleOptionsPress(item)}>
             <Text style={styles.menuText}>...</Text>
           </TouchableOpacity>
@@ -180,7 +191,7 @@ const MyOccasionsScreen = ({ navigation }) => {
           <View style={styles.infoItem}>
             <Text style={styles.label}>Occasion:</Text>
             <View style={styles.occasionContainer}>
-              <Text style={styles.occasion}>{item.occasionType}</Text>
+              <Text style={styles.occasion}>{item.occasionType || item.title}</Text>
             </View>
           </View>
           {item.relationship && (
@@ -194,6 +205,10 @@ const MyOccasionsScreen = ({ navigation }) => {
     );
   };
 
+  const filteredReminders = filter
+    ? reminders.filter((item) => item.occasionType === filter)
+    : reminders;
+
   return (
     <View style={styles.container}>
       <HeaderInner
@@ -206,12 +221,10 @@ const MyOccasionsScreen = ({ navigation }) => {
         onCartPress={() => navigation.navigate('CartPage')}
       />
 
-
-{!filter && (
+      {!filter && (
         <View style={styles.reminderSection}>
           <ReminderSvg width={140} height={70} style={styles.reminderSvg} />
           <View style={styles.reminderContent}>
-            {/* Add your SVG here */}
             <ReminderBell width={40} height={40} style={styles.reminderImage} />
             <Text style={styles.reminderSubtitle}>
               Never miss loved ones' special days with our reminders, tailor-made offers & personalised gifts
@@ -231,13 +244,9 @@ const MyOccasionsScreen = ({ navigation }) => {
 
       <View style={styles.listSection}>
         <FlatList
-          data={
-            filter
-              ? occasionsList.filter((item) => item.occasionType === filter)
-              : occasionsList
-          }
+          data={filteredReminders}
           renderItem={renderOccasionListCard}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           ListEmptyComponent={<Text style={styles.emptyText}>No reminders added.</Text>}
         />
       </View>
@@ -594,14 +603,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   reminderImage: {
-    width: 40, // Adjust width as needed
-    height: 40, // Adjust height as needed
-    marginRight: 10, // Space between image and text
+    width: 40,
+    height: 40,
+    marginRight: 10,
   },
   reminderSubtitle: {
     fontSize: 14,
     color: '#555',
-    flex: 1, // Allows text to take available space
+    flex: 1,
   },
   reminderSvg: {
     marginBottom: 0,
